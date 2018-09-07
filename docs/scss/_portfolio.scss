@@ -78,7 +78,7 @@
   }
   .modal-content {
     padding: 100px 0;
-    text-align: center;
+    text-align: left;
     h2 {
       font-size: 3em;
       margin-bottom: 15px;
@@ -93,6 +93,12 @@
       @include serif-font;
     }
     ul.list-inline {
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+
+    ol.list-inline {
+      list-style-type: decimal;
       margin-top: 0;
       margin-bottom: 30px;
     }

@@ -78,31 +78,19 @@
           </div>
         </div>
         <div class="row text-center">
-
-          <div class="col-md-3 labs-item">
-
-              <a class="labs-link" data-toggle="modal" href="#portfolioModal1">
+          <div class="col-md-3 portfolio-item">
+              <a class="portfolio-link" data-toggle="modal" href="#labsModal1">
               <span class="fa-stack fa-4x">
                 <i class="fas fa-circle fa-stack-2x text-primary"></i>
                 <i class="fas fa-laptop-code fa-stack-1x fa-inverse"></i>
-
               </span>
               </a>
-            <div class="lab-caption">
+            <div class="portfolio-caption">
               <h4 class="service-heading">Lab 1</h4>
-              <p class="text-muted">Illustration</p>
+              <p class="text-muted">Microcontroller</p>
             </div>
           </div>
 
-
-          <div class="col-md-3">
-            <span class="fa-stack fa-4x">
-              <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fas fa-laptop-code fa-stack-1x fa-inverse"></i>
-            </span>
-            <h4 class="service-heading">Lab 1</h4>
-            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
-          </div>
           <div class="col-md-3">
             <span class="fa-stack fa-4x">
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
@@ -461,7 +449,9 @@
     </footer>
 
     <!-- Labs Modals -->
-    <div class="labs-modal modal fade" id="labsModal1" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Modal 1 -->
+    <div class="portfolio-modal modal fade" id="labsModal1" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="close-modal" data-dismiss="modal">
@@ -474,15 +464,82 @@
               <div class="col-lg-8 mx-auto">
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Project Name</h2>
-                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                  <img class="img-fluid d-block mx-auto" src="img/portfolio/01-full.jpg" alt="">
-                  <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-                  <ul class="list-inline">
-                    <li>Date: January 2017</li>
-                    <li>Client: Threads</li>
-                    <li>Category: Illustration</li>
-                  </ul>
+                  <h2 class="text-uppercase">Lab 1: Microcontroller</h2>
+                  <p class="item-intro text-muted">Objective: In this lab we
+                    learned how to program the Arduino Uno through Arduino IDE
+                    and about its functionalities. We wrote simple programs for the Arduino
+                    and then assembled our robot and programmed it to perform basic autonomous driving.</p>
+                  <p> <h5>Teams:</h6>
+                    <ol class="list-inline">
+                      <li>Brian Dempsey and Jaylen Keith</li>
+                      <li>April Chen and Elliot Sotnick</li>
+                    </ol>
+                    Teams eventually merged due to issues with getting IDE to function on some of our laptops. Both teams performed all parts of the lab involving testing the Arduino separately before building and programming the robot together.
+                  </p>
+                  <p> <h5>Materials:</h6>
+                    <ul class="list-inline">
+                      <li>1 Arduino Uno (in the box)</li>
+                      <li>1 USB A/B cable (in the box)</li>
+                      <li> 2 Continuous rotation servos</li>
+                      <li> 1 LED </li>
+                      <li> 1 Potentiometer</li>
+                      <li> 1 Solderless breadboard</li>
+                      <li> 1 Line sensor</li>
+                      <li> Various robot pieces</li>
+                      <li> Various resistors (kΩ range)</li>
+                    </ul>
+                  </p>
+                  <p> <h5>Procedure:</h6>
+                    <ol class="list-inline">
+                      <li>1. Test the internal Blink code</li>
+                      <li>2. Blink an external LED</li>
+                      <li>3. Read the value of a potentiometer </li>
+                      <li>4. Control a LED with the potentiometer</li>
+                      <li>5. Control a servo with the potentiometer</li>
+                      <li>6. Build a robot and code it to drive autonomously</li>
+                    </ol>
+                  </p>
+                  <p> <h6>1. Test the internal Blink code</h6>
+                    We compiled the code for the Blink function and programmed our Arduino with it to test the connections
+                    of the Arduino Uno to IDE. The code for this was given to us in Arduino IDE.
+                    The program worked and the LED on the Arduino blinked on and off as it should.
+                  </p>
+                  <p> <h6>2. Blink an external LED</h6>
+                    We modified the Blink code to blink an external LED connected to a digital pin on the Arduino.
+                    The LED was in series with a 330Ω resistor. The LED was successfully made to blink,
+                    and our code for this program is below.
+                    <img class="img-fluid d-block mx-auto" src="img/lab1/blink_modified.png" alt="">
+                  </p>
+                  <p> <h6>3. Read the value of a potentiometer </h6>
+                    We connected a potentiometer in series with a 330Ω resistor as an input to the Arduino,
+                    and programmed the Arduino to read the voltage with analogRead and print it to the screen every half-second.
+                    The Arduino was able to do this as we changed the value of the voltage by tuning the potentiometer.
+                  </p>
+                  <p> <h6>4. Control an LED with the potentiometer</h6>
+                    Once we were able to read in the potentiometer value,
+                    we wired an LED in series with a 330Ω resistor and a digital out pin.
+                    Using pulse width modulation from the digital out,
+                    we were able to control the brightness of the LED.
+                    The map method was helpful to map servo inputs to PWM duty cycle.
+                    <div class="embed-responsive embed-responsive-16by9">
+                      <iframe class="embed-responsive-item"  src="https://www.youtube.com/embed/jVIxe3YLNs8"></iframe>
+                    </div>
+                  </p>
+                  <p> <h6>5. Control a servo with the potentiometer</h6>
+                    Because Arduino has a built-in Servo library,
+                    controlling the servo was not much harder than controlling the LED.
+                    Again, we used map to map the input from the potentiometer to an input to the Servo.write function.
+                    <img class="img-fluid d-block mx-auto" src="img/lab1/servo.png" alt="">
+                  </p>
+                  <p> <h6>6. Build a robot and code it to drive autonomously</h6>
+                    Now that we were done with the lab tasks, we started building our robot.
+                    The robot was built with one wheel (each with its own servo) on each side and one stabilization bearing in the front.
+                    After using the oscilloscope to measure the line sensor outputs above each color tile,
+                    we wrote stops, turns, or drives the robot depending on the line sensor reading.
+                    Although the robot did not drive perfectly by the time we left lab,
+                    it was a good starting point that we will be building off of.
+                    <img class="img-fluid d-block mx-auto" src="img/lab1/autonomous.png" alt="">
+                  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
