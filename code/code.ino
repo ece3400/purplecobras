@@ -34,13 +34,18 @@ void loop() {
   
   Serial.println("here");
 
-  if(driveM <= 3.3) {
+  if(driveM <= 3.3 && (driveR > 3.3 && driveL > 3.3)) {
     leftservo.write(180);
     rightservo.write(0);
     delay(250);
     Serial.println("straight");
   }
-  
+  if(driveM >= 4.78 || driveR >= 4.78 || driveL >= 4.78){
+    leftservo.write(90);
+    rightservo.write(90);
+    delay(50000); 
+    Serial.println("stuck");
+  }
 }
 
 void turnL() {
