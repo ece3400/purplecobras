@@ -3,9 +3,11 @@
 Servo rightservo;
 Servo leftservo;
 
-int sensorM = A0;
-int sensorR = A1;
-int sensorL = A2;
+int sensorM = A1;
+int sensorR = A2;
+int sensorL = A0;
+
+int turnCount = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,39 +27,50 @@ void loop() {
   int readM = analogRead(sensorM);
   int readR = analogRead(sensorR);
   int readL = analogRead(sensorL);
-
-  Serial.println(readR + " " + readM + " " + readL);
   
-  int driveM = map(reading, 0, 1023, 0, 5);
-  int driveR = map(reading, 0, 1023, 0, 5);
-  int driveL = map(reading, 0, 1023, 0, 5);
-  
-  Serial.println("here");
+//  int driveM = map(readM, 0, 1023, 0, 5);
+//  int driveR = map(readR, 0, 1023, 0, 5);
+//  int driveL = map(readL, 0, 1023, 0, 5);
 
-  if(driveM <= 3.3 && (driveR > 3.3 && driveL > 3.3)) {
-    leftservo.write(180);
-    rightservo.write(0);
-    delay(250);
-    Serial.println("straight");
+  float driveM = readM * 5 / 1023.0;
+  float driveR = readR * 5 / 1023.0;
+  float driveL = readL * 5 / 1023.0;
+
+  Serial.println(readR);
+//  Serial.println(driveR);
+//  Serial.println(driveL);
+  
+
+  if (readR >= 800 && readL >= 800) {
+    leftservo.write(135);
+    rightservo.write(45);
   }
-  if(driveM >= 4.78 || driveR >= 4.78 || driveL >= 4.78){
-    leftservo.write(90);
+  else if (readR < 800 && readL>=800) {
+    leftservo.write(135);
     rightservo.write(90);
-    delay(50000); 
-    Serial.println("stuck");
+  }
+  else if (readR >= 800 && readL < 800) {
+    leftservo.write(90);
+    rightservo.write(45);
+  }
+  else if (readR < 800 && readL < 800) {
+    turn(); 
   }
 }
 
-void turnL() {
-  if (driveM <=3.3 && driveR <= 3.3 && driveL <=3.3) {
-     leftservo.write(0);
-    rightservo.write(0);
-    delay(100);
-    Serial.println("turning");
+void turn() {
+  if (turnCount % 8 < 4) {  //left turn
+    turnCount++;
+    leftservo.write(90);
+    rightservo.write(45);
+    delay(1200);
   }
-}
-
-void turnR() {
+  else { //right turn
+    turnCount++;
+    leftservo.write(135);
+    rightservo.write(90);
+    delay(1200);
+  }
 
 }
 
