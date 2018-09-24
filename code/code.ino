@@ -38,8 +38,8 @@ void loop() {
   float driveR = readR * 5 / 1023.0;
   float driveL = readL * 5 / 1023.0;
 
-  //Serial.println(readR);
-  //Serial.println(readL);
+  Serial.println(readR);
+  Serial.println(readL);
 //  Serial.println(driveR);
 //  Serial.println(driveL);
   
@@ -48,15 +48,15 @@ void loop() {
     leftservo.write(135);
     rightservo.write(45);
   }
-  else if (readR < 800 && readL>=800) {
+  else if (readR < 500 && readL>=800) {
     leftservo.write(135);
     rightservo.write(90);
   }
-  else if (readR >= 800 && readL < 800) {
+  else if (readR >= 800 && readL < 500) {
     leftservo.write(90);
     rightservo.write(45);
   }
-  else if (readR < 700 && readL < 700) {
+  else if (readR < 500 && readL < 500) {
     Serial.println("Turn");
     turn(true);
   }
@@ -92,8 +92,11 @@ void turn(bool direction) {
         readR = analogRead(sensorR);
         readL = analogRead(sensorL);
         }
-      Serial.println("Got here");
-      leftservo.write(135);
+        leftservo.write(90);
+        rightservo.write(90);
+        while(1){};
+      /*Serial.println("Got here");
+      leftservo.write(105);
       rightservo.write(90);
       while( !right_side_done ) {
         readR = analogRead(sensorR);
@@ -105,7 +108,7 @@ void turn(bool direction) {
       rightservo.write(45);
       num_turns = 0;
       right_side_passed_once = 0;
-      right_side_done = 0;
+      right_side_done = 0;*/
     }
     else {
       leftservo.write(135);
