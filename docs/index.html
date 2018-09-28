@@ -468,7 +468,7 @@
               <div class="col-lg-8 mx-auto">
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Lab 2: Analog Circuitry and FFTs</h2>
+                  <h2 class="text-uppercase">Lab 1: Microcontroller</h2>
                   <p class="item-intro text-muted">Objective: In this lab, we added a microphone and an IR sensor to our robot. 
 			  In order to accomplish this we made both analog and digital filters so that the microphone
 			  can detect a 660 Hz whistle blow and the IR sensor can distinguish between other robots and decoys.	
@@ -580,37 +580,31 @@
                       <li>IR - April and Jaylen</li>
                     </ol>
                   </p>
-                  <p> <h5>Materials:</h5>
+                  <p> <h5>Acoustic Team Materials</h5>
                     <ul class="list-inline">
                       <li> 2 Arduino Unos</li>
-                      <li> 1 USB A/B cable</li>
-                      <li> 1 Electret Microphone</li>
-                      <li> 1 IR transistor (OP598) </li>
-		      <li> 1 IR hat </li>
-		      <li> 1 IR decoy </li>
-                      <li> Various resistors for filters </li>
-		      <li> Various capacitors for filters </li>
+	       	      <li> 1 Arduino Uno </li>
+		      <li> 1 breadboard </li>
+		      <li> 1 microphone </li>
+	  	      <li> 1 LM358 op amp </li>
+		      <li> Various resistors and capacitors </li>
                     </ul>
                   </p>
                   <p> <h5>Procedure:</h5>
                     <ol class="list-inline">
-                      <li>1. Test the internal Blink code</li>
-                      <li>2. Blink an external LED</li>
-                      <li>3. Read the value of a potentiometer </li>
-                      <li>4. Control a LED with the potentiometer</li>
-                      <li>5. Control a servo with the potentiometer</li>
-                      <li>6. Build a robot and code it to drive autonomously</li>
+                      <li>1. Observe raw microphone output </li>
+                      <li>2. Filter and/or amplify the signal and observe new output </li>
+                      <li>3. Utilize Open Music Labs FFT library to detect 660 Hz signal on Arduino </li>
                     </ol>
                   </p>
-                  <p> <h6>1. Test the internal Blink code</h6>
-                    We compiled the code for the Blink function and programmed our Arduino with it to test the connections
-                    of the Arduino Uno to IDE. The code for this was given to us in Arduino IDE.
-                    The program worked and the LED on the Arduino blinked on and off as it should.
+                  <p> <h6>1. Observe Raw Microphone Output</h6>
+                    After generating a 660 Hz signal, we observed the microphone output on the oscilloscope 
+		  in the time and frequency domain. The microphone’s AC amplitude was in the 1 mV range, well 
+		  below the accuracy of the Arduino. We determined that an active filter would properly 
+		  condition the microphone signal.
                   </p>
-                  <p> <h6>2. Blink an external LED</h6>
-                    We modified the Blink code to blink an external LED connected to a digital pin on the Arduino.
-                    The LED was in series with a 330Ω resistor. The LED was successfully made to blink,
-                    and our code for this program is below.
+                  <p> <h6>2. Filter and/or amplify the signal and observe new output </h6>
+                    The following circuit was constructed, with cutoff frequencies centered around 660 Hz:
                     <img class="img-fluid d-block mx-auto" src="img/lab1/blink_modified.png" alt="">
                   </p>
                   <p> <h6>3. Read the value of a potentiometer </h6>
