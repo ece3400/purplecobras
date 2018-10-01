@@ -25,8 +25,7 @@ void loop() {
   int readM = analogRead(sensorM);
   int readR = analogRead(sensorR);
   int readL = analogRead(sensorL);
-
-  Serial.println(readR + " " + readM + " " + readL);
+  Serial.println(readR);// + " " + readM + " " + readL);
   
   int driveM = map(reading, 0, 1023, 0, 5);
   int driveR = map(reading, 0, 1023, 0, 5);
