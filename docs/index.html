@@ -582,7 +582,6 @@
                   </p>
                   <p> <h5>Acoustic Team Materials</h5>
                     <ul class="list-inline">
-                      <li> 2 Arduino Unos</li>
 	       	      <li> 1 Arduino Uno </li>
 		      <li> 1 breadboard </li>
 		      <li> 1 microphone </li>
@@ -626,29 +625,19 @@
                     As recommended, the output was then sent to an analog pin on the Arduino with a series 
 	      resistor preventing overcurrent. We then used the Open Music Labs FFT to analyze the incoming 
 	      signal in the frequency domain and figure out which bin represents the 660Hz signal.
+		<p> <h5>Optical Team</h5>
+                  <p> <h6>Objective</h6>
+                   Capture inputs from an IR sensor to detect nearby robots emitting IR at 6.08kHz, and distinguish 
+	      them from decoys emitting at 18kHz
                   </p>
-                  <p> <h6>4. Control an LED with the potentiometer</h6>
-                    Once we were able to read in the potentiometer value,
-                    we wired an LED in series with a 330Ω resistor and a digital out pin.
-                    Using pulse width modulation from the digital out,
-                    we were able to control the brightness of the LED.
-                    The map method was helpful to map servo inputs to PWM duty cycle.
-                  <!-- This is a comment -->
-                  </p>
-                  <p> <h6>5. Control a servo with the potentiometer</h6>
-                    Because Arduino has a built-in Servo library,
-                    controlling the servo was not much harder than controlling the LED.
-                    Again, we used map to map the input from the potentiometer to an input to the Servo.write function.
-                    <img class="img-fluid d-block mx-auto" src="img/lab1/servo.png" alt="">
-                  </p>
-                  <p> <h6>6. Build a robot and code it to drive autonomously</h6>
-                    Now that we were done with the lab tasks, we started building our robot.
-                    The robot was built with one wheel (each with its own servo) on each side and one stabilization bearing in the front.
-                    After using the oscilloscope to measure the line sensor outputs above each color tile,
-                    we wrote stops, turns, or drives the robot depending on the line sensor reading.
-                    Although the robot did not drive perfectly by the time we left lab,
-                    it was a good starting point that we will be building off of.
-                    <img class="img-fluid d-block mx-auto" src="img/lab1/autonomous.png" alt="">
+                  <p> <h6>Optical Team Materials</h6>
+                      <ul class="list-inline">
+                      <li> 1 Arduino Uno</li>
+	       	      <li> 1 IR Phototransistor </li>
+		      <li> 1 IR Hat </li>
+		      <li> 1 IR Decoy </li>
+		      <li> Various resistors and capacitors </li>
+                    </ul>
                   </p>
                   <p>
                     <div class="embed-responsive embed-responsive-16by9">
