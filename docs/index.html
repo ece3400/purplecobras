@@ -622,10 +622,10 @@
 	      <p>
 		   <img class="img-fluid d-block mx-auto" src="img/lab2/image4.jpg" alt="">    
 	      </p>
-                  <p> <h6>3. Read the value of a potentiometer </h6>
-                    We connected a potentiometer in series with a 330Ω resistor as an input to the Arduino,
-                    and programmed the Arduino to read the voltage with analogRead and print it to the screen every half-second.
-                    The Arduino was able to do this as we changed the value of the voltage by tuning the potentiometer.
+                  <p> <h6>3. Utilize Open Music Labs FFT library to detect 660 Hz signal on Arduino </h6>
+                    As recommended, the output was then sent to an analog pin on the Arduino with a series 
+	      resistor preventing overcurrent. We then used the Open Music Labs FFT to analyze the incoming 
+	      signal in the frequency domain and figure out which bin represents the 660Hz signal.
                   </p>
                   <p> <h6>4. Control an LED with the potentiometer</h6>
                     Once we were able to read in the potentiometer value,
