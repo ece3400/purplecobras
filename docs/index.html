@@ -649,6 +649,24 @@
                     </ul>
 		</p>
 
+		<p> <h6>1. FFT</h6>
+			We decided to use the Analog to Digital Converter (ADC) over AnalogRead() because AnalogRead() 
+has a maximum reading rate of ~9kHZ, which is too slow for our purposes. We want to be able to sample at least double the 
+speed of our frequency giving us 12.16kHz. The fft library from Open Music Labs provided the following fft algorithm to run 
+the arduino using the ADC instead of AnalogRead().
+		<img class="img-fluid d-block mx-auto" src="img/lab2/image1.png" alt="">  
+		</p>
+		<p>
+			We first did a unit test to test that this code was working. Using the function generator, we plotted 
+			the data from the serial monitor using Excel to create a graph of the FFTs of the signals that we care 
+			about: 6.08kHz and 18kHz. The line:
+			ADCSRA = 0xe5
+			Changes the prescaler from 128 to 32, this enables us to run the ADC clock at 500kHz. We can then calculate 
+			the width of each bin to be (16MHz/32 prescaler) / 13 clock cycles  = ~38kHz. And 38 kHz / 256 bins = ~148.4 
+			Hz per bin. This means that we would ideally see the peak for 6.08kHz to be in bin 41, and the peak for 18kHz 
+			in bin 121 which is what is shown below.
+		</p>
+
                   <p>
                     <div class="embed-responsive embed-responsive-16by9">
                       <iframe width="560" height="315" src="https://www.youtube.com/embed/Q3JCB6bpPFQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
