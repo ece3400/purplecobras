@@ -695,7 +695,7 @@ We chose to have a gain of 10 by TA suggestion. The resistor values that we chos
 98kΩ and 9.88kΩ.
 
 <br/> However, even after doing this, the signal was still not amplified. After checking everything twice, we swapped out the op-amp for a
-LF series op-amp and followed Team Alpha's circuit.
+LF series op-amp and followed Team Alpha's circuit, as shown below.
 <img class="img-fluid d-block mx-auto" src="img/lab2/teamalphacircuit.png" alt="">
 		</p>
     <p>
@@ -734,7 +734,8 @@ the robot to do anything upon detection.
       for our final prototype and we will remove it to lower the amount of dynamic memory used.
     </p>
     <p>
-      Graphing the outputs, we can see that the signals still peak in the correct bins even when there are multiple signals being detected.
+      By graphing our outputs and comparing them to those we saw before when the code was running each process individually, 
+      we saw that the signals still peaked in the correct bins even when there are multiple signals being detected.
       <img class="img-fluid d-block mx-auto" src="img/lab2/image16.png" alt="">
       This is why we were still able to use the code below to detect the proper signals.
     </p>
