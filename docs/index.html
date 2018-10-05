@@ -469,9 +469,9 @@
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
                   <h2 class="text-uppercase">Lab 1: Microcontroller</h2>
-                  <p class="item-intro text-muted">Objective: In this lab, we added a microphone and an IR sensor to our robot. 
+                  <p class="item-intro text-muted">Objective: In this lab, we added a microphone and an IR sensor to our robot.
 			  In order to accomplish this we made both analog and digital filters so that the microphone
-			  can detect a 660 Hz whistle blow and the IR sensor can distinguish between other robots and decoys.	
+			  can detect a 660 Hz whistle blow and the IR sensor can distinguish between other robots and decoys.
 		  </p>
                   <p> <h5>Teams:</h5>
                     <ol class="list-inline">
@@ -597,9 +597,9 @@
                     </ol>
                   </p>
                   <p> <h6>1. Observe Raw Microphone Output</h6>
-                    After generating a 660 Hz signal, we observed the microphone output on the oscilloscope 
-		  in the time and frequency domain. The microphone’s AC amplitude was in the 1 mV range, well 
-		  below the accuracy of the Arduino. We determined that an active filter would properly 
+                    After generating a 660 Hz signal, we observed the microphone output on the oscilloscope
+		  in the time and frequency domain. The microphone’s AC amplitude was in the 1 mV range, well
+		  below the accuracy of the Arduino. We determined that an active filter would properly
 		  condition the microphone signal.
                   </p>
                   <p> <h6>2. Filter and/or amplify the signal and observe new output </h6>
@@ -611,23 +611,23 @@
 		    <img class="img-fluid d-block mx-auto" src="img/lab2/image6.jpg" height="10" alt="">
                   </p>
 	      	  <p>
-		    Since the open loop gain of the op amp is around 100, we determined that a gain of around 
-		    ~10 would be easy to implement, stable, and large enough for the Arduino to read. A scope 
-			  FFT pre-amplification and post-amplification are shown below.  
+		    Since the open loop gain of the op amp is around 100, we determined that a gain of around
+		    ~10 would be easy to implement, stable, and large enough for the Arduino to read. A scope
+			  FFT pre-amplification and post-amplification are shown below.
 	      	  </p>
 	      	  <p>
 		   <img class="img-fluid d-block mx-auto" src="img/lab2/image2.jpg" alt="">
 	         </p>
 	      <p>
-		   <img class="img-fluid d-block mx-auto" src="img/lab2/image4.jpg" alt="">    
+		   <img class="img-fluid d-block mx-auto" src="img/lab2/image4.jpg" alt="">
 	      </p>
                   <p> <h6>3. Utilize Open Music Labs FFT library to detect 660 Hz signal on Arduino </h6>
-                    As recommended, the output was then sent to an analog pin on the Arduino with a series 
-	      resistor preventing overcurrent. We then used the Open Music Labs FFT to analyze the incoming 
+                    As recommended, the output was then sent to an analog pin on the Arduino with a series
+	      resistor preventing overcurrent. We then used the Open Music Labs FFT to analyze the incoming
 	      signal in the frequency domain and figure out which bin represents the 660Hz signal.
 		<p> <h5>Optical Team</h5>
                   <p> <h6>Objective</h6>
-                   Capture inputs from an IR sensor to detect nearby robots emitting IR at 6.08kHz, and distinguish 
+                   Capture inputs from an IR sensor to detect nearby robots emitting IR at 6.08kHz, and distinguish
 	      them from decoys emitting at 18kHz
                   </p>
                   <p> <h6>Optical Team Materials</h6>
@@ -650,62 +650,106 @@
 		</p>
 
 		<p> <h6>1. FFT</h6>
-			We decided to use the Analog to Digital Converter (ADC) over AnalogRead() because AnalogRead() 
-has a maximum reading rate of ~9kHZ, which is too slow for our purposes. We want to be able to sample at least double the 
-speed of our frequency giving us 12.16kHz. The fft library from Open Music Labs provided the following fft algorithm to run 
+			We decided to use the Analog to Digital Converter (ADC) over AnalogRead() because AnalogRead()
+has a maximum reading rate of ~9kHZ, which is too slow for our purposes. We want to be able to sample at least double the
+speed of our frequency giving us 12.16kHz. The fft library from Open Music Labs provided the following fft algorithm to run
 the arduino using the ADC instead of AnalogRead().
-		<img class="img-fluid d-block mx-auto" src="img/lab2/image1.png" alt="">  
+		<img class="img-fluid d-block mx-auto" src="img/lab2/image1.png" alt="">
 		</p>
 		<p>
-			We first did a unit test to test that this code was working. Using the function generator, we plotted 
-			the data from the serial monitor using Excel to create a graph of the FFTs of the signals that we care 
+			We first did a unit test to test that this code was working. Using the function generator, we plotted
+			the data from the serial monitor using Excel to create a graph of the FFTs of the signals that we care
 			about: 6.08kHz and 18kHz. The line:
 			ADCSRA = 0xe5
-			Changes the prescaler from 128 to 32, this enables us to run the ADC clock at 500kHz. We can then calculate 
-			the width of each bin to be (16MHz/32 prescaler) / 13 clock cycles  = ~38kHz. And 38 kHz / 256 bins = ~148.4 
-			Hz per bin. This means that we would ideally see the peak for 6.08kHz to be in bin 41, and the peak for 18kHz 
+			Changes the prescaler from 128 to 32, this enables us to run the ADC clock at 500kHz. We can then calculate
+			the width of each bin to be (16MHz/32 prescaler) / 13 clock cycles  = ~38kHz. And 38 kHz / 256 bins = ~148.4
+			Hz per bin. This means that we would ideally see the peak for 6.08kHz to be in bin 41, and the peak for 18kHz
 			in bin 121 which is what is shown below.
 		</p>
 		<p>
-		<img class="img-fluid d-block mx-auto" src="img/lab2/image8.png" alt=""> 	
+		<img class="img-fluid d-block mx-auto" src="img/lab2/image8.png" alt="">
 		</p>
 		<p> <h6>2. Test the IR sensor with the IR hat </h6>
-			First we we mounted the IR hat on top of our robot, and powered it with a 9V DC voltage. 
-			Then we tested the phototransistor alone, wiring it up according to this diagram. 
-			<img class="img-fluid d-block mx-auto" src="img/lab2/image7.png" alt=""> 
+			First we we mounted the IR hat on top of our robot, and powered it with a 9V DC voltage.
+			Then we tested the phototransistor alone, wiring it up according to this diagram.
+			<img class="img-fluid d-block mx-auto" src="img/lab2/image7.png" alt="">
 		</p>
 		<p>
-			<img class="img-fluid d-block mx-auto" src="img/lab2/image3.png" alt="">  
+			<img class="img-fluid d-block mx-auto" src="img/lab2/image3.png" alt="">
 		</p>
 		<p>
-			We confirmed that the output voltage changed appropriately as the phototransistor was moved closer to the IR hat. 
-			This is the output when the IR sensor sensed the presence of the IR hat. 
+			We confirmed that the output voltage changed appropriately as the phototransistor was moved closer to the IR hat.
+			This is the output when the IR sensor sensed the presence of the IR hat.
 			<img class="img-fluid d-block mx-auto" src="img/lab2/image5.jpg" alt="">
 		</p>
 		<p> <h6>3. Design and test additional circuitry as needed for the Arduino </h6>
-			We originally wanted to create a band-pass filter because we wanted to detect 6.08kHz signals but not 18kHz signals. 
+			We originally wanted to create a band-pass filter because we wanted to detect 6.08kHz signals but not 18kHz signals.
 We also didn’t want to detect lower frequencies that could be from the room lights or sunlight. After we got this to work, we
-realized that the signal coming off of the IR hat was too weak to detect from farther distances so we decided that we needed to 
-amplify the signal. This is so we can detect other robots prior to hitting them. So we then changed our design from a passive 
-band-pass filter to an active one using an op-amp. Our second design used a band-pass inverting op-amp. However, we ran into 
-many complications with this design, so we determined that we really only needed the amplifier because we could digitally detect 
-the signals using the bin outputs, so we ultimately decided to simply use an inverting amplifier. 
+realized that the signal coming off of the IR hat was too weak to detect from farther distances so we decided that we needed to
+amplify the signal. This is so we can detect other robots prior to hitting them. So we then changed our design from a passive
+band-pass filter to an active one using an op-amp. Our second design used a band-pass inverting op-amp. However, we ran into
+many complications with this design, so we determined that we really only needed the amplifier because we could digitally detect
+the signals using the bin outputs, so we ultimately decided to simply use an inverting amplifier.
 
-We chose to have a gain of 10 by TA suggestion. The resistor values that we chose were 100kΩ, and 10kΩ, but the actual values were 
-98kΩ and 9.88kΩ. 
+We chose to have a gain of 10 by TA suggestion. The resistor values that we chose were 100kΩ, and 10kΩ, but the actual values were
+98kΩ and 9.88kΩ.
 
-Prior to connecting our amplifier to the phototransistor and Arduino, we first must test that it amplifies a signal. 
-
+<br/> However, even after doing this, the signal was still not amplified. After checking everything twice, we swapped out the op-amp for a
+LF series op-amp and followed Team Alpha's circuit.
 		</p>
+    <p>
+      We first checked that the circuit amplified the signal. Below are the before and after amplification photos.
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image10.jpg" alt="">
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image11.jpg" alt="">
+    </p>
+    <p>
+      Using this circuit, we were able to confirm that our amplifier detected the signal from different distances.
+    <p/>
+    <p>
+      4 inches away
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image12.jpg" alt="">
+      6 inches away
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image13.jpg" alt="">
+      8 inches away
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image14.jpg" alt="">
+    </p>
+    <p>
+      Looking at the FFT signal, we can see the harmonics as well.
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image15.jpg" alt="">
+    </p>
 		<p> <h6>4. Connect the circuit to the Arduino and make it detect the presence of an IR hat </h6>
-			We connected the output of the amplifier to an analog pin on the Arduino and ran our code to make the Arduino detect 
-the 6.08 kHz signal from the IR hat. We made the Arduino print out “robot” for debugging purposes whenever the bin that 6.08 kHz 
-was in was over a certain voltage, to show that the Arduino recognized the signal. 
+			We connected the output of the amplifier to an analog pin on the Arduino and ran our code to make the Arduino detect
+the 6.08 kHz signal from the IR hat. We made the Arduino print out “ROBOT” for debugging purposes whenever the bin that 6.08 kHz
+was in was over a certain voltage, to show that the Arduino recognized the signal.
 		</p>
-		<p> <h6>4. Connect the circuit to the Arduino and make it detect the presence of an IR hat </h6>
-			Lastly we tested our setup with the IR hat to make sure that the Arduino received the signal and coded it to not cause 
+		<p> <h6>5. Connect the circuit to the Arduino and make it detect the presence of an IR decoy </h6>
+			Lastly we tested our setup with the IR hat to make sure that the Arduino received the signal and coded it to not cause
 the robot to do anything upon detection.
 		</p>
+    <p> <h5> Full System </h5>
+      To merge all our code together, we decided to simply use the ADC for both the audio and optical.
+      Because of this, we were able to use the same code to sample for our signals. To demonstrate that
+      we were able to detect them all at the same time, we used Serial prints. This won't be necessary
+      for our final prototype and we will remove it to lower the amount of dynamic memory used.
+    </p>
+    <p>
+      Graphing the outputs, we can see that the signals still peak in the correct bins even when there are multiple signals being detected.
+      <img class="img-fluid d-block mx-auto" src="img/lab2/image16.png" alt="">
+      This is why we were still able to use the code below to detect the proper signals.
+    </p>
+    <p class = text-left>
+      <code>
+        <br>if (fft_log_out[44] >= 70) { <br>
+          Serial.println("ROBOT"); <br>
+        }<br>
+        if (fft_log_out[121] >= 70) { <br>
+          Serial.println("DECOY"); <br>
+        } <br>
+        if (fft_log_out[6] >= 70) { <br>
+          Serial.println("SOUND"); <br>
+        }<br>
+      </code>
+    </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
