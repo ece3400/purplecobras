@@ -677,11 +677,35 @@ the arduino using the ADC instead of AnalogRead().
 		<p>
 			<img class="img-fluid d-block mx-auto" src="img/lab2/image3.png" alt="">  
 		</p>
-                  <p>
-                    <div class="embed-responsive embed-responsive-16by9">
-                      <iframe width="560" height="315" src="https://www.youtube.com/embed/Q3JCB6bpPFQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    </div>
-                  </p>
+		<p>
+			We confirmed that the output voltage changed appropriately as the phototransistor was moved closer to the IR hat. 
+			This is the output when the IR sensor sensed the presence of the IR hat. 
+			<img class="img-fluid d-block mx-auto" src="img/lab2/image5.jpg" alt="">
+		</p>
+		<p> <h6>3. Design and test additional circuitry as needed for the Arduino </h6>
+			We originally wanted to create a band-pass filter because we wanted to detect 6.08kHz signals but not 18kHz signals. 
+We also didn’t want to detect lower frequencies that could be from the room lights or sunlight. After we got this to work, we
+realized that the signal coming off of the IR hat was too weak to detect from farther distances so we decided that we needed to 
+amplify the signal. This is so we can detect other robots prior to hitting them. So we then changed our design from a passive 
+band-pass filter to an active one using an op-amp. Our second design used a band-pass inverting op-amp. However, we ran into 
+many complications with this design, so we determined that we really only needed the amplifier because we could digitally detect 
+the signals using the bin outputs, so we ultimately decided to simply use an inverting amplifier. 
+
+We chose to have a gain of 10 by TA suggestion. The resistor values that we chose were 100kΩ, and 10kΩ, but the actual values were 
+98kΩ and 9.88kΩ. 
+
+Prior to connecting our amplifier to the phototransistor and Arduino, we first must test that it amplifies a signal. 
+
+		</p>
+		<p> <h6>4. Connect the circuit to the Arduino and make it detect the presence of an IR hat </h6>
+			We connected the output of the amplifier to an analog pin on the Arduino and ran our code to make the Arduino detect 
+the 6.08 kHz signal from the IR hat. We made the Arduino print out “robot” for debugging purposes whenever the bin that 6.08 kHz 
+was in was over a certain voltage, to show that the Arduino recognized the signal. 
+		</p>
+		<p> <h6>4. Connect the circuit to the Arduino and make it detect the presence of an IR hat </h6>
+			Lastly we tested our setup with the IR hat to make sure that the Arduino received the signal and coded it to not cause 
+the robot to do anything upon detection.
+		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
