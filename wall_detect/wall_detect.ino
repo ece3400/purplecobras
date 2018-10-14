@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 //ARUINO INPUTS
-int sensorL = A0;
+int sensorL = A1;
 int sensorR = A2;
 int wallR = A3;
 int wallL = A4;
@@ -14,9 +14,14 @@ int lineVoltage = 700;
 Servo rightservo;
 Servo leftservo;
 
+//wall reads
+int read_wallR = 0;
+int read_wallL = 0;
+int read_wallF = 0;
+
 void setup() {
-  servoSetup();
   Serial.begin(9600);
+  servoSetup();
 }
 
 int readL[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
@@ -25,6 +30,20 @@ double leftAverage;
 double rightAverage;
 
 void loop() {
+//  while(1) {
+//    sample();
+//    Serial.println("restart");
+//    Serial.print("Right: ");
+//    Serial.println(read_wallR);
+//    Serial.print("Left: ");
+//    Serial.println(read_wallL);
+//    Serial.print("Front: ");
+//    Serial.println(read_wallF);
+//    Serial.print("LineR: ");
+//    Serial.println(rightAverage);
+//    Serial.print("Line L: ");
+//    Serial.println(leftAverage);
+//  }
   sample();
   follow();
 }
@@ -65,6 +84,19 @@ void follow()
     leftservo.write(135);
     rightservo.write(45);
   }
+  else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
+    Serial.println("intersection");
+    if (read_wallF >= 100 && read_wallL >= 195 && read_wallR >= 195) {
+      turn(true);
+      turn(true);
+    }
+    else if (read_wallF >= 100 && read_wallL < 195 && read_wallR >= 195) {
+      turn(false);
+    }
+    else if (read_wallR < 195) {
+      turn(true);
+    }
+  }
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
     leftservo.write(135);
     rightservo.write(90);
@@ -72,18 +104,6 @@ void follow()
   else if (rightAverage >= lineVoltage && leftAverage < lineVoltage) {
     leftservo.write(90);
     rightservo.write(45);
-  }
-  else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
-    if (read_wallF >= 135 && read_wallL >= 195 && read_wallR >= 195) {
-      turn(true);
-      turn(true);
-    }
-    else if (read_wallF >= 135 && read_wallL < 195 && read_wallR >= 195) {
-      turn(false);
-    }
-    else if (read_wallR < 195) {
-      turn(true);
-    }
   }
 }
 
@@ -95,34 +115,36 @@ void turn(int direction) {
     if (direction) { //turn right
       leftservo.write(135);
       rightservo.write(45);
-      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
-        rightAverage = analogRead(sensorR);
-        leftAverage = analogRead(sensorL);
-      }
-      leftservo.write(135);
-      rightservo.write(90);
-      while(!side_done) {
-        sample();
-        if (rightAverage < 700) side_passed_once = 1;
-        if (side_passed_once && rightAverage >= 800) side_done = 1;
-      }
+      delay(500);
+//      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
+//        rightAverage = analogRead(sensorR);
+//        leftAverage = analogRead(sensorL);
+//      }
+//      leftservo.write(135);
+//      rightservo.write(90);
+//      while(!side_done) {
+//        sample();
+//        if (rightAverage < 700) side_passed_once = 1;
+//        if (side_passed_once && rightAverage >= 800) side_done = 1;
+//      }
       leftservo.write(135);
       rightservo.write(45);
     }
     else { //turn left
       leftservo.write(135);
       rightservo.write(45);
-      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
-        rightAverage = analogRead(sensorR);
-        leftAverage = analogRead(sensorL);
-      }
-      leftservo.write(90);
-      rightservo.write(45);
-      while(!side_done) {
-        sample();
-        if (leftAverage < 700) side_passed_once = 1;
-        if (side_passed_once && leftAverage >= 800) side_done = 1;
-      }
+      delay(500);
+//      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
+//        rightAverage = analogRead(sensorR);
+//        leftAverage = analogRead(sensorL);
+//      }
+//      leftservo.write(90);
+//      rightservo.write(45);
+//      while(!side_done) {
+//        sample();
+//        if (leftAverage < 700) side_passed_once = 1;
+//        if (side_passed_once && leftAverage >= 800) side_done = 1;
+//      }
       leftservo.write(135);
       rightservo.write(45);
     }
