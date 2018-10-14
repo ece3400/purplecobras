@@ -8,12 +8,22 @@ port at 115.2kb.
 */
 
 #define LOG_OUT 1 // use the log output function
-#define FFT_N 256 // set to 256 point fft
+#define FFT_N 128 // set to 128 point fft
 
 #include <FFT.h> // include the library
 
+int default_timsk = TIMSK0;
+int default_adcsra = ADCSRA;
+int default_admux = ADMUX;
+int default_didr = DIDR0;
+
+int robot = 0;
+
 void setup() {
-  Serial.begin(115200); // use the serial port
+  pinMode(2, OUTPUT);
+}
+
+void adc_Setup() {
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
   ADMUX = 0x40; // use adc0
@@ -21,9 +31,23 @@ void setup() {
 }
 
 void loop() {
-  while(1) { // reduces jitter
-    cli();  // UDRE interrupt slows this way down on arduino1.0
-    for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
+  adc_Setup();
+  robot = detectRobot();
+  adc_Reset();
+  digitalWrite(2, robot);
+  delay(5000);
+}
+
+void adc_Reset() {
+  TIMSK0 = default_timsk;
+  ADCSRA = default_adcsra;
+  ADMUX = default_admux;
+  DIDR0 = default_didr;
+}
+
+int detectRobot() {
+  cli();
+  for (int i = 0 ; i < 256 ; i += 2) { // save 128 samples
       while(!(ADCSRA & 0x10)); // wait for adc to be ready
       ADCSRA = 0xf5; // restart adc
       byte m = ADCL; // fetch adc data
@@ -34,20 +58,17 @@ void loop() {
       fft_input[i] = k; // put real data into even bins
       fft_input[i+1] = 0; // set odd bins to 0
     }
-    fft_window(); // window the data for better frequency response
-    fft_reorder(); // reorder the data before doing the fft
-    fft_run(); // process the data in the fft
-    fft_mag_log(); // take the output of the fft
-    sei();
-    Serial.println("start");
-    if (fft_log_out[44] >= 70) {
-      Serial.println("ROBOT");
-    }
-    if (fft_log_out[121] >= 70) {
-      Serial.println("DECOY");
-    }
-    if (fft_log_out[6] >= 70) {
-      Serial.println("SOUND");
-    }
+
+  fft_window(); // window the data for better frequency response
+  fft_reorder(); // reorder the data before doing the fft
+  fft_run(); // process the data in the fft
+  fft_mag_log(); // take the output of the fft
+  sei();
+
+  if (fft_log_out[23] >= 70 && fft_log_out[63] <= 150) {
+    return 1;  
+  }
+  else {
+    return 0;
   }
 }
