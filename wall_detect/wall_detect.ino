@@ -86,15 +86,25 @@ void follow()
   }
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
     Serial.println("intersection");
+    leftservo.write(90);
+    rightservo.write(90);
+    delay(500);
+    
     if (read_wallF >= 100 && read_wallL >= 195 && read_wallR >= 195) {
-      turn(true);
-      turn(true);
+      Serial.println("uturn");
+      turn(1);
+      turn(1);
     }
     else if (read_wallF >= 100 && read_wallL < 195 && read_wallR >= 195) {
-      turn(false);
+      Serial.println("left turn");
+      turn(0);
     }
     else if (read_wallR < 195) {
-      turn(true);
+      Serial.println("right turn");
+      turn(1);
+    }
+    else {
+      turn(1);
     }
   }
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
@@ -112,10 +122,10 @@ void turn(int direction) {
     int side_passed_once = 0;
     int side_done = 0;
     
-    if (direction) { //turn right
+    if (direction == 1) { //turn right
       leftservo.write(135);
-      rightservo.write(45);
-      delay(500);
+      rightservo.write(90);
+      delay(1000);
 //      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
 //        rightAverage = analogRead(sensorR);
 //        leftAverage = analogRead(sensorL);
@@ -131,7 +141,7 @@ void turn(int direction) {
       rightservo.write(45);
     }
     else { //turn left
-      leftservo.write(135);
+      leftservo.write(90);
       rightservo.write(45);
       delay(500);
 //      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
