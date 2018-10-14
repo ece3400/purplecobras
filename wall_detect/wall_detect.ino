@@ -104,7 +104,8 @@ void follow()
       turn(1);
     }
     else {
-      turn(1);
+      leftservo.write(135);
+      rightservo.write(45);
     }
   }
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
