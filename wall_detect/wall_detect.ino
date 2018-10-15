@@ -9,6 +9,9 @@ int wallF = A5;
 
 //CALIBRATED GLOBAL VARIABLES
 int lineVoltage = 700;
+int LRwalls = 195;
+int Fwall = 100;
+int pause = 1200;
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
@@ -19,8 +22,9 @@ int read_wallR = 0;
 int read_wallL = 0;
 int read_wallF = 0;
 
+int robot = 0;
+
 void setup() {
-  Serial.begin(9600);
   servoSetup();
 }
 
@@ -87,24 +91,16 @@ void follow()
   }
   // intersection
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
-    Serial.println("intersection");
-    leftservo.write(90);
-    rightservo.write(90);
-    delay(500);
     // U-turn
-    if (read_wallF >= 100 && read_wallL >= 195 && read_wallR >= 195) {
-      Serial.println("uturn");
-      turn(1);
-      turn(1);
+    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
+      turn(2);
     }
     // Left Turn
-    else if (read_wallF >= 100 && read_wallL < 195 && read_wallR >= 195) {
-      Serial.println("left turn");
+    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
       turn(0);
     }
     // Right Turn
-    else if (read_wallR < 195) {
-      Serial.println("right turn");
+    else if (read_wallR < LRwalls) {
       turn(1);
     }
     // Go forward
@@ -133,39 +129,17 @@ void turn(int direction) {
     if (direction == 1) { //turn right
       leftservo.write(135);
       rightservo.write(90);
-      delay(1000);
-//      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
-//        rightAverage = analogRead(sensorR);
-//        leftAverage = analogRead(sensorL);
-//      }
-//      leftservo.write(135);
-//      rightservo.write(90);
-//      while(!side_done) {
-//        sample();
-//        if (rightAverage < 700) side_passed_once = 1;
-//        if (side_passed_once && rightAverage >= 800) side_done = 1;
-//      }
-      leftservo.write(135);
-      rightservo.write(45);
     }
-    else { //turn left
+    else if (direction == 0) { //turn left
       leftservo.write(90);
       rightservo.write(45);
-      delay(1000);
-
-//      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
-//        rightAverage = analogRead(sensorR);
-//        leftAverage = analogRead(sensorL);
-//      }
-//      leftservo.write(90);
-//      rightservo.write(45);
-//      while(!side_done) {
-//        sample();
-//        if (leftAverage < 700) side_passed_once = 1;
-//        if (side_passed_once && leftAverage >= 800) side_done = 1;
-//      }
-      leftservo.write(135);
-      rightservo.write(45);
     }
-}
+    else {
+      leftservo.write(135);
+      rightservo.write(135);
+    }
 
+    delay(pause);
+    leftservo.write(135);
+    rightservo.write(45);
+}

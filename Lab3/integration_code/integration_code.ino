@@ -21,10 +21,16 @@ int pause = 1200;
 Servo rightservo;
 Servo leftservo;
 
+//Averaging the line sensor detection
+int readL[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
+int readR[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
+double leftAverage;
+double rightAverage;
+
 //wall reads
-int read_wallR = 0;
-int read_wallL = 0;
-int read_wallF = 0;
+int read_wallR;
+int read_wallL;
+int read_wallF;
 
 //default adc values
 int default_timsk = TIMSK0;
@@ -35,14 +41,8 @@ int default_didr = DIDR0;
 int robot = 0;
 
 void setup() {
-  Serial.begin(9600);
   servoSetup();
 }
-
-int readL[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
-int readR[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
-double leftAverage;
-double rightAverage;
 
 void loop() {
 //  while(1) {
@@ -86,10 +86,6 @@ void sample()
   leftAverage = (readL[0] + readL[1] + readL[2])/3;
   rightAverage = (readR[0] + readR[1] + readR[2])/3;
   //END LINE SENSORS
-
-  read_wallR = analogRead(wallR);
-  read_wallL = analogRead(wallL);
-  read_wallF = analogRead(wallF);
 }
 
 /*Uses line sensors to have robots follow the line*/
@@ -102,41 +98,8 @@ void follow()
   }
   // intersection
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
-    leftservo.write(90);
-    rightservo.write(90);
-    delay(500);
-    Serial.println("before robot detection");
-    adc_Setup();
-    robot = detectRobot();
-    adc_Reset();
-    
-    if (robot == 1) {
-      Serial.println("ROBOT");
-      leftservo.write(90);
-      rightservo.write(90);
-      delay(1000);
-    }
-
-    Serial.println("after robot detection");
-    // U-turn
-    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
-      turn(2);
-    }
-    // Left Turn
-    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
-      turn(0);
-    }
-    // Right Turn
-    else if (read_wallR < LRwalls) {
-      turn(1);
-    }
-    // Go forward
-    else {
-      leftservo.write(135);
-      rightservo.write(45);
-    }
+    intersection();
   }
-  // Continue turning right
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
     leftservo.write(135);
     rightservo.write(90);
@@ -148,6 +111,39 @@ void follow()
   }
 }
 
+void intersection() {
+  read_wallR = analogRead(wallR);
+  read_wallL = analogRead(wallL);
+  read_wallF = analogRead(wallF);
+
+  adc_Setup();
+  robot = detectRobot();
+  adc_Reset();
+
+  if (robot == 1) {
+    leftservo.write(90);
+    rightservo.write(90);
+    delay(1000);
+  }
+  
+  // U-turn
+  if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
+    turn(2);
+  }
+  // Left Turn
+  else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
+    turn(0);
+  }
+  // Right Turn
+  else if (read_wallR < LRwalls) {
+    turn(1);
+  }
+  // Go forward
+  else {
+    leftservo.write(135);
+    rightservo.write(45);
+  }
+}
 /*Turns the robot according to line sensor readings. A direction of 1 is a right turn.*/
 void turn(int direction) {
     int side_passed_once = 0;
@@ -212,3 +208,4 @@ int detectRobot() {
     return 0;
   }
 }
+

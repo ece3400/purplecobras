@@ -20,7 +20,8 @@ int default_didr = DIDR0;
 int robot = 0;
 
 void setup() {
-  pinMode(2, OUTPUT);
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void adc_Setup() {
@@ -34,7 +35,7 @@ void loop() {
   adc_Setup();
   robot = detectRobot();
   adc_Reset();
-  digitalWrite(2, robot);
+  digitalWrite(LED_BUILTIN, robot);
   delay(5000);
 }
 
@@ -64,11 +65,16 @@ int detectRobot() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-
-  if (fft_log_out[23] >= 70 && fft_log_out[63] <= 150) {
-    return 1;  
+  Serial.println("start");
+  for (byte i = 0 ; i < FFT_N/2 ; i++) { 
+      Serial.println(fft_log_out[i]); // send out the data
   }
-  else {
-    return 0;
-  }
+//  if (fft_log_out[23] >= 100) {
+//    Serial.println("ir signal");
+//    return 1;  
+//  }
+//  else {
+//    Serial.println("no signal");
+//    return 0;
+//  }
 }
