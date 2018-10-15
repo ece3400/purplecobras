@@ -80,38 +80,45 @@ void sample()
 /*Uses line sensors to have robots follow the line*/
 void follow()
 {
+  // Go forward
   if (rightAverage >= lineVoltage && leftAverage >= lineVoltage) {
     leftservo.write(135);
     rightservo.write(45);
   }
+  // intersection
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
     Serial.println("intersection");
     leftservo.write(90);
     rightservo.write(90);
     delay(500);
-    
+    // U-turn
     if (read_wallF >= 100 && read_wallL >= 195 && read_wallR >= 195) {
       Serial.println("uturn");
       turn(1);
       turn(1);
     }
+    // Left Turn
     else if (read_wallF >= 100 && read_wallL < 195 && read_wallR >= 195) {
       Serial.println("left turn");
       turn(0);
     }
+    // Right Turn
     else if (read_wallR < 195) {
       Serial.println("right turn");
       turn(1);
     }
+    // Go forward
     else {
       leftservo.write(135);
       rightservo.write(45);
     }
   }
+  // Continue turning right
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
     leftservo.write(135);
     rightservo.write(90);
   }
+  // Continue turning left
   else if (rightAverage >= lineVoltage && leftAverage < lineVoltage) {
     leftservo.write(90);
     rightservo.write(45);
@@ -144,7 +151,8 @@ void turn(int direction) {
     else { //turn left
       leftservo.write(90);
       rightservo.write(45);
-      delay(500);
+      delay(1000);
+
 //      while(rightAverage < lineVoltage && leftAverage < lineVoltage) {
 //        rightAverage = analogRead(sensorR);
 //        leftAverage = analogRead(sensorL);
