@@ -26,16 +26,11 @@ int read_wallR = 0;
 int read_wallL = 0;
 int read_wallF = 0;
 
-//default adc values
-int default_timsk = TIMSK0;
-int default_adcsra = ADCSRA;
-int default_admux = ADMUX;
-int default_didr = DIDR0;
-
 int robot = 0;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(7, OUTPUT);
   servoSetup();
 }
 
@@ -106,18 +101,22 @@ void follow()
     rightservo.write(90);
     delay(500);
     Serial.println("before robot detection");
-    adc_Setup();
+    //adc_Setup();
     robot = detectRobot();
-    adc_Reset();
+    //adc_Reset();
     
     if (robot == 1) {
+      digitalWrite(7, HIGH);
       Serial.println("ROBOT");
       leftservo.write(90);
       rightservo.write(90);
       delay(1000);
+      digitalWrite(7, LOW);
     }
-
-    Serial.println("after robot detection");
+    else {
+      Serial.println("no robot");
+    }
+    
     // U-turn
     if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
       turn(2);
@@ -164,6 +163,7 @@ void turn(int direction) {
     else {
       leftservo.write(135);
       rightservo.write(135);
+      delay(200);
     }
 
     delay(pause);
@@ -171,21 +171,33 @@ void turn(int direction) {
     rightservo.write(45);
 }
 
-void adc_Setup() {
+//void adc_Setup() {
+//  //TIMSK0 = 0; // turn off timer0 for lower jitter
+//  ADCSRA = 0xe5; // set the adc to free running mode
+//  ADMUX = 0x40; // use adc0
+//  DIDR0 = 0x01; // turn off the digital input for adc0
+//}
+//
+//void adc_Reset() {
+//  //TIMSK0 = default_timsk;
+//  ADCSRA = default_adcsra;
+//  ADMUX = default_admux;
+//  DIDR0 = default_didr;
+//}
+
+int detectRobot() { 
+  //default adc values
+  unsigned int default_timsk = TIMSK0;
+  unsigned int default_adcsra = ADCSRA;
+  unsigned int default_admux = ADMUX;
+  unsigned int default_didr = DIDR0;
+
+  //setup 
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
   ADMUX = 0x40; // use adc0
   DIDR0 = 0x01; // turn off the digital input for adc0
-}
-
-void adc_Reset() {
-  TIMSK0 = default_timsk;
-  ADCSRA = default_adcsra;
-  ADMUX = default_admux;
-  DIDR0 = default_didr;
-}
-
-int detectRobot() {
+  
   cli();
   for (int i = 0 ; i < 256 ; i += 2) { // save 128 samples
       while(!(ADCSRA & 0x10)); // wait for adc to be ready
@@ -205,10 +217,20 @@ int detectRobot() {
   fft_mag_log(); // take the output of the fft
   sei();
 
-  if (fft_log_out[23] >= 100) {
+  Serial.println(fft_log_out[23]);
+  
+  if (fft_log_out[23] >= 70) {
+    TIMSK0 = default_timsk;
+    ADCSRA = default_adcsra;
+    ADMUX = default_admux;
+    DIDR0 = default_didr;
     return 1;  
   }
   else {
+    TIMSK0 = default_timsk;
+    ADCSRA = default_adcsra;
+    ADMUX = default_admux;
+    DIDR0 = default_didr;
     return 0;
   }
 }

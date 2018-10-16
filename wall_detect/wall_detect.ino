@@ -137,6 +137,7 @@ void turn(int direction) {
     else {
       leftservo.write(135);
       rightservo.write(135);
+      delay(200);
     }
 
     delay(pause);
