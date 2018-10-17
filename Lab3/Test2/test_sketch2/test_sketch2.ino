@@ -1,6 +1,6 @@
-// TRANSMITTER \\
-// TRANSMITTER \\
-// TRANSMITTER \\
+// Receiver \\
+// Receiver \\
+// Receiver \\
 
 #include <SPI.h>
 #include "nRF24L01.h"
@@ -38,6 +38,8 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 // The role of the current running sketch
 role_e role = role_pong_back;
 
+int done_transmitting;
+
 
 void setup() {
   //
@@ -49,6 +51,7 @@ void setup() {
   printf("\n\rRF24/examples/GettingStarted/\n\r");
   printf("ROLE: %s\n\r",role_friendly_name[role]);
   printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
+  //while ( !Serial.available() ) {};
 
   //
   // Setup and configure rf radio
@@ -185,17 +188,31 @@ void loop() {
       byte1 = byte1 | robot_present;
     }
     if ( direction[0] == 0 && direction[1] == 1 ) {
-      byte1 = byte1 | direction_north; 
+      //Serial.println("This");
+      //Serial.println(int(byte1));
+      byte1 = byte1 | direction_west;
+      //Serial.println(int(byte1));
     }
-    else byte1 = byte1 | direction_south;
+    else {
+      byte1 = byte1 | direction_south;
+    }
 
     byte2 = byte2 | wall_present_west;
+
+    //Serial.println(int(byte2));
 
     
     current_location[0] = current_location[0] + direction[0];
     current_location[1] = current_location[1] + direction[1];
     i += 1;
+    done_transmitting = 0;
     radiotransmit( byte1, byte2 );
+    while ( !done_transmitting ) {
+      Serial.println("Stuck");
+      };
+    //Serial.println(int(byte1));
+    //Serial.println(current_location[1]);
+    delay(2000);
   }
 }
 
@@ -215,7 +232,7 @@ void radiotransmit( char byte1, char byte2 ) {
     bool ok = radio.write( &byte1, sizeof(byte1) );
 
     if (ok)
-      printf("ok...");
+      printf("ok...\n\r");
     else
       printf("failed.\n\r");
 
@@ -226,7 +243,7 @@ void radiotransmit( char byte1, char byte2 ) {
     unsigned long started_waiting_at = millis();
     bool timeout = false;
     while ( ! radio.available() && ! timeout )
-      if (millis() - started_waiting_at > 200 )
+      if (millis() - started_waiting_at > 1000 )
         timeout = true;
 
     // Describe the results
@@ -243,7 +260,9 @@ void radiotransmit( char byte1, char byte2 ) {
 
       // Spew it
       //printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
-      printf("Got response %c \n", received_byte);
+      //printf("Got response %c \n", received_byte);
+      Serial.println();
+      Serial.println(received_byte);
     }
 
     // Try again 1s later
@@ -271,7 +290,7 @@ void radiotransmit( char byte1, char byte2 ) {
         // Spew it
         //printf("Got payload %lu...",got_time);
         //printf("Got payload %c", received_byte);
-        Serial.println(received_byte);
+        Serial.println(int(received_byte));
 
         // Delay just a little bit to let the other unit
         // make the transition to receiver
@@ -290,7 +309,6 @@ void radiotransmit( char byte1, char byte2 ) {
       radio.startListening();
     }
   }
-
   //
   // Change roles
   //
@@ -315,7 +333,8 @@ void radiotransmit( char byte1, char byte2 ) {
       role = role_pong_back;
       radio.openWritingPipe(pipes[1]);
       radio.openReadingPipe(1,pipes[0]);
-    }
+   }
   }
+  done_transmitting = 1;
 }
 
