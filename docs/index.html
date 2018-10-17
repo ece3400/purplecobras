@@ -154,7 +154,7 @@
                   <i class="fas fa-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="img/portfolio/02-thumbnail.jpg" alt="">
+              <img class="img-fluid" src="img/milestone2/thumbnail.PNG" alt="">
             </a>
             <div class="portfolio-caption">
               <h4>Milstone 2</h4>
@@ -734,7 +734,7 @@ the robot to do anything upon detection.
       for our final prototype and we will remove it to lower the amount of dynamic memory used.
     </p>
     <p>
-      By graphing our outputs and comparing them to those we saw before when the code was running each process individually, 
+      By graphing our outputs and comparing them to those we saw before when the code was running each process individually,
       we saw that the signals still peaked in the correct bins even when there are multiple signals being detected.
       <img class="img-fluid d-block mx-auto" src="img/lab2/img16.png" alt="">
       This is why we were still able to use the code below to detect the proper signals.
@@ -911,15 +911,132 @@ the robot to do anything upon detection.
               <div class="col-lg-8 mx-auto">
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Project Name</h2>
-                  <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
-                  <img class="img-fluid d-block mx-auto" src="img/portfolio/02-full.jpg" alt="">
-                  <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
-                  <ul class="list-inline">
-                    <li>Date: January 2017</li>
-                    <li>Client: Explore</li>
-                    <li>Category: Graphic Design</li>
-                  </ul>
+                  <h2 class="text-uppercase">Milestone 2</h2>
+                  <p class="item-intro text-muted">Objective: The objective of this milestone was to update our robot to circle a set of arbitrary walls through right-hand wall following and successfully avoid other robots. </p>
+                  <img class="img-fluid d-block mx-auto" src="img/milestone2/image1.PNG" alt="">
+                  <p> <h5> Materials</h5>
+                    <ul class="list-inline">
+                      <li> 3 Wall Sensors </li>
+                      <li> Robot</li>
+                    </ul>
+                  </p>
+                  <p> <h5> Wall Following</h5>
+                    Our robot traverses the maze by using right-hand wall following,
+                    which means it always turns right at intersections unless it senses a wall to its right.
+                    To code our robot to do this, first we found values for the walls on the left,
+                    right and front and set them as global variables so we could compare the readings from the sensors,
+                    and decide which way to turn. The right sensor is connected to pin A3, the left is connected to A4,
+                    and the front sensor is connected to pin A5 on the Arduino. Below are the global variables for the walls,
+                    with LRwalls being for the walls on the left and right, and Fwall being for a wall in front of the robot.
+
+                    <p class = "text-left">
+                      <code>
+                        int LRwalls = 195; <br>
+                        int Fwall = 100; <br>
+                      </code>
+                    </p>
+
+                    And here is the code for deciding which way to turn based on the readings from the sensors.
+                    If there are walls on the front, right and left, the robot does a U-turn.
+                    If there is a right wall, a front wall, and no left wall, the robot turns left.
+                    If there is no right wall, the robot turns right.
+                    The turn function call uses the number in its argument to decide which way to turn the robot.
+                    When the robot is not turning, it uses the line following code from previous labs to go straight.
+
+                    <p class = "text-left">
+                      <code>
+                        // U-turn <br>
+                        if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) { <br>
+                          turn(2); <br>
+                        }<br>
+                        // Left Turn <br>
+                        else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) { <br>
+                          turn(0); <br>
+                        } <br>
+                        // Right Turn <br>
+                        else if (read_wallR < LRwalls) { <br>
+                          turn(1); <br>
+                        } <br>
+                        // Go forward <br>
+                        else { <br>
+                        leftservo.write(135); <br>
+                        rightservo.write(45); <br>
+                      } <br>
+                      </code>
+                    </p>
+                  </p>
+                  <p> <h5> Robot Detection </h5>
+                    Our robot currently only checks for other robots at intersections where we call our detectRobot() function.
+                    We chose to do this because when we are at an intersection,
+                    we can choose to go a different direction should we detect a robot instead of stopping.
+                    However, for this milestone, we simply flash an external LED to show that the signal has been detected.
+                    Below is the code for robot detection at an intersection.
+
+                    <p class = "text-left">
+                      <code>
+                        robot = detectRobot(); <br>
+                        if (robot == 1) { <br>
+                          digitalWrite(7, HIGH); <br>
+                          Serial.println("ROBOT"); <br>
+                          leftservo.write(90); <br>
+                          rightservo.write(90); <br>
+                          delay(1000); <br>
+                          digitalWrite(7, LOW); <br>
+                        } <br>
+                        else { <br>
+                          Serial.println("no robot"); <br>
+                        }<br>
+                      </code>
+                    </p>
+
+                    detectRobot() used the FFT code from lab 2 and checks the bin containing the 6.08 kHz frequency to see if it is above a threshold of 70.
+                    To decrease the amount of dynamic memory our robot used,
+                    we lowered the sampling rate from 256 samples to 128 samples after reading the FTT library’s ReadMe file. <br>
+
+                    <img class="img-fluid d-block mx-auto" src="img/milestone2/image2.png" alt="">
+
+                    Because the FFT and Servo interfere with each other,
+                    we saved the default values that are changed when using the Analog to Digital Converter
+                    free running mode and reset them after prior to exiting <code>detectRobot()</code>. The code for robot detection is below
+                    with FFT code from lab 2 omitted):
+
+                    <p class = "text-left">
+                      <code>
+                        int detectRobot() { <br>
+                        //default adc values <br>
+                        unsigned int default_timsk = TIMSK0; <br>
+                        unsigned int default_adcsra = ADCSRA; <br>
+                        unsigned int default_admux = ADMUX; <br>
+                        unsigned int default_didr = DIDR0; <br>
+
+                        //setup <br>
+                        TIMSK0 = 0; // turn off timer0 for lower jitter <br>
+                        ADCSRA = 0xe5; // set the adc to free running mode <br>
+                        ADMUX = 0x40; // use adc0 <br>
+                        DIDR0 = 0x01; // turn off the digital input for adc0 <br>
+
+                        Runing FFT code from lab 2 <br>
+
+                        //checking the bin <br>
+                        if (fft_log_out[23] >= 70) { <br>
+                          TIMSK0 = default_timsk; <br>
+                          ADCSRA = default_adcsra; <br>
+                          ADMUX = default_admux; <br>
+                          DIDR0 = default_didr; <br>
+                          return 1; <br>
+                        } <br>
+                        else { <br>
+                          TIMSK0 = default_timsk; <br>
+                          ADCSRA = default_adcsra; <br>
+                          ADMUX = default_admux; <br>
+                          DIDR0 = default_didr; <br>
+                          return 0; <br>
+                        } <br>
+                      }<br>
+                      </code>
+                    </p>
+
+                  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
