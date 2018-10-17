@@ -217,124 +217,125 @@ void loop() {
 }
 
 void radiotransmit( char byte1, char byte2 ) {
-//
-  // Ping out role.  Repeatedly send the current time
-  //
-
-  if (role == role_ping_out)
-  {
-    // First, stop listening so we can talk.
-    radio.stopListening();
-
-    // Take the time, and send it.  This will block until complete
-    //unsigned long time = millis();
-    printf("Now sending...");
-    bool ok = radio.write( &byte1, sizeof(byte1) );
-
-    if (ok)
-      printf("ok...\n\r");
-    else
-      printf("failed.\n\r");
-
-    // Now, continue listening
-    radio.startListening();
-
-    // Wait here until we get a response, or timeout (250ms)
-    unsigned long started_waiting_at = millis();
-    bool timeout = false;
-    while ( ! radio.available() && ! timeout )
-      if (millis() - started_waiting_at > 2000 )
-        timeout = true;
-
-    // Describe the results
-    if ( timeout )
+    //
+    // Ping out role.  Repeatedly send the current time
+    //
+  
+    if (role == role_ping_out)
     {
-      printf("Failed, response timed out.\n\r");
-    }
-    else
-    {
-      // Grab the response, compare, and send to debugging spew
-      //unsigned long received_byte;
-      char received_byte;
-      radio.read( &received_byte, sizeof(unsigned long) );
-
-      // Spew it
-      //printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
-      //printf("Got response %c \n", received_byte);
-      Serial.println();
-      Serial.println(received_byte);
-    }
-
-    // Try again 1s later
-    delay(1000);
-  }
-
-  //
-  // Pong back role.  Receive each packet, dump it out, and send it back
-  //
-
-  if ( role == role_pong_back )
-  {
-    // if there is data ready
-    if ( radio.available() )
-    {
-      // Dump the payloads until we've gotten everything
-      //unsigned long got_time;
-      char received_byte;
-      bool done = false;
-      while (!done)
-      {
-        // Fetch the payload, and see if this was the last one.
-        done = radio.read( &received_byte, sizeof(byte1) );
-
-        // Spew it
-        //printf("Got payload %lu...",got_time);
-        //printf("Got payload %c", received_byte);
-        Serial.println(int(received_byte));
-
-        // Delay just a little bit to let the other unit
-        // make the transition to receiver
-        delay(20);
-
-      }
-
-      // First, stop listening so we can talk
+      // First, stop listening so we can talk.
       radio.stopListening();
-
-      // Send the final one back.
-      radio.write( &received_byte, sizeof(byte1) );
-      printf("Sent response.\n\r");
-
-      // Now, resume listening so we catch the next packets.
+  
+      // Take the time, and send it.  This will block until complete
+      //unsigned long time = millis();
+      printf("Now sending...");
+      bool ok = radio.write( &byte1, sizeof(byte1) );
+  
+      if (ok)
+        printf("ok...\n\r");
+      else
+        printf("failed.\n\r");
+  
+      // Now, continue listening
       radio.startListening();
+  
+      // Wait here until we get a response, or timeout (250ms)
+      unsigned long started_waiting_at = millis();
+      bool timeout = false;
+      while ( ! radio.available() && ! timeout )
+        if (millis() - started_waiting_at > 2000 )
+          timeout = true;
+  
+      // Describe the results
+      if ( timeout )
+      {
+        printf("Failed, response timed out.\n\r");
+      }
+      else
+      {
+        // Grab the response, compare, and send to debugging spew
+        //unsigned long received_byte;
+        char received_byte;
+        radio.read( &received_byte, sizeof(unsigned long) );
+  
+        // Spew it
+        //printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
+        //printf("Got response %c \n", received_byte);
+        Serial.println();
+        Serial.println(received_byte);
+      }
+  
+      // Try again 1s later
+      delay(1000);
     }
-  }
-  //
-  // Change roles
-  //
-
-  if ( Serial.available() )
-  {
-    char c = toupper(Serial.read());
-    if ( c == 'T' && role == role_pong_back )
+  
+    //
+    // Pong back role.  Receive each packet, dump it out, and send it back
+    //
+  
+    if ( role == role_pong_back )
     {
-      printf("*** CHANGING TO TRANSMIT ROLE -- PRESS 'R' TO SWITCH BACK\n\r");
-
-      // Become the primary transmitter (ping out)
-      role = role_ping_out;
-      radio.openWritingPipe(pipes[0]);
-      radio.openReadingPipe(1,pipes[1]);
+      // if there is data ready
+      if ( radio.available() )
+      {
+        // Dump the payloads until we've gotten everything
+        //unsigned long got_time;
+        char received_byte;
+        bool done = false;
+        while (!done)
+        {
+          // Fetch the payload, and see if this was the last one.
+          done = radio.read( &received_byte, sizeof(byte1) );
+  
+          // Spew it
+          //printf("Got payload %lu...",got_time);
+          //printf("Got payload %c", received_byte);
+          Serial.println(int(received_byte));
+  
+          // Delay just a little bit to let the other unit
+          // make the transition to receiver
+          delay(20);
+  
+        }
+  
+        // First, stop listening so we can talk
+        radio.stopListening();
+  
+        // Send the final one back.
+        radio.write( &received_byte, sizeof(byte1) );
+        printf("Sent response.\n\r");
+  
+        // Now, resume listening so we catch the next packets.
+        radio.startListening();
+      }
     }
-    else if ( c == 'R' && role == role_ping_out )
+    //
+    // Change roles
+    //
+  
+    if ( Serial.available() )
     {
-      printf("*** CHANGING TO RECEIVE ROLE -- PRESS 'T' TO SWITCH BACK\n\r");
-
-      // Become the primary receiver (pong back)
-      role = role_pong_back;
-      radio.openWritingPipe(pipes[1]);
-      radio.openReadingPipe(1,pipes[0]);
-   }
-  }
+      char c = toupper(Serial.read());
+      if ( c == 'T' && role == role_pong_back )
+      {
+        printf("*** CHANGING TO TRANSMIT ROLE -- PRESS 'R' TO SWITCH BACK\n\r");
+  
+        // Become the primary transmitter (ping out)
+        role = role_ping_out;
+        radio.openWritingPipe(pipes[0]);
+        radio.openReadingPipe(1,pipes[1]);
+      }
+      else if ( c == 'R' && role == role_ping_out )
+      {
+        printf("*** CHANGING TO RECEIVE ROLE -- PRESS 'T' TO SWITCH BACK\n\r");
+  
+        // Become the primary receiver (pong back)
+        role = role_pong_back;
+        radio.openWritingPipe(pipes[1]);
+        radio.openReadingPipe(1,pipes[0]);
+     }
+    }
+  
   done_transmitting = 1;
 }
 
