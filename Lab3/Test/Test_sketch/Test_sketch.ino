@@ -309,6 +309,7 @@ void radiotransmit( char byte1, char byte2 ) {
         radio.startListening();
       }
     }
+    /*
     //
     // Change roles
     //
@@ -334,7 +335,7 @@ void radiotransmit( char byte1, char byte2 ) {
         radio.openWritingPipe(pipes[1]);
         radio.openReadingPipe(1,pipes[0]);
      }
-    }
+    }*/
   
   done_transmitting = 1;
 }
