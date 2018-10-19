@@ -60,20 +60,10 @@ double leftAverage;
 double rightAverage;
 
 void loop() {
-//  while(1) {
-//    sample();
-//    Serial.println("restart");
-//    Serial.print("Right: ");
-//    Serial.println(read_wallR);
-//    Serial.print("Left: ");
-//    Serial.println(read_wallL);
-//    Serial.print("Front: ");
-//    Serial.println(read_wallF);
-//    Serial.print("LineR: ");
-//    Serial.println(rightAverage);
-//    Serial.print("Line L: ");
-//    Serial.println(leftAverage);
-//  }
+  int mic = 0;
+  while (mic == 0) {
+    mic = detectMicrophone();
+  }
   sample();
   follow();
 }
@@ -288,3 +278,27 @@ int detectRobot() {
     return 0;
   }
 }
+
+int detectMicrophone () {
+  cli();
+  for (int i = 0 ; i < 256 ; i += 2) {
+    fft_input[i] = analogRead(A4); // <-- NOTE THIS LINE
+    fft_input[i+1] = 0;
+  }
+
+  fft_window();
+  fft_reorder();
+  fft_run();
+  fft_mag_log();
+  sei();
+
+  //whatever bin number decided goes after the log_out
+  // decide threshold by testing the microphone at different distances(?)
+  if (fft_log_out[20] > threshold) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+

@@ -7,9 +7,22 @@
 //ARUINO INPUTS
 int sensorL = A1;
 int sensorR = A2;
-int wallR = A3;
-int wallL = A4;
-int wallF = A5;
+//int wallR = A3;
+//int wallL = A4;
+//int wallF = A5;
+
+//wall selector
+int s2 = 13;
+int s1 = 12;
+int s0 = 8;
+//wall sensor
+int walls = A3
+
+//wall mux
+//000 Left
+//001 Right
+//010 Front
+
 
 //CALIBRATED GLOBAL VARIABLES
 int lineVoltage = 700;
@@ -29,7 +42,14 @@ int read_wallF = 0;
 int robot = 0;
 
 void setup() {
+  //wall selects
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(8, OUTPUT);
+  
   Serial.begin(9600);
+  
+  //LED for robot detection
   pinMode(7, OUTPUT);
   servoSetup();
 }
@@ -97,13 +117,12 @@ void follow()
   }
   // intersection
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
+    // not sure if this stopping is necessary or not
     leftservo.write(90);
     rightservo.write(90);
     delay(500);
-    Serial.println("before robot detection");
-    //adc_Setup();
+    
     robot = detectRobot();
-    //adc_Reset();
     
     if (robot == 1) {
       digitalWrite(7, HIGH);
@@ -116,17 +135,21 @@ void follow()
     else {
       Serial.println("no robot");
     }
+
+    bool front = detectFrontWall();
+    bool left = detectLeftWall();
+    bool right =  detectRightWall();
     
     // U-turn
-    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
+    if (front && left && right) {
       turn(2);
     }
     // Left Turn
-    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
+    else if (front && right) {
       turn(0);
     }
     // Right Turn
-    else if (read_wallR < LRwalls) {
+    else if (!right) {
       turn(1);
     }
     // Go forward
@@ -171,19 +194,50 @@ void turn(int direction) {
     rightservo.write(45);
 }
 
-//void adc_Setup() {
-//  //TIMSK0 = 0; // turn off timer0 for lower jitter
-//  ADCSRA = 0xe5; // set the adc to free running mode
-//  ADMUX = 0x40; // use adc0
-//  DIDR0 = 0x01; // turn off the digital input for adc0
-//}
-//
-//void adc_Reset() {
-//  //TIMSK0 = default_timsk;
-//  ADCSRA = default_adcsra;
-//  ADMUX = default_admux;
-//  DIDR0 = default_didr;
-//}
+bool detectLeftWall() {
+  digitalWrite(s2, LOW);
+  digitalWrite(s1, LOW);
+  digitalWrite(s0, LOW);
+
+  read_wallL = analogRead(walls)
+
+  if (read_wallL >= LRwalls) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool detectFrontWall() {
+  digitalWrite(s2, LOW);
+  digitalWrite(s1, LOW);
+  digitalWrite(s0, LOW);
+
+  read_wallF = analogRead(walls);
+
+  if (read_wallF >= Fwall) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool detectRightWall() {
+  digitalWrite(s2, LOW);
+  digitalWrite(s1, LOW);
+  digitalWrite(s0, LOW);
+
+  read_wallR = analogRead(walls);
+
+  if (read_wallL >= LRwalls) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 
 int detectRobot() { 
   //default adc values
