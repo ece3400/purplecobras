@@ -101,10 +101,6 @@ void sample()
   leftAverage = (readL[0] + readL[1] + readL[2])/3;
   rightAverage = (readR[0] + readR[1] + readR[2])/3;
   //END LINE SENSORS
-
-  read_wallR = analogRead(wallR);
-  read_wallL = analogRead(wallL);
-  read_wallF = analogRead(wallF);
 }
 
 /*Uses line sensors to have robots follow the line*/
