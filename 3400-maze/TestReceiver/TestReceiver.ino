@@ -53,6 +53,10 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 // The role of the current running sketch
 role_e role = role_pong_back;
 
+int wall_north, wall_east, wall_south, wall_west, treasure_circle, treasure_triangle,
+treasure_square, treasure_red, treasure_blue, robot_present, explored, direction_north,
+direction_east, direction_south, direction_west;
+
 void setup(void)
 {
   //
@@ -173,6 +177,126 @@ char*  pong_back() {
         printf("Sent response.\n\r");
         Serial.println(int(received_response[0]));
         Serial.println(int(received_response[1]));
+
+        // byte1
+        if ( i == 0 ) {
+          // North
+          if ( received_response[i] >> 2 == 0 ) {
+            direction_north = 1;
+            direction_east = 0;
+            direction_south = 0;
+            direction_west = 0;
+          }
+          // East
+          else if ( received_response[i] >> 2 == 1 ) {
+            direction_north = 0;
+            direction_east = 1;
+            direction_south = 0;
+            direction_west = 0;
+          }
+          // South
+          else if ( received_response[i] >> 2 == 2 ) {
+            direction_north = 0;
+            direction_east = 0;
+            direction_south = 1;
+            direction_west = 0;
+          }
+          // West
+          else {
+            direction_north = 0;
+            direction_east = 0;
+            direction_south = 0;
+            direction_west = 1;
+          }
+          // Explored/unexplored
+          // explored
+          if ( received_response[i] & 0b00000010 == 2 ) {
+            explored = 1;
+          }
+          // unexplored
+          else {
+            explored = 0;
+          }
+          // robot present/not present
+          // present
+          if ( received_response[i] & 0b00000001 == 1 ) {
+            robot_present = 1;
+          }
+          // not present
+          else {
+            robot_present = 0;
+          }
+        }// end byte1 info
+
+        /// byte2
+        else {
+          // treasure color
+          // red
+          if ( received_response[i] & 0b01000000 == 64 ) {
+            treasure_red = 1;
+            treasure_blue = 0;
+          }
+          // blue
+          else {
+            treasure_red = 0;
+            treasure_blue = 1;
+          }
+          // treasure shape
+          // no treasure
+          if ( ( received_response[i] & 0b00110000 ) >> 4 == 0 ) {
+            treasure_circle = 0;
+            treasure_triangle = 0;
+            treasure_square = 0;
+          }
+          // circle
+          else if ( ( received_response[i] & 0b00110000 ) >> 4 == 1 ) {
+            treasure_circle = 1;
+            treasure_triangle = 0;
+            treasure_square = 0;
+          }
+          // triangle
+          else if ( ( received_response[i] & 0b00110000 ) >> 4 == 2 ) {
+            treasure_circle = 0;
+            treasure_triangle = 1;
+            treasure_square = 0;
+          }
+          // square
+          else if ( ( received_response[i] & 0b00110000 ) >> 4 == 3 ) {
+            treasure_circle = 0;
+            treasure_triangle = 0;
+            treasure_square = 1;
+          }
+
+          // wall info
+          // north
+          if ( received_response[i] & 0b00001111 == 8 ) {
+            wall_north = 1;
+            wall_east = 0;
+            wall_south = 0;
+            wall_west = 0;
+          }
+          // east
+          else if ( received_response[i] & 0b00001111 == 4 ) {
+            wall_north = 0;
+            wall_east = 1;
+            wall_south = 0;
+            wall_west = 0;
+          }
+          // south
+          else if ( received_response[i] & 0b00001111 == 2 ) {
+            wall_north = 0;
+            wall_east = 0;
+            wall_south = 1;
+            wall_west = 0;
+          }
+          // west
+          else {
+            wall_north = 0;
+            wall_east = 0;
+            wall_south = 0;
+            wall_west = 1;
+          }
+        } // end byte2 info
   
         // Now, resume listening so we catch the next packets.
         radio.startListening();
