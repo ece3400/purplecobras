@@ -21,6 +21,7 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 #include "printf.h"
+#include "string.h"
 
 //
 // Hardware configuration
@@ -86,7 +87,7 @@ void setup(void)
   radio.setChannel(0x50);
   // set the power
   // RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_MED=-6dBM, and RF24_PA_HIGH=0dBm.
-  radio.setPALevel(RF24_PA_HIGH);
+  radio.setPALevel(RF24_PA_MAX);
   //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
   radio.setDataRate(RF24_250KBPS);
 
@@ -147,7 +148,8 @@ void loop(void)
 }
 
 unsigned long got_time;
-char received_response[2];
+char received_response1[8];
+char received_response2[8];
 char*  pong_back() {
   for (int i = 0; i < 2; i++ ) {
     //
@@ -180,9 +182,9 @@ char*  pong_back() {
         //printf("Sent response.\n\r");
         //Serial.println(int(received_response[0]));
         //Serial.println(int(received_response[1]));
-
         // byte1
         if ( i == 0 ) {
+          Serial.println(received_response[i] >> 2);
           // North
           if ( received_response[i] >> 2 == 0 ) {
             direction_north = 1;
@@ -302,6 +304,9 @@ char*  pong_back() {
           location[0] = location[0] + right;
         }
 
+        //Serial.println(location[0]);
+        //Serial.println(location[1]);
+
         
         
         // Now, resume listening so we catch the next packets.
@@ -310,13 +315,18 @@ char*  pong_back() {
   } // end loop for 2 bytes
   //Serial.println("1,0,north=true");
   //char buffer[] = "1,0,north=true";
-  int locx = 1;
+  /*int locx = 1;
   int locy = 0;
   char wall[] = "north=true";
-  char comma[] = ",";
-  char buffer[] = string.concat(locx,comma, locy,comma, wall)
-  Serial.println(buffer);
+  //char comma[] = ",";
+  //char buffer[] = string.concat(locx,comma, locy,comma, wall)
+  //Serial.println(buffer);
+  String x = String(location[0]);
+  String y = String(location[1]);
+  String location = x + "," + y + "," + "north=true";
+  Serial.println(location);
+  
   delay(1000);
   Serial.println("2,0,east=true");
-  delay(1000);
+  delay(1000);*/
 }

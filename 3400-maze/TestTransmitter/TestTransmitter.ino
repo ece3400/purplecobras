@@ -79,7 +79,7 @@ void setup(void)
   radio.setChannel(0x50);
   // set the power
   // RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_MED=-6dBM, and RF24_PA_HIGH=0dBm.
-  radio.setPALevel(RF24_PA_HIGH);
+  radio.setPALevel(RF24_PA_MAX);
   //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
   radio.setDataRate(RF24_250KBPS);
 
@@ -150,7 +150,7 @@ byte direction_west = 0b00001100;
 //testing variables
 int current_location[2] = {0, 1};
 int direction[2] = {0,1};
-char to_send[2] = {0b00000000,0b00000000};
+char to_send[] = {0b00000000,0b00000000};
 
 
 void loop(void)
@@ -181,7 +181,7 @@ void loop(void)
     }
 }
 
-void pong_out( char to_send[2] ) {
+void pong_out( char to_send[] ) {
   for ( int i = 0; i < 2; i++ ) {
     //
     // Ping out role.  Repeatedly send the current time
@@ -217,7 +217,7 @@ void pong_out( char to_send[2] ) {
       else
       {
         // Grab the response, compare, and send to debugging spew
-        char got_char[2];
+        char got_char[8];
         radio.read( &got_char[i], sizeof(char) );
   
         // Spew it
@@ -227,5 +227,6 @@ void pong_out( char to_send[2] ) {
       // Try again 1s later
       delay(1000);
   }
+  delay(500);
 }
   
