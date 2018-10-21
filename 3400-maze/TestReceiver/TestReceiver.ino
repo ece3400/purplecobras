@@ -57,6 +57,8 @@ int wall_north, wall_east, wall_south, wall_west, treasure_circle, treasure_tria
 treasure_square, treasure_red, treasure_blue, robot_present, explored, direction_north,
 direction_east, direction_south, direction_west;
 
+int location[2] = {0, 0};
+
 void setup(void)
 {
   //
@@ -64,10 +66,11 @@ void setup(void)
   //
 
   Serial.begin(9600);
-  printf_begin();
-  printf("\n\rRF24/examples/GettingStarted/\n\r");
-  printf("ROLE: %s\n\r",role_friendly_name[role]);
-  printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
+  while ( !Serial ) {};
+  //printf_begin();
+  //printf("\n\rRF24/examples/GettingStarted/\n\r");
+  //printf("ROLE: %s\n\r",role_friendly_name[role]);
+  //printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
 
   //
   // Setup and configure rf radio
@@ -174,9 +177,9 @@ char*  pong_back() {
   
         // Send the final one back.
         radio.write( &received_response[i], sizeof(char) );
-        printf("Sent response.\n\r");
-        Serial.println(int(received_response[0]));
-        Serial.println(int(received_response[1]));
+        //printf("Sent response.\n\r");
+        //Serial.println(int(received_response[0]));
+        //Serial.println(int(received_response[1]));
 
         // byte1
         if ( i == 0 ) {
@@ -208,6 +211,7 @@ char*  pong_back() {
             direction_south = 0;
             direction_west = 1;
           }
+          
           // Explored/unexplored
           // explored
           if ( received_response[i] & 0b00000010 == 2 ) {
@@ -217,6 +221,7 @@ char*  pong_back() {
           else {
             explored = 0;
           }
+          
           // robot present/not present
           // present
           if ( received_response[i] & 0b00000001 == 1 ) {
@@ -241,6 +246,7 @@ char*  pong_back() {
             treasure_red = 0;
             treasure_blue = 1;
           }
+          
           // treasure shape
           // no treasure
           if ( ( received_response[i] & 0b00110000 ) >> 4 == 0 ) {
@@ -269,37 +275,48 @@ char*  pong_back() {
 
           // wall info
           // north
-          if ( received_response[i] & 0b00001111 == 8 ) {
-            wall_north = 1;
-            wall_east = 0;
-            wall_south = 0;
-            wall_west = 0;
-          }
+          wall_north = ( received_response[i] & 0b00001000 ) >> 3;
           // east
-          else if ( received_response[i] & 0b00001111 == 4 ) {
-            wall_north = 0;
-            wall_east = 1;
-            wall_south = 0;
-            wall_west = 0;
-          }
+          wall_east = ( received_response[i] & 0b00000100 ) >> 2;
           // south
-          else if ( received_response[i] & 0b00001111 == 2 ) {
-            wall_north = 0;
-            wall_east = 0;
-            wall_south = 1;
-            wall_west = 0;
-          }
+          wall_south = ( received_response[i] & 0b00000010 ) >> 1;
           // west
-          else {
-            wall_north = 0;
-            wall_east = 0;
-            wall_south = 0;
-            wall_west = 1;
-          }
+          wall_west = ( received_response[i] & 0b00000001 );
         } // end byte2 info
-  
+        
+        // update location
+        int up = 0;
+        int right = 0;
+        if ( direction_north ) up = 1;
+        else if ( direction_south ) up = -1;
+        else if ( direction_east ) right = 1;
+        else if ( direction_west ) right = -1;
+        else {
+          up = 0; 
+          right = 0;
+        }
+        if ( up != 0 ) {
+          location[1] = location[1] + up;
+        }
+        else if ( right != 0 ) {
+          location[0] = location[0] + right;
+        }
+
+        
+        
         // Now, resume listening so we catch the next packets.
         radio.startListening();
-      }
-  }
+      } // end if radio available
+  } // end loop for 2 bytes
+  //Serial.println("1,0,north=true");
+  //char buffer[] = "1,0,north=true";
+  int locx = 1;
+  int locy = 0;
+  char wall[] = "north=true";
+  char comma[] = ",";
+  char buffer[] = string.concat(locx,comma, locy,comma, wall)
+  Serial.println(buffer);
+  delay(1000);
+  Serial.println("2,0,east=true");
+  delay(1000);
 }
