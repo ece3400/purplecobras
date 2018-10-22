@@ -131,27 +131,18 @@ void setup(void)
   radio.printDetails();
 }
 
-char byte1, byte2;
+unsigned char byte1, byte2, preamble;
 
 void loop(void)
 {
-    char* a = pong_back();
-    if ( radio.available() ) {
-      //Serial.println(*a);
-    }
-    //Serial.println(*a);
-    //Serial.println(*(a+8));
-    byte1 = *a;
-    byte2 = *( a + 8 );
-
-    // Just need to dereference these
+    pong_back();
 }
 
+int byteflag = 0;
+
 unsigned long got_time;
-char received_response1[8];
-char received_response2[8];
-char*  pong_back() {
-  for (int i = 0; i < 2; i++ ) {
+unsigned char received_response;
+void pong_back() {
     //
     // Pong back role.  Receive each packet, dump it out, and send it back
     //
@@ -163,146 +154,63 @@ char*  pong_back() {
         while (!done)
         {
           // Fetch the payload, and see if this was the last one.
-          done = radio.read( &received_response[i], sizeof(char) );
+          done = radio.read( &received_response, sizeof(unsigned char) );
   
           // Spew it
-          //printf("Got payload"); //%lu...",got_time);
-  
+          printf("Got payload"); //%lu...",got_time);
+
+          if ( received_response == 0b11000000 ) {
+            byteflag = 1;
+          }
+          else if ( received_response == 0b10000000 ) {
+            byteflag = 1;
+          }
+          else{
+            switch ( byteflag ){
+              case 1:
+                parse_byte_1( received_response );
+                break;
+              case 2:
+                parse_byte_2( received_response );
+                break;
+              default:
+                break;
+            }
+          }
+          
+          // update location
+          int up = 0;
+          int right = 0;
+          if ( direction_north ) up = 1;
+          else if ( direction_south ) up = -1;
+          else if ( direction_east ) right = 1;
+          else if ( direction_west ) right = -1;
+          else {
+            up = 0; 
+            right = 0;
+          }
+          if ( up != 0 ) {
+            location[1] = location[1] + up;
+          }
+          else if ( right != 0 ) {
+            location[0] = location[0] + right;
+          }
+          
           // Delay just a little bit to let the other unit
           // make the transition to receiver
           delay(20);
   
-        }
+        }//end while(!done)
   
         // First, stop listening so we can talk
         radio.stopListening();
   
         // Send the final one back.
-        radio.write( &received_response[i], sizeof(char) );
-        //printf("Sent response.\n\r");
-        //Serial.println(int(received_response[0]));
-        //Serial.println(int(received_response[1]));
-        // byte1
-        if ( i == 0 ) {
-          Serial.println(received_response[i] >> 2);
-          // North
-          if ( received_response[i] >> 2 == 0 ) {
-            direction_north = 1;
-            direction_east = 0;
-            direction_south = 0;
-            direction_west = 0;
-          }
-          // East
-          else if ( received_response[i] >> 2 == 1 ) {
-            direction_north = 0;
-            direction_east = 1;
-            direction_south = 0;
-            direction_west = 0;
-          }
-          // South
-          else if ( received_response[i] >> 2 == 2 ) {
-            direction_north = 0;
-            direction_east = 0;
-            direction_south = 1;
-            direction_west = 0;
-          }
-          // West
-          else {
-            direction_north = 0;
-            direction_east = 0;
-            direction_south = 0;
-            direction_west = 1;
-          }
-          
-          // Explored/unexplored
-          // explored
-          if ( received_response[i] & 0b00000010 == 2 ) {
-            explored = 1;
-          }
-          // unexplored
-          else {
-            explored = 0;
-          }
-          
-          // robot present/not present
-          // present
-          if ( received_response[i] & 0b00000001 == 1 ) {
-            robot_present = 1;
-          }
-          // not present
-          else {
-            robot_present = 0;
-          }
-        }// end byte1 info
-
-        /// byte2
-        else {
-          // treasure color
-          // red
-          if ( received_response[i] & 0b01000000 == 64 ) {
-            treasure_red = 1;
-            treasure_blue = 0;
-          }
-          // blue
-          else {
-            treasure_red = 0;
-            treasure_blue = 1;
-          }
-          
-          // treasure shape
-          // no treasure
-          if ( ( received_response[i] & 0b00110000 ) >> 4 == 0 ) {
-            treasure_circle = 0;
-            treasure_triangle = 0;
-            treasure_square = 0;
-          }
-          // circle
-          else if ( ( received_response[i] & 0b00110000 ) >> 4 == 1 ) {
-            treasure_circle = 1;
-            treasure_triangle = 0;
-            treasure_square = 0;
-          }
-          // triangle
-          else if ( ( received_response[i] & 0b00110000 ) >> 4 == 2 ) {
-            treasure_circle = 0;
-            treasure_triangle = 1;
-            treasure_square = 0;
-          }
-          // square
-          else if ( ( received_response[i] & 0b00110000 ) >> 4 == 3 ) {
-            treasure_circle = 0;
-            treasure_triangle = 0;
-            treasure_square = 1;
-          }
-
-          // wall info
-          // north
-          wall_north = ( received_response[i] & 0b00001000 ) >> 3;
-          // east
-          wall_east = ( received_response[i] & 0b00000100 ) >> 2;
-          // south
-          wall_south = ( received_response[i] & 0b00000010 ) >> 1;
-          // west
-          wall_west = ( received_response[i] & 0b00000001 );
-        } // end byte2 info
+        radio.write( &received_response, sizeof(unsigned char) );
+        printf("Sent response.\n\r");
+        Serial.println(int(received_response));
+        Serial.println(int(received_response));
         
-        // update location
-        int up = 0;
-        int right = 0;
-        if ( direction_north ) up = 1;
-        else if ( direction_south ) up = -1;
-        else if ( direction_east ) right = 1;
-        else if ( direction_west ) right = -1;
-        else {
-          up = 0; 
-          right = 0;
-        }
-        if ( up != 0 ) {
-          location[1] = location[1] + up;
-        }
-        else if ( right != 0 ) {
-          location[0] = location[0] + right;
-        }
 
         //Serial.println(location[0]);
         //Serial.println(location[1]);
@@ -312,7 +220,6 @@ char*  pong_back() {
         // Now, resume listening so we catch the next packets.
         radio.startListening();
       } // end if radio available
-  } // end loop for 2 bytes
   //Serial.println("1,0,north=true");
   //char buffer[] = "1,0,north=true";
   /*int locx = 1;
@@ -330,3 +237,106 @@ char*  pong_back() {
   Serial.println("2,0,east=true");
   delay(1000);*/
 }
+
+
+void parse_byte_1( unsigned char received_response ) {
+  // North
+  if ( received_response >> 2 == 0 ) {
+    direction_north = 1;
+    direction_east = 0;
+    direction_south = 0;
+    direction_west = 0;
+  }
+  // East
+  else if ( received_response >> 2 == 1 ) {
+    direction_north = 0;
+    direction_east = 1;
+    direction_south = 0;
+    direction_west = 0;
+  }
+  // South
+  else if ( received_response >> 2 == 2 ) {
+    direction_north = 0;
+    direction_east = 0;
+    direction_south = 1;
+    direction_west = 0;
+  }
+  // West
+  else {
+    direction_north = 0;
+    direction_east = 0;
+    direction_south = 0;
+    direction_west = 1;
+  }
+  
+  // Explored/unexplored
+  // explored
+  if ( received_response & 0b00000010 == 2 ) {
+    explored = 1;
+  }
+  // unexplored
+  else {
+    explored = 0;
+  }
+  
+  // robot present/not present
+  // present
+  if ( received_response & 0b00000001 == 1 ) {
+    robot_present = 1;
+  }
+  // not present
+  else {
+    robot_present = 0;
+  }
+}
+
+void parse_byte_2 ( unsigned char received_response ) {
+  // treasure color
+  // red
+  if ( received_response & 0b01000000 == 64 ) {
+    treasure_red = 1;
+    treasure_blue = 0;
+  }
+  // blue
+  else {
+    treasure_red = 0;
+    treasure_blue = 1;
+  }
+  
+  // treasure shape
+  // no treasure
+  if ( ( received_response & 0b00110000 ) >> 4 == 0 ) {
+    treasure_circle = 0;
+    treasure_triangle = 0;
+    treasure_square = 0;
+  }
+  // circle
+  else if ( ( received_response & 0b00110000 ) >> 4 == 1 ) {
+    treasure_circle = 1;
+    treasure_triangle = 0;
+    treasure_square = 0;
+  }
+  // triangle
+  else if ( ( received_response & 0b00110000 ) >> 4 == 2 ) {
+    treasure_circle = 0;
+    treasure_triangle = 1;
+    treasure_square = 0;
+  }
+  // square
+  else if ( ( received_response & 0b00110000 ) >> 4 == 3 ) {
+    treasure_circle = 0;
+    treasure_triangle = 0;
+    treasure_square = 1;
+  }
+
+  // wall info
+  // north
+  wall_north = ( received_response & 0b00001000 ) >> 3;
+  // east
+  wall_east = ( received_response & 0b00000100 ) >> 2;
+  // south
+  wall_south = ( received_response & 0b00000010 ) >> 1;
+  // west
+  wall_west = ( received_response & 0b00000001 );
+}
+
