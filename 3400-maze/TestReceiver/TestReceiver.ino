@@ -150,6 +150,7 @@ void pong_back() {
       if ( radio.available() )
       {
         // Dump the payloads until we've gotten everything
+       
         bool done = false;
         while (!done)
         {
@@ -163,7 +164,7 @@ void pong_back() {
             byteflag = 1;
           }
           else if ( received_response == 0b10000000 ) {
-            byteflag = 1;
+            byteflag = 2;
           }
           else{
             switch ( byteflag ){
@@ -239,23 +240,23 @@ void pong_back() {
 }
 
 
-void parse_byte_1( unsigned char received_response ) {
+void parse_byte_1( unsigned char response ) {
   // North
-  if ( received_response >> 2 == 0 ) {
+  if ( response >> 2 == 0 ) {
     direction_north = 1;
     direction_east = 0;
     direction_south = 0;
     direction_west = 0;
   }
   // East
-  else if ( received_response >> 2 == 1 ) {
+  else if ( response >> 2 == 1 ) {
     direction_north = 0;
     direction_east = 1;
     direction_south = 0;
     direction_west = 0;
   }
   // South
-  else if ( received_response >> 2 == 2 ) {
+  else if ( response >> 2 == 2 ) {
     direction_north = 0;
     direction_east = 0;
     direction_south = 1;
@@ -271,7 +272,7 @@ void parse_byte_1( unsigned char received_response ) {
   
   // Explored/unexplored
   // explored
-  if ( received_response & 0b00000010 == 2 ) {
+  if ( response & 0b00000010 == 2 ) {
     explored = 1;
   }
   // unexplored
@@ -281,7 +282,7 @@ void parse_byte_1( unsigned char received_response ) {
   
   // robot present/not present
   // present
-  if ( received_response & 0b00000001 == 1 ) {
+  if ( response & 0b00000001 == 1 ) {
     robot_present = 1;
   }
   // not present
@@ -290,10 +291,10 @@ void parse_byte_1( unsigned char received_response ) {
   }
 }
 
-void parse_byte_2 ( unsigned char received_response ) {
+void parse_byte_2 ( unsigned char response ) {
   // treasure color
   // red
-  if ( received_response & 0b01000000 == 64 ) {
+  if ( response & 0b01000000 == 64 ) {
     treasure_red = 1;
     treasure_blue = 0;
   }
@@ -305,25 +306,25 @@ void parse_byte_2 ( unsigned char received_response ) {
   
   // treasure shape
   // no treasure
-  if ( ( received_response & 0b00110000 ) >> 4 == 0 ) {
+  if ( ( response & 0b00110000 ) >> 4 == 0 ) {
     treasure_circle = 0;
     treasure_triangle = 0;
     treasure_square = 0;
   }
   // circle
-  else if ( ( received_response & 0b00110000 ) >> 4 == 1 ) {
+  else if ( ( response & 0b00110000 ) >> 4 == 1 ) {
     treasure_circle = 1;
     treasure_triangle = 0;
     treasure_square = 0;
   }
   // triangle
-  else if ( ( received_response & 0b00110000 ) >> 4 == 2 ) {
+  else if ( ( response & 0b00110000 ) >> 4 == 2 ) {
     treasure_circle = 0;
     treasure_triangle = 1;
     treasure_square = 0;
   }
   // square
-  else if ( ( received_response & 0b00110000 ) >> 4 == 3 ) {
+  else if ( ( response & 0b00110000 ) >> 4 == 3 ) {
     treasure_circle = 0;
     treasure_triangle = 0;
     treasure_square = 1;
@@ -331,12 +332,12 @@ void parse_byte_2 ( unsigned char received_response ) {
 
   // wall info
   // north
-  wall_north = ( received_response & 0b00001000 ) >> 3;
+  wall_north = ( response & 0b00001000 ) >> 3;
   // east
-  wall_east = ( received_response & 0b00000100 ) >> 2;
+  wall_east = ( response & 0b00000100 ) >> 2;
   // south
-  wall_south = ( received_response & 0b00000010 ) >> 1;
+  wall_south = ( response & 0b00000010 ) >> 1;
   // west
-  wall_west = ( received_response & 0b00000001 );
+  wall_west = ( response & 0b00000001 );
 }
 

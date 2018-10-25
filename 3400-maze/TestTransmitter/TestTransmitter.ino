@@ -53,6 +53,35 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 // The role of the current running sketch
 role_e role = role_pong_back;
 
+// parameters to put into each square
+byte wall_present_north = 0b0001000;
+byte wall_present_east = 0b0000100;
+byte wall_present_south = 0b0000010;
+byte wall_present_west = 0b00000001;
+
+byte treasure_present_circle = 0b00100000;
+byte treasure_present_triangle = 0b01000000;
+byte treasure_present_square = 0b01100000;
+
+byte treasure_color_red = 0b10000000;
+byte treasure_color_blue = 0b00000000;
+
+byte robot_present = 0b00000001;
+
+byte explored = 0b00000010;
+
+byte direction_north = 0b00000000;
+byte direction_east = 0b00000100;
+byte direction_south = 0b00001000;
+byte direction_west = 0b00001100;
+
+//testing variables
+int current_location[2] = {0, 1};
+int direction[2] = {0,1};
+//char to_send[] = {0b00000000,0b00000000};
+unsigned char to_send_0 = 0b00000000;
+unsigned char to_send_1 = 0b00000000;
+
 void setup(void)
 {
   //
@@ -124,37 +153,6 @@ void setup(void)
 }
 
 
-// parameters to put into each square
-byte wall_present_north = 0b0001000;
-byte wall_present_east = 0b0000100;
-byte wall_present_south = 0b0000010;
-byte wall_present_west = 0b00000001;
-
-byte treasure_present_circle = 0b00100000;
-byte treasure_present_triangle = 0b01000000;
-byte treasure_present_square = 0b01100000;
-
-byte treasure_color_red = 0b10000000;
-byte treasure_color_blue = 0b00000000;
-
-byte robot_present = 0b00000001;
-
-byte explored = 0b00000010;
-
-byte direction_north = 0b00000000;
-byte direction_east = 0b00000100;
-byte direction_south = 0b00001000;
-byte direction_west = 0b00001100;
-
-
-//testing variables
-int current_location[2] = {0, 1};
-int direction[2] = {0,1};
-//char to_send[] = {0b00000000,0b00000000};
-unsigned char to_send_0 = 0b00000000;
-unsigned char to_send_1 = 0b00000000;
-
-
 void loop(void)
 {
     current_location[0] = 0;
@@ -178,11 +176,11 @@ void loop(void)
       current_location[0] = current_location[0] + direction[0];
       current_location[1] = current_location[1] + direction[1];
       pong_out( 0b11000000 );
-      //delay( 250 );
+      delay( 250 );
       pong_out( to_send_0 );
-      //delay( 250 );
+      delay( 250 );
       pong_out( 0b10000000 );
-      //delay(250);
+      delay(250);
       pong_out( to_send_1 );
       //Serial.println(current_location[1]);
       delay(2000);
@@ -201,7 +199,7 @@ void pong_out( unsigned char to_send ) {
     
         // Take the time, and send it.  This will block until complete
         unsigned long time = millis();
-        printf("Now sending" ); //%lu...",time);
+        printf("Now sending %x...", to_send ); //%lu...",time);
         bool ok = radio.write( &(to_send), sizeof(unsigned char) );
     
         if (ok)
@@ -216,7 +214,7 @@ void pong_out( unsigned char to_send ) {
         unsigned long started_waiting_at = millis();
         bool timeout = false;
         while ( ! radio.available() && ! timeout )
-          if (millis() - started_waiting_at > 200 )
+          if (millis() - started_waiting_at > 1000 )
             timeout = true;
     
         // Describe the results
@@ -227,14 +225,16 @@ void pong_out( unsigned char to_send ) {
         else
         {
           // Grab the response, compare, and send to debugging spew
+          //unsigned char got_char;
           radio.read( &got_char, sizeof(unsigned char) );
 
-      }
-  
-        // Spew it
-        printf("Got response");//%lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
-
-        delay(250);
+          if (got_char == to_send) {
+             // Spew it
+             printf("Got response");//%lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
+          }
+        }
+        
+        delay(1000);
       }
 }
   
