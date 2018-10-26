@@ -16,7 +16,7 @@ int s2 = 13;
 int s1 = 12;
 int s0 = 8;
 //wall sensor
-int walls = A3
+int walls = A3;
 
 //wall mux
 //000 Left
@@ -60,20 +60,6 @@ double leftAverage;
 double rightAverage;
 
 void loop() {
-//  while(1) {
-//    sample();
-//    Serial.println("restart");
-//    Serial.print("Right: ");
-//    Serial.println(read_wallR);
-//    Serial.print("Left: ");
-//    Serial.println(read_wallL);
-//    Serial.print("Front: ");
-//    Serial.println(read_wallF);
-//    Serial.print("LineR: ");
-//    Serial.println(rightAverage);
-//    Serial.print("Line L: ");
-//    Serial.println(leftAverage);
-//  }
   sample();
   follow();
 }
@@ -116,9 +102,9 @@ void follow()
     // not sure if this stopping is necessary or not
     leftservo.write(90);
     rightservo.write(90);
-    delay(500);
+    delay(100);
     
-    robot = detectRobot();
+    //robot = detectRobot();
     
     if (robot == 1) {
       digitalWrite(7, HIGH);
@@ -132,20 +118,20 @@ void follow()
       Serial.println("no robot");
     }
 
-    bool front = detectFrontWall();
-    bool left = detectLeftWall();
-    bool right =  detectRightWall();
-    
+//    detectFrontWall();
+//    detectLeftWall();
+//    detectRightWall();
+
     // U-turn
-    if (front && left && right) {
+    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
       turn(2);
     }
     // Left Turn
-    else if (front && right) {
+    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
       turn(0);
     }
     // Right Turn
-    else if (!right) {
+    else if (read_wallR < LRwalls) {
       turn(1);
     }
     // Go forward
@@ -153,6 +139,24 @@ void follow()
       leftservo.write(135);
       rightservo.write(45);
     }
+    
+//    // U-turn
+//    if (front && left && right) {
+//      turn(2);
+//    }
+//    // Left Turn
+//    else if (front && right) {
+//      turn(0);
+//    }
+//    // Right Turn
+//    else if (!right) {
+//      turn(1);
+//    }
+//    // Go forward
+//    else {
+//      leftservo.write(135);
+//      rightservo.write(45);
+//    }
   }
   // Continue turning right
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
@@ -190,49 +194,49 @@ void turn(int direction) {
     rightservo.write(45);
 }
 
-bool detectLeftWall() {
+void detectRightWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
   digitalWrite(s0, LOW);
 
-  read_wallL = analogRead(walls)
+  read_wallL = analogRead(walls);
 
-  if (read_wallL >= LRwalls) {
-    return true;
-  }
-  else {
-    return false;
-  }
+//  if (read_wallL >= LRwalls) {
+//    return true;
+//  }
+//  else {
+//    return false;
+//  }
 }
 
-bool detectFrontWall() {
+void detectFrontWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
-  digitalWrite(s0, LOW);
+  digitalWrite(s0, HIGH);
 
   read_wallF = analogRead(walls);
-
-  if (read_wallF >= Fwall) {
-    return true;
-  }
-  else {
-    return false;
-  }
+//
+//  if (read_wallF >= Fwall) {
+//    return true;
+//  }
+//  else {
+//    return false;
+//  }
 }
 
-bool detectRightWall() {
+void detectLeftWall() {
   digitalWrite(s2, LOW);
-  digitalWrite(s1, LOW);
+  digitalWrite(s1, HIGH);
   digitalWrite(s0, LOW);
 
   read_wallR = analogRead(walls);
 
-  if (read_wallL >= LRwalls) {
-    return true;
-  }
-  else {
-    return false;
-  }
+//  if (read_wallL >= LRwalls) {
+//    return true;
+//  }
+//  else {
+//    return false;
+//  }
 }
 
 int detectRobot() { 
