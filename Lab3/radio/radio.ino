@@ -69,13 +69,13 @@ byte robot_present = 0b00000001;
 byte explored = 0b00000010;
 
 byte direction_north = 0b00000000;
-byte direction_east = 0b00000100;
+byte direction_east =  0b00000100;
 byte direction_south = 0b00001000;
-byte direction_west = 0b00001100;
+byte direction_west =  0b00001100;
 
 //testing variables
-int current_location[2] = {0, 0};
-int current_location_rec[2] = {-1, 0};
+int current_location[2] = {-1, 0};
+int current_location_rec[2] = {5, 0};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;
@@ -171,19 +171,31 @@ void loop(void)
       to_send_0 = 0b00000000;
       to_send_1 = 0b00000000;
       
-      if ( current_location[0] == 0 && current_location[1] == 4 ) {
+      /*if ( current_location[0] == 0 && current_location[1] == 4 ) {
         to_send_1 = to_send_1 | treasure_color_red | treasure_present_circle;
         to_send_0 = to_send_0 | robot_present;
+      }*/
+      if ( (current_location[1] > 3) ) {
+        to_send_0 = to_send_0 | direction_north;
+        direction[0] = 0;
+        direction[1] = 0;
+        to_send_1 = to_send_1 | wall_present_east;
       }
-      if ( direction[0] == 0 && direction[1] == 1 ) {
+      //if ( direction[0] == 0 && direction[1] == 1 ) {
+      if ( current_location[1] <= 3 ) {
         //Serial.println("This");
         //Serial.println(int(to_send[0]));
-        to_send_0 = to_send_0 | direction_west;
+        to_send_0 = to_send_0 | direction_east;
+        direction[0] = 0;
+        direction[1] = 1;
         //Serial.println(int(to_send[0]));
       }
-      to_send_1 = to_send_1 | wall_present_west;
+      to_send_1 = to_send_1 | wall_present_north | wall_present_south;
       current_location[0] = current_location[0] + direction[0];
       current_location[1] = current_location[1] + direction[1];
+//      Serial.println("x: " + String(current_location[0]));
+//      Serial.println("y: " + String(current_location[1]));
+//      Serial.println( ( to_send_0 & (0b00001100) ) >> 2 );
       ping_out( 0b11000000 );
       delay( 250 );
       ping_out( to_send_0 );
@@ -334,30 +346,32 @@ void parse_byte_1( unsigned char response ) {
   int Direction;
   Direction = ( response & (0b00001100) ) >> 2;
   Direction_str = "";
+  //Serial.println(Direction);
   switch(Direction){
     case 0:
-      // decrement y value because going south
-      current_location_rec[1] = current_location_rec[1] - 1;
+      // decrement y value because going north
+      current_location_rec[0] = current_location_rec[0] - 1;
       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
       break;
       
     case 1:
-      // decrement x value because going west
-       current_location_rec[0] = current_location_rec[0] - 1;
-       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
-       break;
-
-    case 2:
-      // increment the y value because going north
+      // increment x value because going east
       current_location_rec[1] = current_location_rec[1] + 1;
       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
       break;
 
-     case 3:
-       // increment x value because going east
+    case 2:
+      // increment the y value because going south
       current_location_rec[0] = current_location_rec[0] + 1;
       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
       break;
+
+     case 3:
+       // decrement x value because going west
+       current_location_rec[1] = current_location_rec[1] - 1;
+       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+       break;
+       
 
      default:
        // Do write the current location without changing location
@@ -434,7 +448,11 @@ void parse_byte_2 ( unsigned char response ) {
       break;
   }
 
-  int North_wall = 0,East_wall = 0, South_wall = 0, West_wall = 0;
+  int North_wall,East_wall, South_wall, West_wall;
+  North_wall = ( response & (0b00001000) ) >> 3;
+  East_wall = ( response & (0b00000100) ) >> 2;
+  South_wall = ( response & (0b00000010) ) >> 1;
+  West_wall = ( response & (0b00000001) );
   String Wall_str = "";
   if ( North_wall ) Wall_str += ",north=True";
   else Wall_str += ",north=False";
