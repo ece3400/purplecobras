@@ -262,7 +262,7 @@ int detectMicrophone () {
 
   //whatever bin number decided goes after the log_out
   // decide threshold by testing the microphone at different distances(?)
-  if (fft_log_out[20] > threshold) {
+  if (fft_log_out[12] > 40) {
     return 1;
   }
   else {
