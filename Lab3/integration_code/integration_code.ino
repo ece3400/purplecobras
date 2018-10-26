@@ -7,9 +7,6 @@
 //ARUINO INPUTS
 int sensorL = A1;
 int sensorR = A2;
-//int wallR = A3;
-//int wallL = A4;
-//int wallF = A5;
 
 //wall selector
 int s2 = 13;
@@ -112,30 +109,26 @@ void follow()
     
     if (robot == 1) {
       digitalWrite(7, HIGH);
-      Serial.println("ROBOT");
       leftservo.write(90);
       rightservo.write(90);
       delay(1000);
       digitalWrite(7, LOW);
     }
-    else {
-      Serial.println("no robot");
-    }
 
-    bool front = detectFrontWall();
-    bool left = detectLeftWall();
-    bool right =  detectRightWall();
-    
+    detectFrontWall();
+    detectLeftWall();
+    detectRightWall();
+
     // U-turn
-    if (front && left && right) {
+    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
       turn(2);
     }
     // Left Turn
-    else if (front && right) {
+    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
       turn(0);
     }
     // Right Turn
-    else if (!right) {
+    else if (read_wallR < LRwalls) {
       turn(1);
     }
     // Go forward
@@ -180,49 +173,28 @@ void turn(int direction) {
     rightservo.write(45);
 }
 
-bool detectLeftWall() {
+void detectRightWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
   digitalWrite(s0, LOW);
 
-  read_wallL = analogRead(walls)
-
-  if (read_wallL >= LRwalls) {
-    return true;
-  }
-  else {
-    return false;
-  }
+  read_wallL = analogRead(walls);
 }
 
-bool detectFrontWall() {
+void detectFrontWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
-  digitalWrite(s0, LOW);
+  digitalWrite(s0, HIGH);
 
   read_wallF = analogRead(walls);
-
-  if (read_wallF >= Fwall) {
-    return true;
-  }
-  else {
-    return false;
-  }
 }
 
-bool detectRightWall() {
+void detectLeftWall() {
   digitalWrite(s2, LOW);
-  digitalWrite(s1, LOW);
+  digitalWrite(s1, HIGH);
   digitalWrite(s0, LOW);
 
   read_wallR = analogRead(walls);
-
-  if (read_wallL >= LRwalls) {
-    return true;
-  }
-  else {
-    return false;
-  }
 }
 
 int detectRobot() { 
