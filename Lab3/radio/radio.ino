@@ -98,9 +98,9 @@ void setup(void)
 
   Serial.begin(57600);
   printf_begin();
-  printf("\n\rRF24/examples/GettingStarted/\n\r");
-  printf("ROLE: %s\n\r",role_friendly_name[role]);
-  printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
+  //printf("\n\rRF24/examples/GettingStarted/\n\r");
+  //printf("ROLE: %s\n\r",role_friendly_name[role]);
+  //printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
 
   //
   // Setup and configure rf radio
@@ -202,13 +202,13 @@ void ping_out (unsigned char to_send) {
   
     // Take the time, and send it.  This will block until complete
     unsigned long time = millis();
-    printf("Now sending %lu...",to_send);
+    //printf("Now sending %lu...",to_send);
     bool ok = radio.write( &to_send, sizeof(unsigned char) );
     
     if (ok)
-      printf("ok...");
+      //printf("ok...");
     else
-      printf("failed.\n\r");
+      //printf("failed.\n\r");
     
     // Now, continue listening
     radio.startListening();
@@ -223,7 +223,7 @@ void ping_out (unsigned char to_send) {
     // Describe the results
     if ( timeout )
     {
-      printf("Failed, response timed out.\n\r");
+      //printf("Failed, response timed out.\n\r");
     }
     else
     {
@@ -233,10 +233,10 @@ void ping_out (unsigned char to_send) {
 
       if (got_char == to_send) {
         // Spew it
-        printf("Got response %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
+        //printf("Got response %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
       }
       else {
-        printf("Got WRONG RESPONSE %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
+        //printf("Got WRONG RESPONSE %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
       }
   }
   
@@ -260,7 +260,7 @@ void pong_back() {
         done = radio.read( &got_char, sizeof(unsigned char) );
 
         // Spew it
-        printf("Got payload %lu...",got_char);
+        //printf("Got payload %lu...",got_char);
 
         if ( got_char == 0b11000000 ) {
           byteflag = 1;
@@ -292,7 +292,7 @@ void pong_back() {
 
       // Send the final one back.
       radio.write( &got_char, sizeof(unsigned char) );
-      printf("Sent response.\n\r");
+      //printf("Sent response.\n\r");
 
       // Now, resume listening so we catch the next packets.
       radio.startListening();
@@ -306,7 +306,7 @@ void change_roles() {
     char c = toupper(Serial.read());
     if ( c == 'T' && role == role_pong_back )
     {
-      printf("*** CHANGING TO TRANSMIT ROLE -- PRESS 'R' TO SWITCH BACK\n\r");
+      //printf("*** CHANGING TO TRANSMIT ROLE -- PRESS 'R' TO SWITCH BACK\n\r");
 
       // Become the primary transmitter (ping out)
       role = role_ping_out;
@@ -315,7 +315,7 @@ void change_roles() {
     }
     else if ( c == 'R' && role == role_ping_out )
     {
-      printf("*** CHANGING TO RECEIVE ROLE -- PRESS 'T' TO SWITCH BACK\n\r");
+      //printf("*** CHANGING TO RECEIVE ROLE -- PRESS 'T' TO SWITCH BACK\n\r");
 
       // Become the primary receiver (pong back)
       role = role_pong_back;
@@ -327,7 +327,7 @@ void change_roles() {
 
 void parse_byte_1( unsigned char response ) {
   // North
-  if ( response >> 2 == 0 ) {
+  /*if ( response >> 2 == 0 ) {
     north = 1;
     east = 0;
     south = 0;
@@ -373,6 +373,11 @@ void parse_byte_1( unsigned char response ) {
   // not present
   else {
     robot_pres = 0;
+  }*/
+
+  Direction = ( response & (0b00001100) ) >> 2;
+  switch(Direction){
+    case 1:
   }
 }
 
