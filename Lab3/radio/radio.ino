@@ -96,7 +96,7 @@ void setup(void)
   // Print preamble
   //
 
-  Serial.begin(57600);
+  Serial.begin(9600);
   printf_begin();
   //printf("\n\rRF24/examples/GettingStarted/\n\r");
   //printf("ROLE: %s\n\r",role_friendly_name[role]);
@@ -380,7 +380,7 @@ void parse_byte_1( unsigned char response ) {
       case 0:
         Robot_str += ",robot=False";
         break;
-      case 1;
+      case 1:
         Robot_str += ",robot=True";
         break;
       default:
@@ -388,7 +388,8 @@ void parse_byte_1( unsigned char response ) {
         break;
     }
     String to_Gui = "";
-    to_Gui = Direction_str + Robot_str;
+    to_Gui += Direction_str + Robot_str;
+    Serial.println(to_Gui);
 }
 
 void parse_byte_2 ( unsigned char response ) {
@@ -430,6 +431,21 @@ void parse_byte_2 ( unsigned char response ) {
       break;
   }
 
+  int North_wall = 0,East_wall = 0, South_wall = 0, West_wall = 0;
+  String Wall_str = "";
+  if ( North_wall ) Wall_str += ",north=True";
+  else Wall_str += ",north=False";
+  if ( East_wall ) Wall_str += ",east=True";
+  else Wall_str += ",east=False";
+  if ( South_wall )Wall_str += ",south=True" ;
+  else Wall_str += ",south=False";
+  if ( West_wall ) Wall_str += ",west=True";
+  else Wall_str += ",west=False";
+
+
+  String to_Gui = "";
+  to_Gui += Treasure_str + Wall_str;
+  Serial.println(to_Gui);
   
 }
 
