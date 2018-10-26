@@ -74,7 +74,8 @@ byte direction_south = 0b00001000;
 byte direction_west = 0b00001100;
 
 //testing variables
-int current_location[2] = {0, 1};
+int current_location[2] = {0, 0};
+int current_location_rec[2] = {-1, 0};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;
@@ -327,38 +328,40 @@ void change_roles() {
   }
 }
 
+String Direction_str = "";
+
 void parse_byte_1( unsigned char response ) {
   int Direction;
-  String Direction_str = "";
   Direction = ( response & (0b00001100) ) >> 2;
+  Direction_str = "";
   switch(Direction){
-    case 0: 
-      // increment the y value because going north
-      current_location[1] = current_location[1] + 1;
-      Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+    case 0:
+      // decrement y value because going south
+      current_location_rec[1] = current_location_rec[1] - 1;
+      Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
       break;
       
     case 1:
-      // increment x value because going east
-      current_location[0] = current_location[0] + 1;
-      Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
-      break;
+      // decrement x value because going west
+       current_location_rec[0] = current_location_rec[0] - 1;
+       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+       break;
 
     case 2:
-      // decrement y value because going south
-      current_location[1] = current_location[1] - 1;
-      Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+      // increment the y value because going north
+      current_location_rec[1] = current_location_rec[1] + 1;
+      Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
       break;
 
      case 3:
-       // decrement x value because going west
-       current_location[0] = current_location[0] - 1;
-       Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
-       break;
+       // increment x value because going east
+      current_location_rec[0] = current_location_rec[0] + 1;
+      Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+      break;
 
      default:
        // Do write the current location without changing location
-       Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
   }
 
 //  // Explored/unexplored
@@ -398,23 +401,23 @@ void parse_byte_2 ( unsigned char response ) {
   String Treasure_str = "";
   switch( treasure_shape ) {
     case 0:
-      Treasure_str += "tshape=None";
+      Treasure_str += ",tshape=None";
       break;
       
     case 1:
-      Treasure_str += "tshape=Circle";
+      Treasure_str += ",tshape=Circle";
       break;
 
     case 2:
-      Treasure_str += "tshape=Triangle";
+      Treasure_str += ",tshape=Triangle";
       break;
 
     case 3:
-      Treasure_str += "tshape=Square";
+      Treasure_str += ",tshape=Square";
       break;
       
     default:
-      Treasure_str += "tshape=None";
+      Treasure_str += ",tshape=None";
       break;
   }
   switch( treasure_color ) {
@@ -444,7 +447,7 @@ void parse_byte_2 ( unsigned char response ) {
 
 
   String to_Gui = "";
-  to_Gui += Treasure_str + Wall_str;
+  to_Gui += Direction_str + Treasure_str + Wall_str;
   Serial.println(to_Gui);
   
 }
