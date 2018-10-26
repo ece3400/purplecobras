@@ -75,7 +75,7 @@ byte direction_west =  0b00001100;
 
 //testing variables
 int current_location[2] = {-1, 0};
-int current_location_rec[2] = {5, 0};
+int current_location_rec[2] = {0, 5};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;
@@ -175,19 +175,19 @@ void loop(void)
         to_send_1 = to_send_1 | treasure_color_red | treasure_present_circle;
         to_send_0 = to_send_0 | robot_present;
       }*/
-      if ( (current_location[1] > 3) ) {
+      if ( (current_location[0] > 3) ) {
         to_send_0 = to_send_0 | direction_north;
         direction[0] = 0;
-        direction[1] = 0;
+        direction[1] = 1;
         to_send_1 = to_send_1 | wall_present_east;
       }
       //if ( direction[0] == 0 && direction[1] == 1 ) {
-      if ( current_location[1] <= 3 ) {
+      else {
         //Serial.println("This");
         //Serial.println(int(to_send[0]));
         to_send_0 = to_send_0 | direction_east;
-        direction[0] = 0;
-        direction[1] = 1;
+        direction[0] = 1;
+        direction[1] = 0;
         //Serial.println(int(to_send[0]));
       }
       to_send_1 = to_send_1 | wall_present_north | wall_present_south;
@@ -350,32 +350,32 @@ void parse_byte_1( unsigned char response ) {
   switch(Direction){
     case 0:
       // decrement y value because going north
-      current_location_rec[0] = current_location_rec[0] - 1;
-      Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+      current_location_rec[1] = current_location_rec[1] - 1;
+      Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
       break;
       
     case 1:
       // increment x value because going east
-      current_location_rec[1] = current_location_rec[1] + 1;
-      Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+      current_location_rec[0] = current_location_rec[0] + 1;
+      Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
       break;
 
     case 2:
       // increment the y value because going south
-      current_location_rec[0] = current_location_rec[0] + 1;
-      Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+      current_location_rec[1] = current_location_rec[1] + 1;
+      Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
       break;
 
      case 3:
        // decrement x value because going west
-       current_location_rec[1] = current_location_rec[1] - 1;
-       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+       current_location_rec[0] = current_location_rec[0] - 1;
+       Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
        break;
        
 
      default:
        // Do write the current location without changing location
-       Direction_str = Direction_str + String(current_location_rec[0]) + "," + String(current_location_rec[1]);
+       Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
   }
 
 //  // Explored/unexplored
