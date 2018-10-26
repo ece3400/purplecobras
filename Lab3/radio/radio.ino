@@ -205,10 +205,12 @@ void ping_out (unsigned char to_send) {
     //printf("Now sending %lu...",to_send);
     bool ok = radio.write( &to_send, sizeof(unsigned char) );
     
-    if (ok)
+    if (ok) {
       //printf("ok...");
-    else
+    }
+    else{
       //printf("failed.\n\r");
+    }
     
     // Now, continue listening
     radio.startListening();
@@ -326,109 +328,109 @@ void change_roles() {
 }
 
 void parse_byte_1( unsigned char response ) {
-  // North
-  /*if ( response >> 2 == 0 ) {
-    north = 1;
-    east = 0;
-    south = 0;
-    west = 0;
-  }
-  // East
-  else if ( response >> 2 == 1 ) {
-    north = 0;
-    east = 1;
-    south = 0;
-    west = 0;
-  }
-  // South
-  else if ( response >> 2 == 2 ) {
-    north = 0;
-    east = 0;
-    south = 1;
-    west = 0;
-  }
-  // West
-  else {
-    north = 0;
-    east = 0;
-    south = 0;
-    west = 1;
-  }
-  
-  // Explored/unexplored
-  // explored
-  if ( response & 0b00000010 == 2 ) {
-    explore = 1;
-  }
-  // unexplored
-  else {
-    explore = 0;
-  }
-  
-  // robot present/not present
-  // present
-  if ( response & 0b00000001 == 1 ) {
-    robot_pres = 1;
-  }
-  // not present
-  else {
-    robot_pres = 0;
-  }*/
-
+  int Direction;
+  String Direction_str = "";
   Direction = ( response & (0b00001100) ) >> 2;
   switch(Direction){
+    case 0: 
+      // increment the y value because going north
+      current_location[1] = current_location[1] + 1;
+      Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+      break;
+      
     case 1:
+      // increment x value because going east
+      current_location[0] = current_location[0] + 1;
+      Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+      break;
+
+    case 2:
+      // decrement y value because going south
+      current_location[1] = current_location[1] - 1;
+      Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+      break;
+
+     case 3:
+       // decrement x value because going west
+       current_location[0] = current_location[0] - 1;
+       Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
+       break;
+
+     default:
+       // Do write the current location without changing location
+       Direction_str = Direction_str + String(current_location[0]) + "," + String(current_location[1]);
   }
+
+//  // Explored/unexplored
+//  int explored = ( response & (0b00000010) ) >> 1;
+//  String Explored_str = "";
+//  switch(explored) {
+//    case 0:
+//      Explored_str = Explored_str + "";
+//      break;
+//    case 1:
+//      Explored_str = Explored_str + "";
+//      break;
+//  }
+
+    // robot present
+    int robot = ( response & (0b00000001) );
+    String Robot_str = "";
+    switch( robot ) {
+      case 0:
+        Robot_str += ",robot=False";
+        break;
+      case 1;
+        Robot_str += ",robot=True";
+        break;
+      default:
+        Robot_str += ",robot=False";
+        break;
+    }
+    String to_Gui = "";
+    to_Gui = Direction_str + Robot_str;
 }
 
 void parse_byte_2 ( unsigned char response ) {
   // treasure color
-  // red
-  if ( response & 0b01000000 == 64 ) {
-    treasure_red = 1;
-    treasure_blue = 0;
+  int treasure_shape = ( ( response & (0b00110000) ) >> 4 ), treasure_color = ( ( response & (0b01000000) ) >> 6 );
+  String Treasure_str = "";
+  switch( treasure_shape ) {
+    case 0:
+      Treasure_str += "tshape=None";
+      break;
+      
+    case 1:
+      Treasure_str += "tshape=Circle";
+      break;
+
+    case 2:
+      Treasure_str += "tshape=Triangle";
+      break;
+
+    case 3:
+      Treasure_str += "tshape=Square";
+      break;
+      
+    default:
+      Treasure_str += "tshape=None";
+      break;
   }
-  // blue
-  else {
-    treasure_red = 0;
-    treasure_blue = 1;
-  }
-  
-  // treasure shape
-  // no treasure
-  if ( ( response & 0b00110000 ) >> 4 == 0 ) {
-    treasure_circle = 0;
-    treasure_triangle = 0;
-    treasure_square = 0;
-  }
-  // circle
-  else if ( ( response & 0b00110000 ) >> 4 == 1 ) {
-    treasure_circle = 1;
-    treasure_triangle = 0;
-    treasure_square = 0;
-  }
-  // triangle
-  else if ( ( response & 0b00110000 ) >> 4 == 2 ) {
-    treasure_circle = 0;
-    treasure_triangle = 1;
-    treasure_square = 0;
-  }
-  // square
-  else if ( ( response & 0b00110000 ) >> 4 == 3 ) {
-    treasure_circle = 0;
-    treasure_triangle = 0;
-    treasure_square = 1;
+  switch( treasure_color ) {
+    case 0:
+      Treasure_str += ",tcolor=red";
+      break;
+      
+    case 1:
+      Treasure_str += ",tcolor=blue";
+      break;
+      
+    default:
+      Treasure_str += ",tcolor=red";
+      break;
   }
 
-  // wall info
-  // north
-  wall_north = ( response & 0b00001000 ) >> 3;
-  // east
-  wall_east = ( response & 0b00000100 ) >> 2;
-  // south
-  wall_south = ( response & 0b00000010 ) >> 1;
-  // west
-  wall_west = ( response & 0b00000001 );
+  
 }
 
 // vim:cin:ai:sts=2 sw=2 ft=cpp
