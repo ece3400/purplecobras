@@ -118,9 +118,9 @@ void follow()
       Serial.println("no robot");
     }
 
-//    detectFrontWall();
-//    detectLeftWall();
-//    detectRightWall();
+    detectFrontWall();
+    detectLeftWall();
+    detectRightWall();
 
     // U-turn
     if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
@@ -139,24 +139,6 @@ void follow()
       leftservo.write(135);
       rightservo.write(45);
     }
-    
-//    // U-turn
-//    if (front && left && right) {
-//      turn(2);
-//    }
-//    // Left Turn
-//    else if (front && right) {
-//      turn(0);
-//    }
-//    // Right Turn
-//    else if (!right) {
-//      turn(1);
-//    }
-//    // Go forward
-//    else {
-//      leftservo.write(135);
-//      rightservo.write(45);
-//    }
   }
   // Continue turning right
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
