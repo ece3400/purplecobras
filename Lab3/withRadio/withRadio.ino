@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include "radio.h"
 
 #define LOG_OUT 1 // use the log output function
 #define FFT_N 128 // set to 128 point fft
@@ -13,7 +14,7 @@ int s2 = 13;
 int s1 = 12;
 int s0 = 8;
 //wall sensor
-int walls = A3;
+int walls = A3
 
 //wall mux
 //000 Left
@@ -26,7 +27,7 @@ int lineVoltage = 700;
 int LRwalls = 195;
 int Fwall = 100;
 int pause = 1200;
-int mic_threshold = 50;
+int mic_threshold = 40
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
@@ -38,7 +39,6 @@ int read_wallL = 0;
 int read_wallF = 0;
 
 int robot = 0;
-int mic = 0;
 
 void setup() {
   //wall selects
@@ -59,12 +59,10 @@ double leftAverage;
 double rightAverage;
 
 void loop() {
-  //Serial.println(mic);
+  int mic = 0;
   while (mic == 0) {
-    detectMicrophone();
-    Serial.println("looking for sound");
+    mic = detectMicrophone();
   }
-  //Serial.println("found signal");
   sample();
   follow();
 }
@@ -107,7 +105,6 @@ void follow()
     // not sure if this stopping is necessary or not
     leftservo.write(90);
     rightservo.write(90);
-    delay(500);
     
     robot = detectRobot();
     
@@ -122,6 +119,8 @@ void follow()
     detectFrontWall();
     detectLeftWall();
     detectRightWall();
+
+    
 
     // U-turn
     if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
@@ -232,6 +231,8 @@ int detectRobot() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
+
+  Serial.println(fft_log_out[23]);
   
   if (fft_log_out[23] >= 70) {
     TIMSK0 = default_timsk;
@@ -249,7 +250,7 @@ int detectRobot() {
   }
 }
 
-void detectMicrophone () {
+int detectMicrophone () {
   cli();
   for (int i = 0 ; i < 256 ; i += 2) {
     fft_input[i] = analogRead(A4); // <-- NOTE THIS LINE
@@ -264,11 +265,11 @@ void detectMicrophone () {
 
   //whatever bin number decided goes after the log_out
   // decide threshold by testing the microphone at different distances(?)
-  if (fft_log_out[10] > mic_threshold) {
-    mic = 1;
+  if (fft_log_out[12] > mic_threshold) {
+    return 1;
   }
   else {
-    mic = 0;
+    return 0;
   }
 }
 
