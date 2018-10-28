@@ -10,11 +10,11 @@ int sensorL = A1;
 int sensorR = A2;
 
 //wall selector
-int s2 = 13;
-int s1 = 12;
-int s0 = 8;
+int s2 = 12;
+int s1 = 11;
+int s0 = 10;
 //wall sensor
-int walls = A3
+int walls = A3;
 
 //wall mux
 //000 Left
@@ -27,7 +27,7 @@ int lineVoltage = 700;
 int LRwalls = 195;
 int Fwall = 100;
 int pause = 1200;
-int mic_threshold = 40
+int mic_threshold = 40;
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
