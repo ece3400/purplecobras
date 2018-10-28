@@ -5,6 +5,11 @@
  version 2 as published by the Free Software Foundation.
  */
 
+#include <SPI.h>
+#include "nRF24L01.h"
+#include "RF24.h"
+#include "printf.h"
+
 /**
  * Example for Getting Started with nRF24L01+ radios.
  *
