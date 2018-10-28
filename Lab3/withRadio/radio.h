@@ -2,13 +2,11 @@
 //#include "nRF24L01.h"
 //#include "RF24.h"
 //#include "printf.h"
-#ifndef RADIO_H
-#define RADIO_H
+#ifndef __RADIO_H__
+#define __RADIO_H__
 
 
-void radioSetup();
-
-void radio();
+void ping_out( unsigned char to_send );
 
 #endif
 

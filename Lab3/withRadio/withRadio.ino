@@ -40,7 +40,7 @@ typedef enum { role_ping_out = 1, role_pong_back } role_e;
 const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 
 // The role of the current running sketch
-role_e role = role_pong_back;
+role_e role = role_ping_out;
 
 // parameters to put into each square
 byte wall_present_north = 0b0001000;
@@ -108,6 +108,7 @@ void setup() {
   pinMode(8, OUTPUT);
   
   Serial.begin(9600);
+  printf_begin();
   
   //LED for robot detection
   pinMode(7, OUTPUT);
@@ -134,21 +135,8 @@ void setup() {
   // Open pipes to other nodes for communication
   //
 
-  // This simple sketch opens two pipes for these two nodes to communicate
-  // back and forth.
-  // Open 'our' pipe for writing
-  // Open the 'other' pipe for reading, in position #1 (we can have up to 5 pipes open for reading)
-
-  if ( role == role_ping_out )
-  {
-    radio.openWritingPipe(pipes[0]);
-    radio.openReadingPipe(1,pipes[1]);
-  }
-  else
-  {
-    radio.openWritingPipe(pipes[1]);
-    radio.openReadingPipe(1,pipes[0]);
-  }
+  radio.openWritingPipe(pipes[0]);
+  radio.openReadingPipe(1,pipes[1]);
 
   //
   // Start listening
