@@ -84,7 +84,7 @@ unsigned char to_send_1 = 0b00000000;
 int location[2] = {0, 0};
 int byteflag = 0;
 
-void setup(void)
+void radioSetup()
 {
   //
   // Print preamble
@@ -134,7 +134,7 @@ void setup(void)
   radio.printDetails();
 }
 
-void loop(void)
+void radioLoop()
 { 
   current_location[0] = 0;
   current_location[1] = 0;

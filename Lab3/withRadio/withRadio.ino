@@ -1,9 +1,9 @@
 #include <Servo.h>
 //#include "radio.h"
 
-#include <SPI.h>
-#include "nRF24L01.h"
-#include "RF24.h"
+//#include <SPI.h>
+//#include "nRF24L01.h"
+//#include "RF24.h"
 //#include "printf.h"
 
 #define LOG_OUT 1 // use the log output function
@@ -17,14 +17,14 @@
 
 // Set up nRF24L01 radio on SPI bus plus pins 9 & 10
 
-RF24 radio(9,10);
+//RF24 radio(9,10);
 
 //
 // Topology
 //
 
 // Radio pipe addresses for the 2 nodes to communicate.
-const uint64_t pipes[2] = { 0x0000000004LL, 0x0000000005LL };
+//const uint64_t pipes[2] = { 0x0000000004LL, 0x0000000005LL };
 
 //
 // Role management
@@ -34,35 +34,35 @@ const uint64_t pipes[2] = { 0x0000000004LL, 0x0000000005LL };
 //
 
 // The various roles supported by this sketch
-typedef enum { role_ping_out = 1, role_pong_back } role_e;
+//typedef enum { role_ping_out = 1, role_pong_back } role_e;
 
 // The debug-friendly names of those roles
-const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
+//const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 
 // The role of the current running sketch
-role_e role = role_ping_out;
+//role_e role = role_ping_out;
 
 // parameters to put into each square
-byte wall_present_north = 0b0001000;
-byte wall_present_east = 0b0000100;
-byte wall_present_south = 0b0000010;
-byte wall_present_west = 0b00000001;
-
-byte treasure_present_circle = 0b00100000;
-byte treasure_present_triangle = 0b01000000;
-byte treasure_present_square = 0b01100000;
-
-byte treasure_color_red = 0b10000000;
-byte treasure_color_blue = 0b00000000;
-
-byte robot_present = 0b00000001;
-
-byte explored = 0b00000010;
-
-byte direction_north = 0b00000000;
-byte direction_east =  0b00000100;
-byte direction_south = 0b00001000;
-byte direction_west =  0b00001100;
+//byte wall_present_north = 0b0001000;
+//byte wall_present_east = 0b0000100;
+//byte wall_present_south = 0b0000010;
+//byte wall_present_west = 0b00000001;
+//
+//byte treasure_present_circle = 0b00100000;
+//byte treasure_present_triangle = 0b01000000;
+//byte treasure_present_square = 0b01100000;
+//
+//byte treasure_color_red = 0b10000000;
+//byte treasure_color_blue = 0b00000000;
+//
+//byte robot_present = 0b00000001;
+//
+//byte explored = 0b00000010;
+//
+//byte direction_north = 0b00000000;
+//byte direction_east =  0b00000100;
+//byte direction_south = 0b00001000;
+//byte direction_west =  0b00001100;
 
 
 
@@ -108,47 +108,53 @@ void setup() {
   pinMode(8, OUTPUT);
   
   Serial.begin(9600);
-  printf_begin();
+  //printf_begin();
   
   //LED for robot detection
   pinMode(7, OUTPUT);
   servoSetup();
 
-  radio.begin();
-
-  // optionally, increase the delay between retries & # of retries
-  radio.setRetries(15,15);
-  radio.setAutoAck(true);
-  // set the channel
-  radio.setChannel(0x50);
-  // set the power
-  // RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_MED=-6dBM, and RF24_PA_HIGH=0dBm.
-  radio.setPALevel(RF24_PA_MIN);
-  //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
-  radio.setDataRate(RF24_250KBPS);
+//  radio.begin();
+//
+//  // optionally, increase the delay between retries & # of retries
+//  radio.setRetries(15,15);
+//  radio.setAutoAck(true);
+//  // set the channel
+//  radio.setChannel(0x50);
+//  // set the power
+//  // RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_MED=-6dBM, and RF24_PA_HIGH=0dBm.
+//  radio.setPALevel(RF24_PA_MIN);
+//  //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
+//  radio.setDataRate(RF24_250KBPS);
 
   // optionally, reduce the payload size.  seems to
   // improve reliability
-  radio.setPayloadSize(8);
+//  radio.setPayloadSize(8);
 
   //
   // Open pipes to other nodes for communication
   //
 
-  radio.openWritingPipe(pipes[0]);
-  radio.openReadingPipe(1,pipes[1]);
+//  radio.openWritingPipe(pipes[0]);
+//  radio.openReadingPipe(1,pipes[1]);
 
   //
   // Start listening
   //
 
-  radio.startListening();
+//  radio.startListening();
 
   //
   // Dump the configuration of the rf unit for debugging
   //
 
-  radio.printDetails();
+//  radio.printDetails();
+
+  int mic = 0;
+  while (mic == 0) {
+    mic = detectMicrophone();
+    Serial.println("Waiting for mic");
+  }
 }
 
 int readL[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
@@ -157,10 +163,6 @@ double leftAverage;
 double rightAverage;
 
 void loop() {
-  int mic = 0;
-  while (mic == 0) {
-    mic = detectMicrophone();
-  }
   sample();
   follow();
 }
@@ -279,7 +281,7 @@ void detectRightWall() {
   digitalWrite(s1, LOW);
   digitalWrite(s0, LOW);
 
-  read_wallL = analogRead(walls);
+  read_wallR = analogRead(walls);
 }
 
 void detectFrontWall() {
@@ -295,7 +297,7 @@ void detectLeftWall() {
   digitalWrite(s1, HIGH);
   digitalWrite(s0, LOW);
 
-  read_wallR = analogRead(walls);
+  read_wallL = analogRead(walls);
 }
 
 int detectRobot() { 
@@ -363,7 +365,7 @@ int detectMicrophone () {
 
   //whatever bin number decided goes after the log_out
   // decide threshold by testing the microphone at different distances(?)
-  if (fft_log_out[12] > mic_threshold) {
+  if (fft_log_out[10] > mic_threshold) {
     return 1;
   }
   else {
