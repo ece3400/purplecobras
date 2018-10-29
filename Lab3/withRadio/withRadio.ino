@@ -103,9 +103,9 @@ int robot = 0;
 
 void setup() {
   //wall selects
-  pinMode(12, OUTPUT);
-  pinMode(11, OUTPUT);
-  pinMode(10, OUTPUT);
+  pinMode(s2, OUTPUT);
+  pinMode(s1, OUTPUT);
+  pinMode(s0, OUTPUT);
   
   Serial.begin(9600);
   //printf_begin();
