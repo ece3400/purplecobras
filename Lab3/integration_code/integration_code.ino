@@ -42,9 +42,9 @@ int mic = 0;
 
 void setup() {
   //wall selects
-  pinMode(13, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(8, OUTPUT);
+  pinMode(s2, OUTPUT);
+  pinMode(s1, OUTPUT);
+  pinMode(s0, OUTPUT);
   
   Serial.begin(9600);
   
