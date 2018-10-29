@@ -75,7 +75,7 @@ byte direction_west =  0b00001100;
 
 //testing variables
 int current_location[2] = {-1, 0};
-int current_location_rec[2] = {0, 5};
+int current_location_rec[2] = {0, 0};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;

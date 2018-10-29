@@ -68,14 +68,14 @@ byte robot_present = 0b00000001;
 
 byte explored = 0b00000010;
 
-byte direction_north = 0b00000000;
-byte direction_east =  0b00000100;
-byte direction_south = 0b00001000;
-byte direction_west =  0b00001100;
+byte direction_north = 0b00010000;
+byte direction_east =  0b00010100;
+byte direction_south = 0b00011000;
+byte direction_west =  0b00011100;
 
 //testing variables
-int current_location[2] = {-1, 0};
-int current_location_rec[2] = {0, 5};
+int current_location[2] = {0, 0};
+int current_location_rec[2] = {0, 0};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;
@@ -83,6 +83,8 @@ unsigned char to_send_1 = 0b00000000;
 
 int location[2] = {0, 0};
 int byteflag = 0;
+
+int done_sending = 0;
 
 void setup(void)
 {
@@ -137,46 +139,88 @@ void setup(void)
 void loop(void)
 { 
   current_location[0] = 0;
-  current_location[1] = 0;
+  current_location[1] = 1;
 
-  for ( int i = 0; i < 9; i++ ) {
+  for ( int i = 0; i <= 10; i++ ) {
       to_send_0 = 0b00000000;
       to_send_1 = 0b00000000;
+      //to_send_0 = to_send_0 | direction_east;
+      //direction[0] = 0;
+      //direction[1] = 0;
       
-      if ( (current_location[0] > 3) ) {
+      //if ( (current_location[0] == 0 && current_location[1] == 1) ) {
+      if ( i == 0 | i == 1  | i == 2 ) {//| i == 3 | i == 4 | i == 5) {
+        //to_send_0 = to_send_0 | direction_north;
+        //direction[0] = 0;
+        //direction[1] = 0;
+        to_send_1 = to_send_1 | wall_present_east | wall_present_south | wall_present_west;
+      }
+      //else if ( current_location[0] == 0 && current_location[1] == 0 ) {
+      else if ( i == 3 ) {
         to_send_0 = to_send_0 | direction_north;
         direction[0] = 0;
-        direction[1] = 1;
-        to_send_1 = to_send_1 | wall_present_east;
-      }
-      //if ( direction[0] == 0 && direction[1] == 1 ) {
-      else {
-        //Serial.println("This");
-        //Serial.println(int(to_send[0]));
-        to_send_0 = to_send_0 | direction_east;
-        direction[0] = 1;
         direction[1] = 0;
-        //Serial.println(int(to_send[0]));
+        to_send_1 = to_send_1 | wall_present_north | wall_present_west;
       }
-      to_send_1 = to_send_1 | wall_present_north | wall_present_south;
+      else if ( i == 4 ) {
+        //Serial.println("wtf");
+        to_send_0 = to_send_0 | direction_east;
+        //direction[0] = 1;
+        //direction[1] = 0;
+        to_send_1 = to_send_1 | wall_present_north | wall_present_east;
+      }
+      else if ( i == 5 ) {
+        to_send_0 = to_send_0 | direction_south ;
+        //direction[0] = ;
+        //direction[1] = ;
+        to_send_1 = to_send_1 | wall_present_south | wall_present_west;
+      }
+      else if ( i == 6 ) {
+        to_send_0 = to_send_0 | direction_east ;
+        //direction[0] = ;
+        //direction[1] = ;
+        to_send_1 = to_send_1 | wall_present_south | wall_present_east;
+      }
+      else if ( i == 7 ) {
+        to_send_0 = to_send_0 | direction_north ;
+        //direction[0] = ;
+        //direction[1] = ;
+        to_send_1 = to_send_1 | wall_present_north | wall_present_east | wall_present_west;
+      }
+      else if ( i == 10 ) {
+        to_send_0 = to_send_0 | direction_south;
+        //to_send_1 = to_send_1 | wall_present_east | wall_present_south;
+      }
+//      //if ( direction[0] == 0 && direction[1] == 1 ) {
+//      else {
+//        //Serial.println("This");
+//        //Serial.println(int(to_send[0]));
+//        to_send_0 = to_send_0 | direction_east;
+//        direction[0] = 1;
+//        direction[1] = 0;
+//      }
+      //to_send_1 = to_send_1 | wall_present_north | wall_present_south;
       current_location[0] = current_location[0] + direction[0];
-      current_location[1] = current_location[1] + direction[1];
-//      Serial.println("x: " + String(current_location[0]));
-//      Serial.println("y: " + String(current_location[1]));
-//      Serial.println( ( to_send_0 & (0b00001100) ) >> 2 );
+      current_location[1] = current_location[1] - direction[1];
+      
       ping_out( 0b11000000 );
-      delay( 250 );
+      while ( !done_sending ) {};
+      //delay( 250 );
       ping_out( to_send_0 );
-      delay( 250 );
+      while ( !done_sending ) {};
+      //delay( 400 );
       ping_out( 0b10000000 );
-      delay(250);
+      while ( !done_sending ) {};
+      //delay(250);
       ping_out( to_send_1 );
+      while ( !done_sending ) {};
       //Serial.println(current_location[1]);
       delay(2000);
     }
 }
 
 void ping_out (unsigned char to_send) {
+  done_sending = 0;
   if (role == role_ping_out ) {
     // First, stop listening so we can talk.
     radio.stopListening();
@@ -226,6 +270,7 @@ void ping_out (unsigned char to_send) {
     // Try again 1s later
     delay(1000);
   }
+  done_sending = 1;
 }
 
 // vim:cin:ai:sts=2 sw=2 ft=cpp
