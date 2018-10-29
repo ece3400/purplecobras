@@ -52,8 +52,8 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_pong_back;
 
 //testing variables
-int current_location[2] = {-1, 0};
-int current_location_rec[2] = {0, 5};
+int current_location[2] = {-1, 1};
+int current_location_rec[2] = {0, 1};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;
@@ -178,40 +178,46 @@ void pong_back() {
 String Direction_str = "";
 
 void parse_byte_1( unsigned char response ) {
-  int Direction;
+  int Direction, Move;
   Direction = ( response & (0b00001100) ) >> 2;
   Direction_str = "";
-  //Serial.println(Direction);
-  switch(Direction){
-    case 0:
-      // decrement y value because going north
-      current_location_rec[1] = current_location_rec[1] - 1;
+  Move = ( response & (0b00010000) ) >> 4;
+  if ( Move ) {
+    //Serial.println(Direction);
+    switch(Direction){
+      case 0:
+        // decrement y value because going north
+        current_location_rec[1] = current_location_rec[1] - 1;
+        Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
+        break;
+        
+      case 1:
+        // increment x value because going east
+        current_location_rec[0] = current_location_rec[0] + 1;
+        Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
+        break;
+  
+      case 2:
+        // increment the y value because going south
+        current_location_rec[1] = current_location_rec[1] + 1;
+        Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
+        break;
+  
+       case 3:
+         // decrement x value because going west
+         current_location_rec[0] = current_location_rec[0] - 1;
+         Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
+         break;
+         
+  
+       default:
+         // Do write the current location without changing location
+         Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
+      }
+    }
+    else {
       Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
-      break;
-      
-    case 1:
-      // increment x value because going east
-      current_location_rec[0] = current_location_rec[0] + 1;
-      Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
-      break;
-
-    case 2:
-      // increment the y value because going south
-      current_location_rec[1] = current_location_rec[1] + 1;
-      Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
-      break;
-
-     case 3:
-       // decrement x value because going west
-       current_location_rec[0] = current_location_rec[0] - 1;
-       Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
-       break;
-       
-
-     default:
-       // Do write the current location without changing location
-       Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
-  }
+    }
 
     // robot present
     int robot = ( response & (0b00000001) );
@@ -278,13 +284,13 @@ void parse_byte_2 ( unsigned char response ) {
   West_wall = ( response & (0b00000001) );
   String Wall_str = "";
   if ( North_wall ) Wall_str += ",north=True";
-  else Wall_str += ",north=False";
+  //else Wall_str += ",north=False";
   if ( East_wall ) Wall_str += ",east=True";
-  else Wall_str += ",east=False";
+  //else Wall_str += ",east=False";
   if ( South_wall )Wall_str += ",south=True" ;
-  else Wall_str += ",south=False";
+  //else Wall_str += ",south=False";
   if ( West_wall ) Wall_str += ",west=True";
-  else Wall_str += ",west=False";
+  //else Wall_str += ",west=False";
 
 
   String to_Gui = "";
