@@ -215,7 +215,7 @@ void loop(void)
       ping_out( to_send_1 );
       while ( !done_sending ) {};
       //Serial.println(current_location[1]);
-      delay(2000);
+      //delay(200);
     }
 }
 
