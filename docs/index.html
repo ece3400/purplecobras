@@ -103,11 +103,13 @@
               <p class="text-muted">Analog Circuitry and FFTs</p>
             </div>
           </div>
-          <div class="col-md-3">
-            <span class="fa-stack fa-4x">
-              <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fas fa-glasses fa-stack-1x fa-inverse"></i>
-            </span>
+          <div class="col-md-3 portfolio-item">
+            <a class="portfolio-link" data-toggle="modal" href="#labsModal3">
+              <span class="fa-stack fa-4x">
+                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                <i class="fas fa-glasses fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
             <h4 class="service-heading">Lab 3</h4>
             <p class="text-muted">System Integration and Radio Communication</p>
           </div>
@@ -752,6 +754,154 @@ the robot to do anything upon detection.
         }<br>
       </code>
     </p>
+                  <button class="btn btn-primary" data-dismiss="modal" type="button">
+                    <i class="fas fa-times"></i>
+                    Close Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div class="portfolio-modal modal fade" id="labsModal3" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 mx-auto">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+                  <h2 class="text-uppercase">Lab 3: System Integration and Radio Communication</h2>
+                  <p class="item-intro text-muted">Objective: Make the robot start on a 660Hz tone, navigate a maze autonomously, send maze information and update GUI.</p>
+                  <p> <h5>Teams:</h5>
+                    <ol class="list-inline">
+                      <li>Radio - Brian and Jaylen</li>
+                      <li>Robot - April and Elliot</li>
+                    </ol>
+                  </p>
+                  <p> <h5> Radio Team </h5> </p>
+                  <p> <h6> Objective: Send information the robot discovers about the maze to a base station which will display this info using the GUI. </h6> </p>
+                  <p> <h6>Radio Team Materials</h6>
+                    <ul class="list-inline">
+                      <li> 2 Nordic nRF24L01+ transceivers </li>
+                      <li> 2 Arduino Unos </li>
+                      <li> 2 radio breakout boards with headers </li>
+                    </ul>
+                  </p>
+                  <p> <h6>Procedure:</h6>
+                    <ol class="list-inline">
+                      <li>1. Getting Started </li>
+                      <li>2. Sending Maze Information Between Arduinos</li>
+                      <li>3. Simulating Your Robot</li>
+                      <li>4. Base Station-to-GUI Transmission</li>
+                    </ol>
+                  </p>
+                  <p> <h6>1. Getting Started</h6>
+                    Stuff
+                  </p>
+                  <p> <h6>2. Sending Maze Information Between Arduinos </h6>
+                    Stuff
+                  </p>
+                  <p> <h6>3.  Simulating Your Robot </h6>
+                    Stuff
+                  </p>
+
+                  <p> <h5>Robot Team</h5>
+
+                  <p> <h6>Objective</h6>
+                   Integrate all the bits and pieces from labs 1 and 2, and milestone 1 and 2 on your robot.
+                   Demonstrate that the robot starts on a 660Hz tone, does line following, and avoid walls.
+                   It should also stop if its path is blocked by another robot, and continue if it is just a decoy.
+                  </p>
+                  <p> <h6>Robot Team Materials</h6>
+                      <ul class="list-inline">
+                      <li> Your robot, all the code from the past labs</li>
+                      <li> Decoy </li>
+                      <li> 660Hz tone generator </li>
+                      <li> IR Hat </li>
+                      <li> Microphone </li>
+                      <li> Walls to make up following maze setup </li>
+                    </ul>
+                  </p>
+                  <p>
+                    <img class="img-fluid d-block mx-auto" src="img/lab3/image2.png" alt="">
+                  </p>
+                  <p> <h6>State Machine</h6>
+                    Before we started integrating all of our code, we drew a FSM to decide how we wanted to integrate our code.
+                    <img class="img-fluid d-block mx-auto" src="img/lab3/image3.png" alt="">
+                  </p>
+                  <p> <h6> Implementing a mux </h6>
+                    We had run out of analog pins so before we could integrate the microphone, we needed to free up these pins.
+                    To do so, we chose to mux the wall sensor inputs because we only check those at intersections.
+                    If we chose to mux the light sensors then we would have risked the robot’s line following ability.
+                    We connected our wall sensors to the mux as shown below:
+                    <img class="img-fluid d-block mx-auto" src="img/lab3/image3.png" alt="">
+                    To detect each wall, we placed them in different functions and updated the corresponding global variable.
+                    One of the functions are shown below.
+                    <p class= "text-left">
+                      <code>
+                        void detectLeftWall() { <br>
+                          digitalWrite(s2, LOW); <br>
+                          digitalWrite(s1, HIGH); <br>
+                          digitalWrite(s0, LOW); <br>
+
+                          read_wallL = analogRead(walls); <br>
+                        }<br>
+                      </code>
+                    </p>
+
+                    We called these functions at an intersection because that is the only time that we need to
+                    detect walls and the way we were able to call the functions was simply:
+
+                    <p class= "text-left">
+                      <code>
+                        detectFrontWall(); <br>
+                        detectLeftWall(); <br>
+                        detectRightWall();<br>
+                      </code>
+                    </p>
+                  </p>
+                  <p> <h6>Integrating the Microphone </h6>
+                    In lab 2, the microphone code that we made utilized the ADCs free-running mode. However, because
+                    the signal that we are trying to detect is a fairly low frequency, this is unnecessary. We also
+                    don't want to sample too quickly because then the range of signals detected in a single bin would
+                    be too large and make it difficult for us to distinguish 660Hz from similar frequencies.
+                    We also had to take into account that our FFT code now has a sampling rate of 128 samples.
+                    To account for this, we needed to test for the bin number and threshold again - using <code>AnalogRead</code>
+                    and 128 samples.
+
+                    These were our results.
+
+                    We see that the bin number is 10 and the threshold is around 50,
+                    but to be safe we drop the threshold in our detection code to be 40.
+
+                    We run our 660Hz detection in our setup function so that it occurs prior to running anything else.
+                    Doing it in this function also means that it won't constantly be checked during our loop.
+
+                    <p class= "text-left">
+                      <code>
+                        int mic = 0; <br>
+                        while (mic == 0) { <br>
+                          mic = detectMicrophone(); <br>
+                          Serial.println("Waiting for mic"); <br>
+                        }<br>
+                      </code>
+                    </p>
+
+                    The function <code> detectMicrophone </code> runs the FFT code using <code> AnalogRead </code>
+                    to read the microphone for a signal and returns 1 if the bin we check is above the threshold.
+                  </p>
+                  <p> <h5> Full System </h5>
+                    We now need to merge the too teams work together. 
+                  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>

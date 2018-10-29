@@ -84,8 +84,8 @@ int walls = A3;
 
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 700;
-int LRwalls = 195;
+int lineVoltage = 400;
+int LRwalls = 155;
 int Fwall = 100;
 int pause = 1200;
 int mic_threshold = 40;
@@ -103,9 +103,9 @@ int robot = 0;
 
 void setup() {
   //wall selects
-  pinMode(13, OUTPUT);
   pinMode(12, OUTPUT);
-  pinMode(8, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(10, OUTPUT);
   
   Serial.begin(9600);
   //printf_begin();
@@ -206,15 +206,16 @@ void follow()
     leftservo.write(90);
     rightservo.write(90);
     
-    robot = detectRobot();
+    detectRobot();
     
-    if (robot == 1) {
+    while (robot == 1) {
+      detectRobot();
       digitalWrite(7, HIGH);
       leftservo.write(90);
       rightservo.write(90);
-      delay(1000);
-      digitalWrite(7, LOW);
+          
     }
+    digitalWrite(7, LOW);
 
     detectFrontWall();
     detectLeftWall();
@@ -300,7 +301,7 @@ void detectLeftWall() {
   read_wallL = analogRead(walls);
 }
 
-int detectRobot() { 
+void detectRobot() { 
   //default adc values
   unsigned int default_timsk = TIMSK0;
   unsigned int default_adcsra = ADCSRA;
@@ -339,14 +340,14 @@ int detectRobot() {
     ADCSRA = default_adcsra;
     ADMUX = default_admux;
     DIDR0 = default_didr;
-    return 1;  
+    robot = 1;  
   }
   else {
     TIMSK0 = default_timsk;
     ADCSRA = default_adcsra;
     ADMUX = default_admux;
     DIDR0 = default_didr;
-    return 0;
+    robot = 0;
   }
 }
 
