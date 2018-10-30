@@ -863,9 +863,19 @@ the robot to do anything upon detection.
 		  <p>
                     <img class="img-fluid d-block mx-auto" src="img/lab3/Actualswitchstatements.JPG" alt="">
                   </p>
+		<p>
+			After getting the GUI running, changed our code so that we had a transmit script and a receive script. We knew that
+			we would have to separate the two codes because including the receive code on the robot Arduino would simply be a waste
+			of space, and we ended up freeing up about 15% of our dynamic memory on the robot by removing this code. The most important
+			step in this step was to change the pipe setup for each of the arduinos. This is accomplished by changing the role of the
+			script. After doing this, our code was working separately.
+		</p>
 		</p>
                   <p> <h6>3.  Simulating Your Robot </h6>
-                    Stuff
+                    	In the end, we integrated our code with the radio code and got the robot to drive around the maze as can be seen
+			at the bottom of the page. We accomplished this by creating separate functions for the radio transmit code and
+			including this file in the general code. Then when we wanted to send information to the receiver, which we chose to do
+			at intersections, we would call the radio transmit function and pass in the bits we wanted to send.
                   </p>
 
                   <p> <h5>Robot Team</h5>
