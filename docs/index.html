@@ -805,11 +805,61 @@ the robot to do anything upon detection.
                     </ol>
                   </p>
                   <p> <h6>1. Getting Started</h6>
-                    Stuff
+                    We started off the radio portion of the lab by choosing the pipes we would be using throughout
+	      	    the lab. Being Group 2 and in Monday lab, we used 4 and 5 for our pipes. After this, we 
+	      		downloaded the getting started sketch and made sure that it was able to run on our Arduinos.
+	      		We found that on maximum power, the radios were able to trasmit from over 10 feet away.
+	      		We were having a dropped packet about once every 10 packets so we knew we were goign
+	      		to have to add a way to ensure each packet that was sent was received later in the lab.
                   </p>
                   <p> <h6>2. Sending Maze Information Between Arduinos </h6>
-                    Stuff
+                    	At this point, we began modifying the getting started sketch so that it would serve
+	    		the purposes we needed it to. One of the changes we made was for the radio to send
+	    		unsigned chars rather than ints because we needed to send bits containing our bit masks
+	    		to the receiver. After successfully getting the radios to send chars, we started 
+	    		coming up with the bit masks we would use for relaying information to the ground
+	    		station while taking up as little storage as possible. We determined that we would
+	    		send robot movement direction information, whether a space is explored or unexpored,
+	    		and whether a robot is present in a square all in one byte. This left treasure information
+	    		and wall information for the second byte. We decided to send direction information rather
+	    		than physical coordinates each time because while it is slightly harder to decipher the
+	    		sent information on the receiver end, it means we can send fewer bytes and store less
+	    		information. Direction ended up taking 3 bits, one for whether we had moved, and the next
+	    		two to store which direction we had moved in if we moved. We got away with using only two
+	    		bits for the four directions because we made North 00 (which we could do since we made the
+	    		move/no move bit), East 01, South 10, and West 11. The next two bits were a simple yes or no
+	    		indication of whether we had explored a space and whether a robot is present or not. For the
+	    		second byte, we had the first bit of the treasure information indicate the color of the treasure,
+	    		and then the next two bits indicated the shape or if no present was present in a similar method
+	    		to that used for our direction bits. Finally, for our walls we knew we could have multiple walls
+	    		at each location so we couldn't use only two bits (this would only allow for one wall at each
+	    		position). We ended up using four bits where each bit indicated whether there was a north, east,
+	    		south, and/or west wall present.
                   </p>
+		<p>
+			By combining our bits this way, we were able to use only two bytes per transaction between
+			sender and receiver. After this was developed, we began working on creating a virtual maze
+			and robot which we used to test the functionality of our code, and later on, the functionality
+			of the GUI. We set up a simple 9x9 array and used a for loop to have our robot move through the
+			array. As it moved, we had simple if conditions to check its location and depending on the location
+			the robot was at, we put in different conditions such as that walls were present, or that we wanted
+			the robot to change directions. Using the serial monitor, we checked on the receiver side to ensure
+			the robot was driving in the directions we thought and that we were detecting the walls and treasures
+			that we had set up in the maze.
+		</p>
+		<p>
+			Now we were ready to tackle the challenge of dropping packets. To solve this problem, we but in a condition
+			variable that was set to 0 when we went into the receive code and was only set to 
+		</p>
+		<p>
+			At this point, we were ready to set up the GUI. We started this by taking out every print statement
+			in the code, and then adding many switch case statements to our receiver code. By ANDing the received
+			bytes with different bits, we could retrieve exactly the bits we wanted to check, and then we would
+			shift these bits so that they were the least significant bits. After doing this, it was very easy to
+			figure out the possible values we could receive and use the bitmasks we had come up with earlier to
+			decode the bits we received. We used Arduino Strings to concatenate the strings we wanted to create
+			depending on the conditions in the switch case statements.
+		</p>
                   <p> <h6>3.  Simulating Your Robot </h6>
                     Stuff
                   </p>
