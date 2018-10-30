@@ -809,8 +809,7 @@ the robot to do anything upon detection.
 	      	    the lab. Being Group 2 and in Monday lab, we used 4 and 5 for our pipes. After this, we 
 	      		downloaded the getting started sketch and made sure that it was able to run on our Arduinos.
 	      		We found that on maximum power, the radios were able to trasmit from over 10 feet away.
-	      		We were having a dropped packet about once every 10 packets so we knew we were goign
-	      		to have to add a way to ensure each packet that was sent was received later in the lab.
+	      		Once on maximum power, we found that we never dropped packets.
                   </p>
                   <p> <h6>2. Sending Maze Information Between Arduinos </h6>
                     	At this point, we began modifying the getting started sketch so that it would serve
@@ -848,17 +847,14 @@ the robot to do anything upon detection.
 			that we had set up in the maze.
 		</p>
 		<p>
-			Now we were ready to tackle the challenge of dropping packets. To solve this problem, we but in a condition
-			variable that was set to 0 when we went into the receive code and was only set to 
-		</p>
-		<p>
 			At this point, we were ready to set up the GUI. We started this by taking out every print statement
 			in the code, and then adding many switch case statements to our receiver code. By ANDing the received
 			bytes with different bits, we could retrieve exactly the bits we wanted to check, and then we would
 			shift these bits so that they were the least significant bits. After doing this, it was very easy to
 			figure out the possible values we could receive and use the bitmasks we had come up with earlier to
 			decode the bits we received. We used Arduino Strings to concatenate the strings we wanted to create
-			depending on the conditions in the switch case statements.
+			depending on the conditions in the switch case statements. Finally, after decoding each byte, one at a time,
+			we put in a Serial.println() and printed our code to the GUI.
 		</p>
                   <p> <h6>3.  Simulating Your Robot </h6>
                     Stuff
