@@ -854,7 +854,15 @@ the robot to do anything upon detection.
 			figure out the possible values we could receive and use the bitmasks we had come up with earlier to
 			decode the bits we received. We used Arduino Strings to concatenate the strings we wanted to create
 			depending on the conditions in the switch case statements. Finally, after decoding each byte, one at a time,
-			we put in a Serial.println() and printed our code to the GUI. Attached below is a picture of our method for
+			we put in a Serial.println() and printed our code to the GUI. Attached below is an example of using a switch
+			case statement to determine whether a robot is present in a given square. As can be seen, we and the received
+			bit with an 8 bit 1 so that we can get rid of all the other bits that don't contain any information about
+			whether a robot is present, and then depending on this value, we concatenate different strings.	At the end, we
+			combine the strings we made about the direction the robot is moving (which we change into the coordinates) and the
+			robot string to form one complete statement to print to the GUI.
+		  <p>
+                    <img class="img-fluid d-block mx-auto" src="img/lab3/Actualswitchstatements.JPG" alt="">
+                  </p>
 		</p>
                   <p> <h6>3.  Simulating Your Robot </h6>
                     Stuff
