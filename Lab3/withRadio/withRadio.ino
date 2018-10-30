@@ -1,5 +1,5 @@
 #include <Servo.h>
-//#include "radio.h"
+#include "radio.h"
 
 //#include <SPI.h>
 //#include "nRF24L01.h"
@@ -9,62 +9,6 @@
 #define LOG_OUT 1 // use the log output function
 #define FFT_N 128 // set to 128 point fft
 #include <FFT.h>
-
-//////RADIO INFORMATION\\\\\\\\
-//
-// Hardware configuration
-//
-
-// Set up nRF24L01 radio on SPI bus plus pins 9 & 10
-
-//RF24 radio(9,10);
-
-//
-// Topology
-//
-
-// Radio pipe addresses for the 2 nodes to communicate.
-//const uint64_t pipes[2] = { 0x0000000004LL, 0x0000000005LL };
-
-//
-// Role management
-//
-// Set up role.  This sketch uses the same software for all the nodes
-// in this system.  Doing so greatly simplifies testing.
-//
-
-// The various roles supported by this sketch
-//typedef enum { role_ping_out = 1, role_pong_back } role_e;
-
-// The debug-friendly names of those roles
-//const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
-
-// The role of the current running sketch
-//role_e role = role_ping_out;
-
-// parameters to put into each square
-//byte wall_present_north = 0b0001000;
-//byte wall_present_east = 0b0000100;
-//byte wall_present_south = 0b0000010;
-//byte wall_present_west = 0b00000001;
-//
-//byte treasure_present_circle = 0b00100000;
-//byte treasure_present_triangle = 0b01000000;
-//byte treasure_present_square = 0b01100000;
-//
-//byte treasure_color_red = 0b10000000;
-//byte treasure_color_blue = 0b00000000;
-//
-//byte robot_present = 0b00000001;
-//
-//byte explored = 0b00000010;
-//
-//byte direction_north = 0b00000000;
-//byte direction_east =  0b00000100;
-//byte direction_south = 0b00001000;
-//byte direction_west =  0b00001100;
-
-
 
 //ARUINO INPUTS
 int sensorL = A1;
@@ -100,6 +44,18 @@ int read_wallL = 0;
 int read_wallF = 0;
 
 int robot = 0;
+// radio information
+unsigned char to_send_0 = 0b00000000;
+unsigned char to_send_1 = 0b00000000;
+
+enum maze_direction {
+  North,
+  East,
+  South,
+  West
+};
+
+maze_direction m_direction = North;
 
 void setup() {
   //wall selects
@@ -114,41 +70,7 @@ void setup() {
   pinMode(7, OUTPUT);
   servoSetup();
 
-//  radio.begin();
-//
-//  // optionally, increase the delay between retries & # of retries
-//  radio.setRetries(15,15);
-//  radio.setAutoAck(true);
-//  // set the channel
-//  radio.setChannel(0x50);
-//  // set the power
-//  // RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_MED=-6dBM, and RF24_PA_HIGH=0dBm.
-//  radio.setPALevel(RF24_PA_MIN);
-//  //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
-//  radio.setDataRate(RF24_250KBPS);
-
-  // optionally, reduce the payload size.  seems to
-  // improve reliability
-//  radio.setPayloadSize(8);
-
-  //
-  // Open pipes to other nodes for communication
-  //
-
-//  radio.openWritingPipe(pipes[0]);
-//  radio.openReadingPipe(1,pipes[1]);
-
-  //
-  // Start listening
-  //
-
-//  radio.startListening();
-
-  //
-  // Dump the configuration of the rf unit for debugging
-  //
-
-//  radio.printDetails();
+  radioSetup();
 
   int mic = 0;
   while (mic == 0) {
@@ -207,9 +129,21 @@ void follow()
     rightservo.write(90);
     
     detectRobot();
+    // radio information
+    ping_out( 0b11000000 );
+      delay( 250 );
+      ping_out( to_send_0 );
+      delay( 250 );
+      ping_out( 0b10000000 );
+      delay(250);
+      ping_out( to_send_1 );
+
+    to_send_0 = 0b00000000;
+    to_send_1 = 0b00000000;
     
     while (robot == 1) {
       detectRobot();
+      to_send_0 = to_send_0 | robot_present;
       digitalWrite(7, HIGH);
       leftservo.write(90);
       rightservo.write(90);
@@ -225,14 +159,19 @@ void follow()
 
     // U-turn
     if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
+      to_send_1 = to_send_1 | wall_present_north | wall_present_east | wall_present_west;
+      change_direction(1);
       turn(2);
     }
     // Left Turn
     else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
+      to_send_1 = to_send_1 | wall_present_north | wall_present_east;
+      change_direction(2);
       turn(0);
     }
     // Right Turn
     else if (read_wallR < LRwalls) {
+      change_direction(0);
       turn(1);
     }
     // Go forward
@@ -371,6 +310,88 @@ int detectMicrophone () {
   }
   else {
     return 0;
+  }
+}
+
+
+void change_direction(int how_many_turn) {
+  switch( how_many_turn ) {
+    // turn right
+    case 0:
+      switch( m_direction ) {
+        case North:
+          m_direction = East;
+          to_send_0 = to_send_0 | direction_east;
+          break;
+        case East:
+          m_direction = South;
+          to_send_0 = to_send_0 | direction_south;
+          break;
+        case South:
+          m_direction = West;
+          to_send_0 = to_send_0 | direction_west;
+          break;
+        case West:
+          m_direction = North;
+          to_send_0 = to_send_0 | direction_north;
+          break;
+        default:
+          m_direction = m_direction;
+          break;
+      }
+      break;
+    // U-turn
+    case 1:
+      switch( m_direction ) {
+        case North:
+          m_direction = South;
+          to_send_0 = to_send_0 | direction_south;
+          break;
+        case East:
+          m_direction = West;
+          to_send_0 = to_send_0 | direction_west;
+          break;
+        case South:
+          m_direction = North;
+          to_send_0 = to_send_0 | direction_north;
+          break;
+        case West:
+          m_direction = East;
+          to_send_0 = to_send_0 | direction_east;
+          break;
+        default:
+          m_direction = m_direction;
+          break;
+      }
+       break;
+    // turn left
+    case 2:
+      switch( m_direction ) {
+        case North:
+          m_direction = West;
+          to_send_0 = to_send_0 | direction_west;
+          break;
+        case East:
+          m_direction = South;
+          to_send_0 = to_send_0 | direction_south;
+          break;
+        case South:
+          m_direction = East;
+          to_send_0 = to_send_0 | direction_east;
+          break;
+        case West:
+          m_direction = North;
+          to_send_0 = to_send_0 | direction_north;
+          break;
+        default:
+          m_direction = m_direction;
+          break;
+      }
+      break;
+    // no turn
+    default:
+      m_direction = m_direction;
+      break;
   }
 }
 

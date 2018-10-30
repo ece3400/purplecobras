@@ -52,34 +52,34 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_ping_out;
 
 // parameters to put into each square
-byte wall_present_north = 0b0001000;
-byte wall_present_east = 0b0000100;
-byte wall_present_south = 0b0000010;
-byte wall_present_west = 0b00000001;
-
-byte treasure_present_circle = 0b00100000;
-byte treasure_present_triangle = 0b01000000;
-byte treasure_present_square = 0b01100000;
-
-byte treasure_color_red = 0b10000000;
-byte treasure_color_blue = 0b00000000;
-
-byte robot_present = 0b00000001;
-
-byte explored = 0b00000010;
-
-byte direction_north = 0b00000000;
-byte direction_east =  0b00000100;
-byte direction_south = 0b00001000;
-byte direction_west =  0b00001100;
+//byte wall_present_north = 0b0001000;
+//byte wall_present_east = 0b0000100;
+//byte wall_present_south = 0b0000010;
+//byte wall_present_west = 0b00000001;
+//
+//byte treasure_present_circle = 0b00100000;
+//byte treasure_present_triangle = 0b01000000;
+//byte treasure_present_square = 0b01100000;
+//
+//byte treasure_color_red = 0b10000000;
+//byte treasure_color_blue = 0b00000000;
+//
+//byte robot_present = 0b00000001;
+//
+//byte explored = 0b00000010;
+//
+//byte direction_north = 0b00000000;
+//byte direction_east =  0b00000100;
+//byte direction_south = 0b00001000;
+//byte direction_west =  0b00001100;
 
 //testing variables
 int current_location[2] = {-1, 0};
 int current_location_rec[2] = {0, 5};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
-unsigned char to_send_0 = 0b00000000;
-unsigned char to_send_1 = 0b00000000;
+//unsigned char to_send_0 = 0b00000000;
+//unsigned char to_send_1 = 0b00000000;
 
 int location[2] = {0, 0};
 int byteflag = 0;
@@ -89,8 +89,8 @@ void radioSetup()
   //
   // Print preamble
   //
-
-  Serial.begin(9600);
+  role = role_ping_out;
+  //Serial.begin(9600);
   printf_begin();
 
   //
@@ -134,47 +134,47 @@ void radioSetup()
   radio.printDetails();
 }
 
-void radioLoop()
-{ 
-  current_location[0] = 0;
-  current_location[1] = 0;
-
-  for ( int i = 0; i < 9; i++ ) {
-      to_send_0 = 0b00000000;
-      to_send_1 = 0b00000000;
-      
-      if ( (current_location[0] > 3) ) {
-        to_send_0 = to_send_0 | direction_north;
-        direction[0] = 0;
-        direction[1] = 1;
-        to_send_1 = to_send_1 | wall_present_east;
-      }
-      //if ( direction[0] == 0 && direction[1] == 1 ) {
-      else {
-        //Serial.println("This");
-        //Serial.println(int(to_send[0]));
-        to_send_0 = to_send_0 | direction_east;
-        direction[0] = 1;
-        direction[1] = 0;
-        //Serial.println(int(to_send[0]));
-      }
-      to_send_1 = to_send_1 | wall_present_north | wall_present_south;
-      current_location[0] = current_location[0] + direction[0];
-      current_location[1] = current_location[1] + direction[1];
-//      Serial.println("x: " + String(current_location[0]));
-//      Serial.println("y: " + String(current_location[1]));
-//      Serial.println( ( to_send_0 & (0b00001100) ) >> 2 );
-      ping_out( 0b11000000 );
-      delay( 250 );
-      ping_out( to_send_0 );
-      delay( 250 );
-      ping_out( 0b10000000 );
-      delay(250);
-      ping_out( to_send_1 );
-      //Serial.println(current_location[1]);
-      delay(2000);
-    }
-}
+//void radioLoop()
+//{ 
+//  current_location[0] = 0;
+//  current_location[1] = 0;
+//
+//  for ( int i = 0; i < 9; i++ ) {
+//      to_send_0 = 0b00000000;
+//      to_send_1 = 0b00000000;
+//      
+//      if ( (current_location[0] > 3) ) {
+//        to_send_0 = to_send_0 | direction_north;
+//        direction[0] = 0;
+//        direction[1] = 1;
+//        to_send_1 = to_send_1 | wall_present_east;
+//      }
+//      //if ( direction[0] == 0 && direction[1] == 1 ) {
+//      else {
+//        //Serial.println("This");
+//        //Serial.println(int(to_send[0]));
+//        to_send_0 = to_send_0 | direction_east;
+//        direction[0] = 1;
+//        direction[1] = 0;
+//        //Serial.println(int(to_send[0]));
+//      }
+//      to_send_1 = to_send_1 | wall_present_north | wall_present_south;
+//      current_location[0] = current_location[0] + direction[0];
+//      current_location[1] = current_location[1] + direction[1];
+////      Serial.println("x: " + String(current_location[0]));
+////      Serial.println("y: " + String(current_location[1]));
+////      Serial.println( ( to_send_0 & (0b00001100) ) >> 2 );
+//      ping_out( 0b11000000 );
+//      delay( 250 );
+//      ping_out( to_send_0 );
+//      delay( 250 );
+//      ping_out( 0b10000000 );
+//      delay(250);
+//      ping_out( to_send_1 );
+//      //Serial.println(current_location[1]);
+//      delay(2000);
+//    }
+//}
 
 void ping_out (unsigned char to_send) {
   if (role == role_ping_out ) {
