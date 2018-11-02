@@ -1,0 +1,10 @@
+
+State Machine - |DE0_NANO|temp_counter
+Name temp_counter.001 
+temp_counter.000 0 
+temp_counter.001 1 
+
+State Machine - |DE0_NANO|which_byte
+Name which_byte.01 
+which_byte.00 0 
+which_byte.01 1 

@@ -1,0 +1,89 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1200mV 85C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 11.453
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 31.711
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 0.293
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 0.569
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 9.743
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 9.747
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 19.747
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 12.349
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 32.596
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 0.288
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 0.511
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 9.709
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 9.744
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 19.744
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 15.002
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 35.214
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 0.144
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 0.304
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 9.416
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
+Slack : 9.752
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 19.755
+TNS   : 0.000
+
+------------------------------------------------------------
