@@ -1,5 +1,5 @@
 Fitter report for DE0_NANO
-Fri Nov 02 17:13:47 2018
+Mon Nov 05 13:52:56 2018
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -68,7 +68,7 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Fitter Summary                                                                   ;
 +------------------------------------+---------------------------------------------+
-; Fitter Status                      ; Successful - Fri Nov 02 17:13:47 2018       ;
+; Fitter Status                      ; Successful - Mon Nov 05 13:52:56 2018       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; DE0_NANO                                    ;
 ; Top-level Entity Name              ; DE0_NANO                                    ;
@@ -376,7 +376,7 @@ refer to the applicable agreement for further details.
 +--------------+
 ; Pin-Out File ;
 +--------------+
-The pin-out file can be found in H:/Lab4_FPGA_Template_V2/DE0_NANO.pin.
+The pin-out file can be found in C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.pin.
 
 
 +---------------------------------------------------------------------+
@@ -1465,9 +1465,9 @@ Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors
 Info (119006): Selected device EP4CE22F17C6 for design "DE0_NANO"
 Info (21077): Low junction temperature is 0 degrees C
 Info (21077): High junction temperature is 85 degrees C
-Info (15535): Implemented PLL "sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|pll1" as Cyclone IV E PLL type File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
-    Info (15099): Implementing clock multiplication of 12, clock division of 25, and phase shift of 0 degrees (0 ps) for sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[0] port File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
-    Info (15099): Implementing clock multiplication of 1, clock division of 2, and phase shift of 0 degrees (0 ps) for sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[1] port File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
+Info (15535): Implemented PLL "sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|pll1" as Cyclone IV E PLL type File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
+    Info (15099): Implementing clock multiplication of 12, clock division of 25, and phase shift of 0 degrees (0 ps) for sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[0] port File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
+    Info (15099): Implementing clock multiplication of 1, clock division of 2, and phase shift of 0 degrees (0 ps) for sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[1] port File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
 Info (171003): Fitter is performing an Auto Fit compilation, which may decrease Fitter effort to reduce compilation time
 Warning (292013): Feature LogicLock is only available with a valid subscription license. You can purchase a software subscription to gain full access to this feature.
 Info (176444): Device migration not selected. If you intend to use device migration later, you may need to change the pin assignments as they may be incompatible with other devices
@@ -1479,9 +1479,9 @@ Info (12825): Data[1]/ASDO dual-purpose pin not reserved
 Info (12825): nCSO dual-purpose pin not reserved
 Info (12825): DCLK dual-purpose pin not reserved
 Warning (15714): Some pins have incomplete I/O assignments. Refer to the I/O Assignment Warnings report for details
-Info (176353): Automatically promoted node sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[0] (placed in counter C0 of PLL_4) File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 77
+Info (176353): Automatically promoted node sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[0] (placed in counter C0 of PLL_4) File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 77
     Info (176355): Automatically promoted destinations to use location or clock signal Global Clock CLKCTRL_G18
-Info (176353): Automatically promoted node sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[1] (placed in counter C1 of PLL_4) File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 77
+Info (176353): Automatically promoted node sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|wire_pll1_clk[1] (placed in counter C1 of PLL_4) File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 77
     Info (176355): Automatically promoted destinations to use location or clock signal Global Clock CLKCTRL_G19
 Info (332104): Reading SDC File: 'DE0_NANO.SDC'
 Info (332110): Deriving PLL clocks
@@ -1499,8 +1499,8 @@ Info (332111): Found 3 clocks
 Info (176233): Starting register packing
 Info (176235): Finished register packing
     Extra Info (176219): No registers were packed into other blocks
-Warning (15058): PLL "sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|pll1" is in normal or source synchronous mode with output clock "compensate_clock" set to clk[0] that is not fully compensated because it feeds an output pin -- only PLLs in zero delay buffer mode can fully compensate output pins File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
-Warning (15064): PLL "sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|pll1" output port clk[0] feeds output pin "GPIO_0_D[33]~output" via non-dedicated routing -- jitter performance depends on switching rate of other design elements. Use PLL dedicated clock outputs to ensure jitter performance File: H:/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
+Warning (15058): PLL "sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|pll1" is in normal or source synchronous mode with output clock "compensate_clock" set to clk[0] that is not fully compensated because it feeds an output pin -- only PLLs in zero delay buffer mode can fully compensate output pins File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
+Warning (15064): PLL "sweetPLL:sweetPLL_inst|altpll:altpll_component|sweetPLL_altpll:auto_generated|pll1" output port clk[0] feeds output pin "GPIO_0_D[33]~output" via non-dedicated routing -- jitter performance depends on switching rate of other design elements. Use PLL dedicated clock outputs to ensure jitter performance File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/db/sweetpll_altpll.v Line: 43
 Warning (15705): Ignored locations or region assignments to the following nodes
     Warning (15706): Node "ADC_CS_N" is assigned to location or region, but does not exist in design
     Warning (15706): Node "ADC_SADDR" is assigned to location or region, but does not exist in design
@@ -1599,62 +1599,62 @@ Info (170199): The Fitter performed an Auto Fit compilation.  Optimizations were
     Info (170201): Optimizations that may affect the design's routability were skipped
     Info (170200): Optimizations that may affect the design's timing were skipped
 Info (170194): Fitter routing operations ending: elapsed time is 00:00:00
-Info (11888): Total time spent on timing analysis during the Fitter is 0.05 seconds.
+Info (11888): Total time spent on timing analysis during the Fitter is 0.06 seconds.
 Info (334003): Started post-fitting delay annotation
 Info (334004): Delay annotation completed successfully
 Info (334003): Started post-fitting delay annotation
 Info (334004): Delay annotation completed successfully
-Info (11218): Fitter post-fit operations ending: elapsed time is 00:00:02
+Info (11218): Fitter post-fit operations ending: elapsed time is 00:00:01
 Warning (171167): Found invalid Fitter assignments. See the Ignored Assignments panel in the Fitter Compilation Report for more information.
 Warning (169177): 37 pins must meet Intel FPGA requirements for 3.3-, 3.0-, and 2.5-V interfaces. For more information, refer to AN 447: Interfacing Cyclone IV E Devices with 3.3/3.0/2.5-V LVTTL/LVCMOS I/O Systems.
-    Info (169178): Pin GPIO_1_D[0] uses I/O standard 3.3-V LVTTL at F13 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[1] uses I/O standard 3.3-V LVTTL at T15 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[2] uses I/O standard 3.3-V LVTTL at T14 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[3] uses I/O standard 3.3-V LVTTL at T13 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[4] uses I/O standard 3.3-V LVTTL at R13 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[5] uses I/O standard 3.3-V LVTTL at T12 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[6] uses I/O standard 3.3-V LVTTL at R12 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[7] uses I/O standard 3.3-V LVTTL at T11 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[8] uses I/O standard 3.3-V LVTTL at T10 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[9] uses I/O standard 3.3-V LVTTL at R11 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[10] uses I/O standard 3.3-V LVTTL at P11 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[11] uses I/O standard 3.3-V LVTTL at R10 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[12] uses I/O standard 3.3-V LVTTL at N12 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[13] uses I/O standard 3.3-V LVTTL at P9 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[14] uses I/O standard 3.3-V LVTTL at N9 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[15] uses I/O standard 3.3-V LVTTL at N11 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[16] uses I/O standard 3.3-V LVTTL at L16 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[17] uses I/O standard 3.3-V LVTTL at K16 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[18] uses I/O standard 3.3-V LVTTL at R16 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[19] uses I/O standard 3.3-V LVTTL at L15 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[20] uses I/O standard 3.3-V LVTTL at P15 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[21] uses I/O standard 3.3-V LVTTL at P16 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[22] uses I/O standard 3.3-V LVTTL at R14 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[23] uses I/O standard 3.3-V LVTTL at N16 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[24] uses I/O standard 3.3-V LVTTL at N15 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[25] uses I/O standard 3.3-V LVTTL at P14 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[26] uses I/O standard 3.3-V LVTTL at L14 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[27] uses I/O standard 3.3-V LVTTL at N14 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[28] uses I/O standard 3.3-V LVTTL at M10 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[29] uses I/O standard 3.3-V LVTTL at L13 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[30] uses I/O standard 3.3-V LVTTL at J16 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[31] uses I/O standard 3.3-V LVTTL at K15 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[32] uses I/O standard 3.3-V LVTTL at J13 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin GPIO_1_D[33] uses I/O standard 3.3-V LVTTL at J14 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
-    Info (169178): Pin KEY[1] uses I/O standard 3.3-V LVTTL at E1 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 30
-    Info (169178): Pin KEY[0] uses I/O standard 3.3-V LVTTL at J15 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 30
-    Info (169178): Pin CLOCK_50 uses I/O standard 3.3-V LVTTL at R8 File: H:/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 24
-Info (144001): Generated suppressed messages file H:/Lab4_FPGA_Template_V2/DE0_NANO.fit.smsg
+    Info (169178): Pin GPIO_1_D[0] uses I/O standard 3.3-V LVTTL at F13 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[1] uses I/O standard 3.3-V LVTTL at T15 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[2] uses I/O standard 3.3-V LVTTL at T14 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[3] uses I/O standard 3.3-V LVTTL at T13 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[4] uses I/O standard 3.3-V LVTTL at R13 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[5] uses I/O standard 3.3-V LVTTL at T12 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[6] uses I/O standard 3.3-V LVTTL at R12 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[7] uses I/O standard 3.3-V LVTTL at T11 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[8] uses I/O standard 3.3-V LVTTL at T10 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[9] uses I/O standard 3.3-V LVTTL at R11 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[10] uses I/O standard 3.3-V LVTTL at P11 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[11] uses I/O standard 3.3-V LVTTL at R10 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[12] uses I/O standard 3.3-V LVTTL at N12 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[13] uses I/O standard 3.3-V LVTTL at P9 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[14] uses I/O standard 3.3-V LVTTL at N9 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[15] uses I/O standard 3.3-V LVTTL at N11 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[16] uses I/O standard 3.3-V LVTTL at L16 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[17] uses I/O standard 3.3-V LVTTL at K16 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[18] uses I/O standard 3.3-V LVTTL at R16 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[19] uses I/O standard 3.3-V LVTTL at L15 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[20] uses I/O standard 3.3-V LVTTL at P15 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[21] uses I/O standard 3.3-V LVTTL at P16 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[22] uses I/O standard 3.3-V LVTTL at R14 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[23] uses I/O standard 3.3-V LVTTL at N16 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[24] uses I/O standard 3.3-V LVTTL at N15 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[25] uses I/O standard 3.3-V LVTTL at P14 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[26] uses I/O standard 3.3-V LVTTL at L14 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[27] uses I/O standard 3.3-V LVTTL at N14 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[28] uses I/O standard 3.3-V LVTTL at M10 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[29] uses I/O standard 3.3-V LVTTL at L13 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[30] uses I/O standard 3.3-V LVTTL at J16 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[31] uses I/O standard 3.3-V LVTTL at K15 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[32] uses I/O standard 3.3-V LVTTL at J13 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin GPIO_1_D[33] uses I/O standard 3.3-V LVTTL at J14 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 29
+    Info (169178): Pin KEY[1] uses I/O standard 3.3-V LVTTL at E1 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 30
+    Info (169178): Pin KEY[0] uses I/O standard 3.3-V LVTTL at J15 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 30
+    Info (169178): Pin CLOCK_50 uses I/O standard 3.3-V LVTTL at R8 File: C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.v Line: 24
+Info (144001): Generated suppressed messages file C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.fit.smsg
 Info: Quartus Prime Fitter was successful. 0 errors, 93 warnings
-    Info: Peak virtual memory: 5292 megabytes
-    Info: Processing ended: Fri Nov 02 17:13:48 2018
-    Info: Elapsed time: 00:00:12
-    Info: Total CPU time (on all processors): 00:00:10
+    Info: Peak virtual memory: 5206 megabytes
+    Info: Processing ended: Mon Nov 05 13:52:57 2018
+    Info: Elapsed time: 00:00:10
+    Info: Total CPU time (on all processors): 00:00:11
 
 
 +----------------------------+
 ; Fitter Suppressed Messages ;
 +----------------------------+
-The suppressed messages can be found in H:/Lab4_FPGA_Template_V2/DE0_NANO.fit.smsg.
+The suppressed messages can be found in C:/Users/Brian/Desktop/purplecobras/Lab4/Lab4_FPGA_Template_V2/DE0_NANO.fit.smsg.
 
 
