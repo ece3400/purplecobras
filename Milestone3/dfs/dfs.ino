@@ -159,8 +159,42 @@ void intersection(){
 // not sure if this stopping is necessary or not
   leftservo.write(90);
   rightservo.write(90);
-  
+
+  bool nGood = true;
+  bool sGood = true;
+  bool wGood = true;
+  bool eGood = true;
+  bool fGood = true;
+  bool lGood = true;
+  bool rGood = true;
+  bool rWall = detectRightWall();
+  bool lWall = detectLeftWall();
+  bool fWall = detectFrontWall();
+   
   detectRobot();
+  switch(c_direction) { //update current location
+    case North :
+      nGood = false;
+    case East :
+      eGood = false;
+    case South :
+      sGood = false;
+    case West :
+      wGood = false;
+  }
+  if (!nGood){
+    to_send_1 = to_send_1 | wall_present_north;
+  }
+  if (!eGood){
+    to_send_1 = to_send_1 | wall_present_east;
+  }
+  if (!wGood){
+    to_send_1 = to_send_1 | wall_present_west;
+  }
+  if (!sGood){
+    to_send_1 = to_send_1 | wall_present_south;
+  }
+  
   // radio information
   ping_out( 0b11000000 );
     delay( 250 );
@@ -194,74 +228,66 @@ void intersection(){
       current[1] = current[1] - 1;
   }
   
-  bool rWall = detectRightWall();
-  bool lWall = detectLeftWall();
-  bool fWall = detectFrontWall();
-  bool nWall;
-  bool eWall;
-  bool sWall;
-  bool wWall;
-  
   switch (c_direction) {
     case North :
-      sWall = false;
-      nWall = fWall;
-      eWall = rWall;
-      wWall = lWall;
+      nGood &= !fWall;
+      eGood &= !rWall;
+      wGood &= !lWall;
     case East :
-      nWall = lWall;
-      eWall = fWall;
-      sWall = rWall;
-      wWall = false;
+      nGood &= !lWall;
+      eGood &= !fWall;
+      sGood &= !rWall;
     case South :
-      nWall = false;
-      eWall = lWall;
-      wWall = rWall;
-      sWall = fWall;
+      eGood &= !lWall;
+      wGood &= !rWall;
+      sGood &= !fWall;
     case West :
-      nWall = rWall;
-      eWall = true;
-      wWall = fWall;
-      sWall = lWall;
+      nGood &= !rWall;
+      wGood &= !fWall;
+      sGood &= !lWall;
   }
-  
+  nGood &= !maze[current[0]+1][current[1]];
+  eGood &= !maze[current[0]][current[1]+1];
+  wGood &= !maze[current[0]][current[1]-1];
+  sGood &= !maze[current[0]-1][current[1]];
   maze[current[0]][current[1]] = true;
+
+  if (c_direction == North){
+    fGood = nGood;
+    rGood = eGood;
+    lGood = wGood;
+  }
+  else if (c_direction == East){
+    fGood = eGood;
+    rGood = sGood;
+    lGood = nGood;
+  }
+  else if (c_direction == South){
+    fGood = sGood;
+    rGood = wGood;
+    lGood = eGood;
+  }
+  else if (c_direction == West){
+    fGood = wGood;
+    rGood = nGood;
+    lGood = sGood;
+  }
   
-  // U-turn
-  if (fWall && lWall && rWall) {
-    next = UTURN;
-//      to_send_1 = to_send_1 | wall_present_north | wall_present_east | wall_present_west;
-//      change_direction(1);
-//      turn(2);
+  
+  
+  if (rGood) {
+    
   }
-  // Left Turn
-  else if (fWall && rWall) {
-    next = LEFT;
-//      to_send_1 = to_send_1 | wall_present_north | wall_present_east;
-//      change_direction(2);
-//      turn(0);
+  else if (fGood) {
+    
   }
-  // Right Turn
-  else if (!rWall) {
-    next = RIGHT;
-//      change_direction(0);
-//      turn(1);
-  }
-  // Go forward
-  else {
-    next = FORWARD;
-//      leftservo.write(135);
-//      rightservo.write(45);
-  }
-
-  maze_direction next_maze = find_next_direction(c_direction, next);
-
-  if (next_maze == North && maze[current[0]+1][current[1]] == true) {
+  else if (lGood) {
     
   }
   else {
-    
+    //backtrack(); //need to write method to return to node with nonvisited branch
   }
+
 }
 
 /*Turns the robot according to line sensor readings. A direction of 1 is a right turn.*/
@@ -489,59 +515,3 @@ void change_direction(int how_many_turn) {
       break;
   }
 }
-
-maze_direction find_next_direction (maze_direction m, action a) {
-  
-  switch (m) {
-    case North:
-      switch (a) {
-        case LEFT:
-          return West;
-        case RIGHT:
-          return East;
-        case FORWARD:
-          return North;
-        case UTURN:
-          return South;
-      }
-      break;
-      
-    case East :
-      switch (a) {
-        case LEFT:
-          return North;
-        case RIGHT:
-          return South;
-        case FORWARD:
-          return East;
-        case UTURN:
-          return West;
-      }
-      break;
-
-    case South :
-      switch (a) {
-        case LEFT:
-          return East;
-        case RIGHT:
-          return West;
-        case FORWARD:
-          return South;
-        case UTURN:
-          return North;
-      }
-
-    case West :
-      switch (a) {
-        case LEFT:
-          return South;
-        case RIGHT:
-          return North;
-        case FORWARD:
-          return West;
-        case UTURN:
-          return East;
-      }
-  }
-}
-
