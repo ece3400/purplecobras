@@ -38,10 +38,10 @@ int mic_threshold = 40;
 Servo rightservo;
 Servo leftservo;
 
-//wall reads
-int read_wallR = 0;
-int read_wallL = 0;
-int read_wallF = 0;
+////wall reads
+//int read_wallR = 0;
+//int read_wallL = 0;
+//int read_wallF = 0;
 
 int robot = 0;
 // radio information
@@ -57,7 +57,24 @@ enum maze_direction {
 
 maze_direction m_direction = North;
 
+enum action {
+  UTURN,
+  LEFT,
+  RIGHT,
+  FORWARD
+};
+
+action next = FORWARD;
+
+bool maze[4][5];
+int path[20][2];
+int current[]= {0, 0}; //first is rows, second columns
+maze_direction c_direction = North;
+
 void setup() {
+  //setting up maze
+  maze[0][0] = true;
+  
   //wall selects
   pinMode(s2, OUTPUT);
   pinMode(s1, OUTPUT);
@@ -124,61 +141,7 @@ void follow()
   }
   // intersection
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
-    // not sure if this stopping is necessary or not
-    leftservo.write(90);
-    rightservo.write(90);
-    
-    detectRobot();
-    // radio information
-    ping_out( 0b11000000 );
-      delay( 250 );
-      ping_out( to_send_0 );
-      delay( 250 );
-      ping_out( 0b10000000 );
-      delay(250);
-      ping_out( to_send_1 );
-
-    to_send_0 = 0b00000000;
-    to_send_1 = 0b00000000;
-    
-    while (robot == 1) {
-      detectRobot();
-      to_send_0 = to_send_0 | robot_present;
-      digitalWrite(7, HIGH);
-      leftservo.write(90);
-      rightservo.write(90);
-          
-    }
-    digitalWrite(7, LOW);
-
-    detectFrontWall();
-    detectLeftWall();
-    detectRightWall();
-
-    
-
-    // U-turn
-    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
-      to_send_1 = to_send_1 | wall_present_north | wall_present_east | wall_present_west;
-      change_direction(1);
-      turn(2);
-    }
-    // Left Turn
-    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
-      to_send_1 = to_send_1 | wall_present_north | wall_present_east;
-      change_direction(2);
-      turn(0);
-    }
-    // Right Turn
-    else if (read_wallR < LRwalls) {
-      change_direction(0);
-      turn(1);
-    }
-    // Go forward
-    else {
-      leftservo.write(135);
-      rightservo.write(45);
-    }
+    intersection();
   }
   // Continue turning right
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
@@ -190,6 +153,141 @@ void follow()
     leftservo.write(90);
     rightservo.write(45);
   }
+}
+
+void intersection(){
+// not sure if this stopping is necessary or not
+  leftservo.write(90);
+  rightservo.write(90);
+
+  bool nGood = true;
+  bool sGood = true;
+  bool wGood = true;
+  bool eGood = true;
+  bool fGood = true;
+  bool lGood = true;
+  bool rGood = true;
+  bool rWall = detectRightWall();
+  bool lWall = detectLeftWall();
+  bool fWall = detectFrontWall();
+   
+  detectRobot();
+  switch(c_direction) { //update current location
+    case North :
+      nGood = false;
+    case East :
+      eGood = false;
+    case South :
+      sGood = false;
+    case West :
+      wGood = false;
+  }
+  if (!nGood){
+    to_send_1 = to_send_1 | wall_present_north;
+  }
+  if (!eGood){
+    to_send_1 = to_send_1 | wall_present_east;
+  }
+  if (!wGood){
+    to_send_1 = to_send_1 | wall_present_west;
+  }
+  if (!sGood){
+    to_send_1 = to_send_1 | wall_present_south;
+  }
+  
+  // radio information
+  ping_out( 0b11000000 );
+    delay( 250 );
+    ping_out( to_send_0 );
+    delay( 250 );
+    ping_out( 0b10000000 );
+    delay(250);
+    ping_out( to_send_1 );
+
+  to_send_0 = 0b00000000;
+  to_send_1 = 0b00000000;
+  
+  while (robot == 1) {
+    detectRobot();
+    to_send_0 = to_send_0 | robot_present;
+    digitalWrite(7, HIGH);
+    leftservo.write(90);
+    rightservo.write(90);
+        
+  }
+  digitalWrite(7, LOW);
+
+  switch(c_direction) { //update current location
+    case North :
+      current[0] = current[0] + 1;
+    case East :
+      current[1] = current[1] + 1;
+    case South :
+      current[0] = current[0] - 1;
+    case West :
+      current[1] = current[1] - 1;
+  }
+  
+  switch (c_direction) {
+    case North :
+      nGood &= !fWall;
+      eGood &= !rWall;
+      wGood &= !lWall;
+    case East :
+      nGood &= !lWall;
+      eGood &= !fWall;
+      sGood &= !rWall;
+    case South :
+      eGood &= !lWall;
+      wGood &= !rWall;
+      sGood &= !fWall;
+    case West :
+      nGood &= !rWall;
+      wGood &= !fWall;
+      sGood &= !lWall;
+  }
+  nGood &= !maze[current[0]+1][current[1]];
+  eGood &= !maze[current[0]][current[1]+1];
+  wGood &= !maze[current[0]][current[1]-1];
+  sGood &= !maze[current[0]-1][current[1]];
+  maze[current[0]][current[1]] = true;
+
+  if (c_direction == North){
+    fGood = nGood;
+    rGood = eGood;
+    lGood = wGood;
+  }
+  else if (c_direction == East){
+    fGood = eGood;
+    rGood = sGood;
+    lGood = nGood;
+  }
+  else if (c_direction == South){
+    fGood = sGood;
+    rGood = wGood;
+    lGood = eGood;
+  }
+  else if (c_direction == West){
+    fGood = wGood;
+    rGood = nGood;
+    lGood = sGood;
+  }
+  
+  
+  
+  if (rGood) {
+    
+  }
+  else if (fGood) {
+    
+  }
+  else if (lGood) {
+    
+  }
+  else {
+    //backtrack(); //need to write method to return to node with nonvisited branch
+  }
+
 }
 
 /*Turns the robot according to line sensor readings. A direction of 1 is a right turn.*/
@@ -216,28 +314,51 @@ void turn(int direction) {
     rightservo.write(45);
 }
 
-void detectRightWall() {
+bool detectRightWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
   digitalWrite(s0, LOW);
 
-  read_wallR = analogRead(walls);
+  //read_wallR = analogRead(walls);
+
+  if (analogRead(walls) >= LRwalls) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
-void detectFrontWall() {
+bool detectFrontWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
   digitalWrite(s0, HIGH);
 
-  read_wallF = analogRead(walls);
+  //int read_wallF = analogRead(walls);
+
+  
+  if (analogRead(walls) >= Fwall) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
-void detectLeftWall() {
+bool detectLeftWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, HIGH);
   digitalWrite(s0, LOW);
 
-  read_wallL = analogRead(walls);
+  //read_wallL = analogRead(walls);
+
+  
+  if (analogRead(walls) >= LRwalls) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 void detectRobot() { 
@@ -394,4 +515,3 @@ void change_direction(int how_many_turn) {
       break;
   }
 }
-
