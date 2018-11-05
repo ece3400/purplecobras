@@ -38,10 +38,10 @@ int mic_threshold = 40;
 Servo rightservo;
 Servo leftservo;
 
-//wall reads
-int read_wallR = 0;
-int read_wallL = 0;
-int read_wallF = 0;
+////wall reads
+//int read_wallR = 0;
+//int read_wallL = 0;
+//int read_wallF = 0;
 
 int robot = 0;
 // radio information
@@ -57,7 +57,24 @@ enum maze_direction {
 
 maze_direction m_direction = North;
 
+enum action {
+  UTURN,
+  LEFT,
+  RIGHT,
+  FORWARD
+};
+
+action next = FORWARD;
+
+bool maze[4][5];
+int path[20][2];
+int current[]= {0, 0}; //first is rows, second columns
+maze_direction c_direction = North;
+
 void setup() {
+  //setting up maze
+  maze[0][0] = true;
+  
   //wall selects
   pinMode(s2, OUTPUT);
   pinMode(s1, OUTPUT);
@@ -124,61 +141,7 @@ void follow()
   }
   // intersection
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
-    // not sure if this stopping is necessary or not
-    leftservo.write(90);
-    rightservo.write(90);
-    
-    detectRobot();
-    // radio information
-    ping_out( 0b11000000 );
-      delay( 250 );
-      ping_out( to_send_0 );
-      delay( 250 );
-      ping_out( 0b10000000 );
-      delay(250);
-      ping_out( to_send_1 );
-
-    to_send_0 = 0b00000000;
-    to_send_1 = 0b00000000;
-    
-    while (robot == 1) {
-      detectRobot();
-      to_send_0 = to_send_0 | robot_present;
-      digitalWrite(7, HIGH);
-      leftservo.write(90);
-      rightservo.write(90);
-          
-    }
-    digitalWrite(7, LOW);
-
-    detectFrontWall();
-    detectLeftWall();
-    detectRightWall();
-
-    
-
-    // U-turn
-    if (read_wallF >= Fwall && read_wallL >= LRwalls && read_wallR >= LRwalls) {
-      to_send_1 = to_send_1 | wall_present_north | wall_present_east | wall_present_west;
-      change_direction(1);
-      turn(2);
-    }
-    // Left Turn
-    else if (read_wallF >= Fwall && read_wallL < LRwalls && read_wallR >= LRwalls) {
-      to_send_1 = to_send_1 | wall_present_north | wall_present_east;
-      change_direction(2);
-      turn(0);
-    }
-    // Right Turn
-    else if (read_wallR < LRwalls) {
-      change_direction(0);
-      turn(1);
-    }
-    // Go forward
-    else {
-      leftservo.write(135);
-      rightservo.write(45);
-    }
+    intersection();
   }
   // Continue turning right
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
@@ -189,6 +152,115 @@ void follow()
   else if (rightAverage >= lineVoltage && leftAverage < lineVoltage) {
     leftservo.write(90);
     rightservo.write(45);
+  }
+}
+
+void intersection(){
+// not sure if this stopping is necessary or not
+  leftservo.write(90);
+  rightservo.write(90);
+  
+  detectRobot();
+  // radio information
+  ping_out( 0b11000000 );
+    delay( 250 );
+    ping_out( to_send_0 );
+    delay( 250 );
+    ping_out( 0b10000000 );
+    delay(250);
+    ping_out( to_send_1 );
+
+  to_send_0 = 0b00000000;
+  to_send_1 = 0b00000000;
+  
+  while (robot == 1) {
+    detectRobot();
+    to_send_0 = to_send_0 | robot_present;
+    digitalWrite(7, HIGH);
+    leftservo.write(90);
+    rightservo.write(90);
+        
+  }
+  digitalWrite(7, LOW);
+
+  switch(c_direction) { //update current location
+    case North :
+      current[0] = current[0] + 1;
+    case East :
+      current[1] = current[1] + 1;
+    case South :
+      current[0] = current[0] - 1;
+    case West :
+      current[1] = current[1] - 1;
+  }
+  
+  bool rWall = detectRightWall();
+  bool lWall = detectLeftWall();
+  bool fWall = detectFrontWall();
+  bool nWall;
+  bool eWall;
+  bool sWall;
+  bool wWall;
+  
+  switch (c_direction) {
+    case North :
+      sWall = false;
+      nWall = fWall;
+      eWall = rWall;
+      wWall = lWall;
+    case East :
+      nWall = lWall;
+      eWall = fWall;
+      sWall = rWall;
+      wWall = false;
+    case South :
+      nWall = false;
+      eWall = lWall;
+      wWall = rWall;
+      sWall = fWall;
+    case West :
+      nWall = rWall;
+      eWall = true;
+      wWall = fWall;
+      sWall = lWall;
+  }
+  
+  maze[current[0]][current[1]] = true;
+  
+  // U-turn
+  if (fWall && lWall && rWall) {
+    next = UTURN;
+//      to_send_1 = to_send_1 | wall_present_north | wall_present_east | wall_present_west;
+//      change_direction(1);
+//      turn(2);
+  }
+  // Left Turn
+  else if (fWall && rWall) {
+    next = LEFT;
+//      to_send_1 = to_send_1 | wall_present_north | wall_present_east;
+//      change_direction(2);
+//      turn(0);
+  }
+  // Right Turn
+  else if (!rWall) {
+    next = RIGHT;
+//      change_direction(0);
+//      turn(1);
+  }
+  // Go forward
+  else {
+    next = FORWARD;
+//      leftservo.write(135);
+//      rightservo.write(45);
+  }
+
+  maze_direction next_maze = find_next_direction(c_direction, next);
+
+  if (next_maze == North && maze[current[0]+1][current[1]] == true) {
+    
+  }
+  else {
+    
   }
 }
 
@@ -216,28 +288,51 @@ void turn(int direction) {
     rightservo.write(45);
 }
 
-void detectRightWall() {
+bool detectRightWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
   digitalWrite(s0, LOW);
 
-  read_wallR = analogRead(walls);
+  //read_wallR = analogRead(walls);
+
+  if (analogRead(walls) >= LRwalls) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
-void detectFrontWall() {
+bool detectFrontWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, LOW);
   digitalWrite(s0, HIGH);
 
-  read_wallF = analogRead(walls);
+  //int read_wallF = analogRead(walls);
+
+  
+  if (analogRead(walls) >= Fwall) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
-void detectLeftWall() {
+bool detectLeftWall() {
   digitalWrite(s2, LOW);
   digitalWrite(s1, HIGH);
   digitalWrite(s0, LOW);
 
-  read_wallL = analogRead(walls);
+  //read_wallL = analogRead(walls);
+
+  
+  if (analogRead(walls) >= LRwalls) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 void detectRobot() { 
@@ -392,6 +487,61 @@ void change_direction(int how_many_turn) {
     default:
       m_direction = m_direction;
       break;
+  }
+}
+
+maze_direction find_next_direction (maze_direction m, action a) {
+  
+  switch (m) {
+    case North:
+      switch (a) {
+        case LEFT:
+          return West;
+        case RIGHT:
+          return East;
+        case FORWARD:
+          return North;
+        case UTURN:
+          return South;
+      }
+      break;
+      
+    case East :
+      switch (a) {
+        case LEFT:
+          return North;
+        case RIGHT:
+          return South;
+        case FORWARD:
+          return East;
+        case UTURN:
+          return West;
+      }
+      break;
+
+    case South :
+      switch (a) {
+        case LEFT:
+          return East;
+        case RIGHT:
+          return West;
+        case FORWARD:
+          return South;
+        case UTURN:
+          return North;
+      }
+
+    case West :
+      switch (a) {
+        case LEFT:
+          return South;
+        case RIGHT:
+          return North;
+        case FORWARD:
+          return West;
+        case UTURN:
+          return East;
+      }
   }
 }
 
