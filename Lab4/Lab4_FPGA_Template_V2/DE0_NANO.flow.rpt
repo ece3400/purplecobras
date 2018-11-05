@@ -1,5 +1,5 @@
 Flow report for DE0_NANO
-Fri Nov 02 17:14:05 2018
+Mon Nov 05 13:53:09 2018
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -40,7 +40,7 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Fri Nov 02 17:13:53 2018       ;
+; Flow Status                        ; Successful - Mon Nov 05 13:53:02 2018       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; DE0_NANO                                    ;
 ; Top-level Entity Name              ; DE0_NANO                                    ;
@@ -64,7 +64,7 @@ refer to the applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 11/02/2018 17:13:12 ;
+; Start date & time ; 11/05/2018 13:52:25 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; DE0_NANO            ;
 +-------------------+---------------------+
@@ -75,7 +75,7 @@ refer to the applicable agreement for further details.
 +-------------------------------------+----------------------------------------+---------------+-------------+------------+
 ; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id ;
 +-------------------------------------+----------------------------------------+---------------+-------------+------------+
-; COMPILER_SIGNATURE_ID               ; 180331606175997.154119319108704        ; --            ; --          ; --         ;
+; COMPILER_SIGNATURE_ID               ; 180331606175997.154144394507712        ; --            ; --          ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --            ; --          ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --            ; --          ; --         ;
 ; MISC_FILE                           ; sweetPLL_inst.v                        ; --            ; --          ; --         ;
@@ -94,11 +94,11 @@ refer to the applicable agreement for further details.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:25     ; 1.0                     ; 4780 MB             ; 00:00:45                           ;
-; Fitter               ; 00:00:11     ; 1.0                     ; 5292 MB             ; 00:00:10                           ;
-; Assembler            ; 00:00:03     ; 1.0                     ; 4697 MB             ; 00:00:02                           ;
-; Timing Analyzer      ; 00:00:10     ; 1.0                     ; 4779 MB             ; 00:00:03                           ;
-; Total                ; 00:00:49     ; --                      ; --                  ; 00:01:00                           ;
+; Analysis & Synthesis ; 00:00:21     ; 1.0                     ; 4764 MB             ; 00:00:46                           ;
+; Fitter               ; 00:00:09     ; 1.0                     ; 5206 MB             ; 00:00:11                           ;
+; Assembler            ; 00:00:03     ; 1.0                     ; 4684 MB             ; 00:00:03                           ;
+; Timing Analyzer      ; 00:00:05     ; 1.0                     ; 4755 MB             ; 00:00:05                           ;
+; Total                ; 00:00:38     ; --                      ; --                  ; 00:01:05                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

@@ -155,20 +155,20 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 	end
 end
 
-// update x, y coordinates
-always @ ( posedge PLL_50 ) begin
-	// this is the only time we want to update
-	//if ( temp_counter == 2'd2 ) begin
-		if ( HREF == 1'd0 ) begin
-			Y_ADDR <= Y_ADDR + 15'd1;
-			X_ADDR <= 15'd0;
-		end
-		else if ( Y_ADDR == `SCREEN_HEIGHT ) begin
-			Y_ADDR <= 15'd0;
-		end
-		else begin
-			X_ADDR <= X_ADDR + 15'd1;
-		end
+//// update x, y coordinates
+//always @ ( posedge PLL_50 ) begin
+//	// this is the only time we want to update
+//	//if ( temp_counter == 2'd2 ) begin
+//		if ( HREF == 1'd0 ) begin
+//			Y_ADDR <= Y_ADDR + 15'd1;
+//			X_ADDR <= 15'd0;
+//		end
+//		else if ( Y_ADDR == `SCREEN_HEIGHT ) begin
+//			Y_ADDR <= 15'd0;
+//		end
+//		else begin
+//			X_ADDR <= X_ADDR + 15'd1;
+//		end
 	//end
 	//else begin
 	//end
@@ -183,62 +183,85 @@ always @ ( posedge PLL_50 ) begin
 //	end
 //	else begin
 //	end
-end
+//end
 
 
 // read
-always @ ( negedge PCLK ) begin
-	W_EN <= 1'b0;
-	if ( HREF ) begin
-		if ( which_byte == 1'd0 ) begin	
-			if ( temp_counter == 2'd0 ) begin
-				// red color
-				color_temp[7] <= 1'd1;//camera_7;
-				color_temp[6] <= 1'd1;//camera_6;
-				color_temp[5] <= 1'd1;//camera_5;
-				
-				// green color
-				color_temp[4] <= 1'd0;//camera_2;
-				color_temp[3] <= 1'd0;//camera_1;
-				color_temp[2] <= 1'd0;//camera_0;
-				which_byte <= 1'd1;
-				temp_counter <= 2'd1;
-			end	
-			else begin
-			
-			end
+always @ ( posedge PCLK ) begin
+	if ( VSYNC ) begin
+		W_EN = 0;
+		// reset X and pixel data
+		pixel_data_RGB332[7:0] = 0;
+		X_ADDR = 0;
+		which_byte = 1'b0;
+	end
+	else begin
+		if ( !HREF ) begin
+			W_EN = 0;
+			which_byte = 1'b1;
+			pixel_data_RGB332[1:0] = { camera_3, camera_4 };
 		end
-		
-		// second byte
 		else begin
-			if ( temp_counter == 2'd1 ) begin
-				color_temp[1] <= 1'd0;//camera_4;
-				color_temp[0] <= 1'd0;//camera_3;
-				which_byte <= 1'd0;
-				temp_counter <= 2'd1;
-			end
-			else begin
-			end
+			W_EN = 0;
+			which_byte = 1'b0;
+			pixel_data_RGB332[7:2] = { camera_7, camera_6, camera_5, camera_2, camera_1, camera_0 };
+			X_ADDR = X_ADDR + 1'b1;
+			W_EN = 1;
 		end
 	end
-	else begin
-	end
-	W_EN <= 1'b1;
 end
-
-always @ ( PLL_50 ) begin
-	//if ( temp_counter == 2'd1 ) begin
-	if ( W_EN ) begin
-		pixel_data_RGB332 <= color_temp;
-		
-	end
-	else begin
-	end
-		//temp_counter <= 2'd0;
-	//end
-	//else begin
-	//end
-end
+	
+//	W_EN <= 1'b0;
+//	if ( HREF ) begin
+//		if ( which_byte == 1'd0 ) begin	
+//			if ( temp_counter == 2'd0 ) begin
+//				// red color
+//				color_temp[7] <= 1'd1;//camera_7;
+//				color_temp[6] <= 1'd1;//camera_6;
+//				color_temp[5] <= 1'd1;//camera_5;
+//				
+//				// green color
+//				color_temp[4] <= 1'd0;//camera_2;
+//				color_temp[3] <= 1'd0;//camera_1;
+//				color_temp[2] <= 1'd0;//camera_0;
+//				which_byte <= 1'd1;
+//				temp_counter <= 2'd1;
+//			end	
+//			else begin
+//			
+//			end
+//		end
+//		
+//		// second byte
+//		else begin
+//			if ( temp_counter == 2'd1 ) begin
+//				color_temp[1] <= 1'd0;//camera_4;
+//				color_temp[0] <= 1'd0;//camera_3;
+//				which_byte <= 1'd0;
+//				temp_counter <= 2'd1;
+//			end
+//			else begin
+//			end
+//		end
+//	end
+//	else begin
+//	end
+//	W_EN <= 1'b1;
+//end
+//
+//always @ ( PLL_50 ) begin
+//	//if ( temp_counter == 2'd1 ) begin
+//	if ( W_EN ) begin
+//		pixel_data_RGB332 <= color_temp;
+//		
+//	end
+//	else begin
+//	end
+//		//temp_counter <= 2'd0;
+//	//end
+//	//else begin
+//	//end
+//end
 
 //// starts at the second byte
 //always @ ( HREF, negedge PCLK, which_byte ) begin
