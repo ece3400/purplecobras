@@ -1085,7 +1085,25 @@ the robot to do anything upon detection.
                     We set up the PLL according to the lab and created wires to deliver the clock signals to the proper places.
                   </p>
 		<p> <h6>2. Buffer Reader</h6>
+		After connecting the VGA Driver to the monitor, we checked that we properly saw the black screen in the top left corner.
 		</p>
+	       <p class = text-left>
+      		 <code>
+			always @ (posedge PLL_50) begin
+			W_EN <= 1'b0;
+			if ( X_ADDR == `SCREEN_WIDTH ) begin 
+			Y_ADDR <= Y_ADDR + 15'd1;
+			X_ADDR <= 15'd0;
+			end
+		else if ( Y_ADDR < `SCREEN_HEIGHT )begin
+		X_ADDR <= X_ADDR + 15'd1;
+		end
+		else begin
+		end
+		W_EN <= 1'b1;
+		end	
+		 </code>
+    		</p>
 	      <h5>Arduino Team</h5>
 	      <p> <h6> Objective: Establish communication between camera and Arduino so camera registers can be read and written</h6> </p>
 			<p> <h6>Arduino Team Materials</h6>
@@ -1096,6 +1114,8 @@ the robot to do anything upon detection.
 			      <li> 24 MHz clock (from FPGA) </li>
                     </ul>
                   </p>
+			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together.  
+There was no communication occurring between the devices, so we checked both the FPGA and Arduino. Originally, we thought that the distorted clock signal (more sinusoidal than square) coming from the FPGA was causing the issue, but after some testing the issue was found to be the program stopping after calling Wire.endTransmission(). Then, after some googling, we switched out our knock-off Arduino for a real one, and the two immediately were able to communicate. We then compared register values before and after writing them to verify that they we could change them.</p>
 		</div>
 	    	</div>
 		</div>
