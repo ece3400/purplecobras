@@ -1089,19 +1089,19 @@ the robot to do anything upon detection.
 		</p>
 	       <p class = text-left>
       		 <code>
-			always @ (posedge PLL_50) begin
-			W_EN <= 1'b0;
-			if ( X_ADDR == `SCREEN_WIDTH ) begin 
-			Y_ADDR <= Y_ADDR + 15'd1;
-			X_ADDR <= 15'd0;
-			end
-		else if ( Y_ADDR < `SCREEN_HEIGHT )begin
-		X_ADDR <= X_ADDR + 15'd1;
-		end
-		else begin
-		end
-		W_EN <= 1'b1;
-		end	
+			<br> always @ (posedge PLL_50) begin <br>
+			W_EN <= 1'b0; <br>
+			if ( X_ADDR == `SCREEN_WIDTH ) begin <br>
+			Y_ADDR <= Y_ADDR + 15'd1; <br>
+			X_ADDR <= 15'd0; <br>
+			end <br>
+		else if ( Y_ADDR < `SCREEN_HEIGHT )begin <br>
+		X_ADDR <= X_ADDR + 15'd1; <br>
+		end <br>
+		else begin <br>
+		end <br>
+		W_EN <= 1'b1; <br>
+		end <br>
 		 </code>
     		</p>
 	      <h5>Arduino Team</h5>
