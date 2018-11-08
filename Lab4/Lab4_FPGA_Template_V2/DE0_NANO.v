@@ -294,7 +294,6 @@ module DE0_NANO(
 	GPIO_1_D,
 	KEY,
 	RESULT
-
 );
 
 
@@ -324,8 +323,6 @@ sweetPLL	sweetPLL_inst (
 	);
 
 
-
-
 //////////// GPIO_0, GPIO_0 connect to GPIO Default //////////
 output 		    [33:0]		GPIO_0_D;
 //////////// GPIO_0, GPIO_1 connect to GPIO Default //////////
@@ -334,6 +331,7 @@ input 		     [1:0]		KEY;
 
 //////////// CLOCK //////////
 input CLOCK_50;
+
 wire PCLK = GPIO_1_D[6];
 //wire HREF = GPIO_1_D[30];
 wire HREF = GPIO_1_D[2];
@@ -445,9 +443,7 @@ end
 reg cycle = 1'b0;
 //reg [15:0] cameradata;
 
-reg PREV_HREF = 1'b0;
-
-always @ (posedge PCLK) begin 
+always @ (posedge PCLK) begin
 	if (VSYNC) begin 
 		W_EN = 0;
 		X_ADDR = 0;
@@ -459,7 +455,7 @@ always @ (posedge PCLK) begin
 		if (!HREF) begin
 			W_EN = 0;
 			X_ADDR = 0;
-			cycle = 0;
+			cycle = 1'b0;
 			pixel_data_RGB332[7:0] = 0;
 			//cameradata[15:0] = 0;
 		end
@@ -467,24 +463,25 @@ always @ (posedge PCLK) begin
 			if (!cycle ) begin
 				//cameradata[15:0] = {GPIO_1_D[15], GPIO_1_D[14], GPIO_1_D[13], GPIO_1_D[12], GPIO_1_D[11], GPIO_1_D[10], GPIO_1_D[9], GPIO_1_D[8]};
 				W_EN = 0;
-				cycle = 1'b1;
 				X_ADDR = X_ADDR;
 				//pixel_data_RGB332[7:5] = {GPIO_1_D[15], GPIO_1_D[14], GPIO_1_D[13]};
 				//pixel_data_RGB332[4:2] = {GPIO_1_D[10], GPIO_1_D[9], GPIO_1_D[8]};
 				pixel_data_RGB332[1:0] = {GPIO_1_D[16], GPIO_1_D[14]}; //something is wrong with the cycles, blue being output before red/green, but this code works
+				cycle = 1'b1;
 			end
 			else begin
 				//cameradata[15:8] = {GPIO_1_D[15], GPIO_1_D[14], GPIO_1_D[13], GPIO_1_D[12], GPIO_1_D[11], GPIO_1_D[10], GPIO_1_D[9], GPIO_1_D[8]};
 				//pixel_data_RGB332[7:0] = {cameradata[4], cameradata[3], cameradata[2], cameradata[10], cameradata[9], cameradata[8], cameradata[15], cameradata[14]};
 				pixel_data_RGB332[7:5] = {GPIO_1_D[22], GPIO_1_D[20], GPIO_1_D[18]};
 				pixel_data_RGB332[4:2] = {GPIO_1_D[12], GPIO_1_D[10], GPIO_1_D[8]};
+				X_ADDR = X_ADDR + 1'b1;
 				cycle = 1'b0;
-				if ( X_ADDR >= `SCREEN_WIDTH ) begin
-					X_ADDR = X_ADDR;
-				end
-				else begin
-					X_ADDR = X_ADDR + 1'b1;
-				end
+//				if ( X_ADDR >= `SCREEN_WIDTH ) begin
+//					X_ADDR = X_ADDR;
+//				end
+//				else begin
+//					X_ADDR = X_ADDR + 1'b1;
+//				end
 				//X_ADDR = X_ADDR + 1'b1;
 				W_EN = 1;
 			end
@@ -499,7 +496,6 @@ always @ (posedge PCLK) begin
 //assign camera_7 = GPIO_1_D[22];
 		end
 	end
-	PREV_HREF <= HREF;
 end
 
 	
