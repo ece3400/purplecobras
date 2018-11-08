@@ -141,11 +141,12 @@
 
 
 int reg11;
-int reg0c;
+int reg0C;
 int reg40;
 int reg3e;
 int reg12;
 int reg42;
+int reg14;
 
 ///////// Main Program //////////////
 void setup() {
@@ -162,16 +163,20 @@ void setup() {
   // TODO: WRITE KEY REGISTERS
   //there should be 8 of them
 //laasyas stuff
-Serial.println(OV7670_write_register( 0x12, 0x80 )); 
+//  Serial.println("starting write");
+//  Serial.println(OV7670_write_register( 0x12, 0x80 )); 
   //delay
   delay(100);
-  Serial.println(OV7670_write_register( 0x12, 0x06 )); 
-  Serial.println(OV7670_write_register( 0x11, 0x80 )); 
+  Serial.println(OV7670_write_register( 0x12, 0x0C ));  //c should disable test, E should enable everything
+  Serial.println(OV7670_write_register( 0x11, 0xC0 )); 
   Serial.println(OV7670_write_register( 0x0C, 0x08 )); 
-  Serial.println(OV7670_write_register( 0x40, 0xD0 ));//color test reg 12 AND reset all registers by enabling last bit
-  Serial.println(OV7670_write_register( 0x42, 0x08 ));//more color test reg 42
-
-
+  Serial.println(OV7670_write_register( 0x40, 0xD0 )); //confirmed good except output seems whack
+  Serial.println(OV7670_write_register( 0x42, 0x00 ));//more color test reg 42, 0 will turn off, 08 will turn on
+  Serial.println(OV7670_write_register( 0x14, 0x0B ));
+   
+// to turn color test on:
+// replace "Serial.println(OV7670_write_register( 0x12, 0x0C ));" with  Serial.println(OV7670_write_register( 0x12, 0x0E ));
+// replace "Serial.println(OV7670_write_register( 0x42, 0x00 ));" with Serial.println(OV7670_write_register( 0x42, 0x08 ));
 
 
   
@@ -225,7 +230,7 @@ void loop(){
   
   MSB = digitalRead(8);
   LSB = digitalRead(9);
-  /*if(MSB == LOW && LSB == LOW){ //nothing
+  if(MSB == LOW && LSB == LOW){ //nothing
     Serial.println("no color");
   }
   else if(MSB == LOW && LSB == HIGH){
@@ -233,27 +238,37 @@ void loop(){
   }
   else if(MSB == HIGH && LSB == LOW){
     Serial.println("BLUE");
-  }*/
-  read_key_registers();
+  }
   Serial.println( "loop" );
 }
 
 ///////// Function Definition //////////////
 void read_key_registers(){
   /*TODO: DEFINE THIS FUNCTION*/
-  reg11 = read_register_value(17); //external clock
+  reg11 = read_register_value(0x11); //external clock
+  Serial.println( "reg11" );
   Serial.println( reg11 );
-  reg0c = read_register_value(12); //enable scaling
-  Serial.println( reg0c );
-  reg40 = read_register_value(64); //change res 
-  Serial.println( reg40 );
-  reg3e = read_register_value(62); //change res
-  Serial.println( reg3e );
-  reg12 = read_register_value(18); //change res
+  reg12 = read_register_value(0x12); //enable scaling
+  Serial.println( "reg12" );
   Serial.println( reg12 );
-  reg42 = read_register_value(66); //change res
+  reg40 = read_register_value(0x40); //change res 
+  Serial.println( "reg40" );
+  Serial.println( reg40 );
+//  reg3e = read_register_value(62); //change res
+//  Serial.println( reg3e );
+//  reg12 = read_register_value(18); //change res
+//  Serial.println( reg12 );
+  reg42 = read_register_value(0x42); //change res
+  Serial.println( "reg42" );
   Serial.println( reg42 );
+  reg0C = read_register_value(0x0C); //change res
+  Serial.println( "reg0c" );
+  Serial.println( reg0C );
+  reg14 = read_register_value(0x14); //change res
+  Serial.println( "reg14" );
+  Serial.println( reg14 );
   Serial.println( "finished read" );
+  
 }
 
 
@@ -261,7 +276,7 @@ byte read_register_value(int register_address){
   byte data = 0;
   Wire.beginTransmission(OV7670_I2C_ADDRESS);
   Serial.println( "begining read_reg_val" );
-  Serial.println( register_address );
+  //Serial.println( register_address );
   Wire.write(register_address);
   Wire.endTransmission();
   Wire.requestFrom(OV7670_I2C_ADDRESS,1);
