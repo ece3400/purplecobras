@@ -173,7 +173,7 @@ always @ (posedge PCLK) begin
 				W_EN = 0;
 				X_ADDR = X_ADDR;
 				// get data for blue
-				pixel_data_RGB332[1:0] = {GPIO_1_D[16], GPIO_1_D[14]}; //something is wrong with the cycles, blue being output before red/green, but this code works
+				pixel_data_RGB332[1:0] = {GPIO_1_D[16], GPIO_1_D[14]}; 
 				which_byte = 1'b1;
 			end
 			else begin

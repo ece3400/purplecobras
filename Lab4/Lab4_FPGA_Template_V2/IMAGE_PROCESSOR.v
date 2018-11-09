@@ -31,22 +31,23 @@ reg [15:0] BLUECOUNTTEMP = 0;
 
 always @ (posedge CLK, negedge VGA_VSYNC_NEG) begin
 		if (!VGA_VSYNC_NEG) begin
-			if (BLUECOUNTTEMP > REDCOUNTTEMP && BLUECOUNTTEMP > 16’d17000) begin //100 is arbitrary, can change
-				RESULT = 2'b10; //when color is 10, blue
+			if (BLUECOUNTTEMP > REDCOUNTTEMP && BLUECOUNTTEMP > 16’d17000) begin
+				// set result to 2 when blue is detected
+				RESULT = 2'b10;
 			end
-			else if (REDCOUNTTEMP > BLUECOUNTTEMP && REDCOUNTTEMP > 16’d17000) begin //
-				RESULT = 2'b01; //when color is 01, red
+			else if (REDCOUNTTEMP > BLUECOUNTTEMP && REDCOUNTTEMP > 16’d17000) begin
+				// set result to 1 when red is detected
+				RESULT = 2'b01;
 			end
 			else begin
-				RESULT = 2'b00; //no color detected
+				// set result to 0 if no color
+				RESULT = 2'b00;
 			end
 			BLUECOUNT = 0;
 			REDCOUNT = 0;
 		end
 		else begin
-			//if (VGA_PIXEL_Y >= 10'b0001000110 && VGA_PIXEL_Y <= 10'b0001001010) begin
-				//RESULT = 2'b10;
-			//REDCOUNT = REDCOUNT + 1;
+			// determine whether the majority of the pixels are red or blue
 			if (PIXEL_IN[7:6] > PIXEL_IN[1:0] && PIXEL_IN[7:6] > PIXEL_IN[4:3]) begin
 				REDCOUNT = REDCOUNT + 1'b1;
 			end
