@@ -66,11 +66,16 @@ enum action {
 
 action next = FORWARD;
 
-bool maze[4][5];
-int path[20][2];
+unsigned char maze[4][5] = 
+  { {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+  };
+unsigned char path[20][2];
 int current[]= {0, 0}; //first is rows, second columns
 maze_direction c_direction = North;
-int pointer = 0;
 
 void setup() {
   //setting up maze
@@ -173,16 +178,6 @@ void intersection(){
   bool fWall = detectFrontWall();
    
   detectRobot();
-  while (robot == 1) {
-    detectRobot();
-    to_send_0 = to_send_0 | robot_present;
-    digitalWrite(7, HIGH);
-    leftservo.write(90);
-    rightservo.write(90);
-        
-  }
-  digitalWrite(7, LOW);
-  
   switch(c_direction) { //update current location
     case North :
       nGood = false;
@@ -214,6 +209,19 @@ void intersection(){
     ping_out( 0b10000000 );
     delay(250);
     ping_out( to_send_1 );
+
+  to_send_0 = 0b00000000;
+  to_send_1 = 0b00000000;
+  
+  while (robot == 1) {
+    detectRobot();
+    to_send_0 = to_send_0 | robot_present;
+    digitalWrite(7, HIGH);
+    leftservo.write(90);
+    rightservo.write(90);
+        
+  }
+  digitalWrite(7, LOW);
 
   switch(c_direction) { //update current location
     case North :
@@ -270,18 +278,17 @@ void intersection(){
     rGood = nGood;
     lGood = sGood;
   }
-
+  
+  
+  
   if (rGood) {
-    pointer ++;
     turn(1);
   }
   else if (fGood) {
-    pointer ++;
     leftservo.write(135);
     rightservo.write(45);
   }
   else if (lGood) {
-    pointer++;
     turn(3);
   }
   else {
@@ -517,8 +524,6 @@ void change_direction(int how_many_turn) {
 }
 
 void backTrack() {
-  int prevRow = path[pointer][0];
-  int prevCol = path[pointer][0];
-  if (
+  
 }
 
