@@ -411,7 +411,7 @@ IMAGE_PROCESSOR proc (
 
 
 always @ (negedge HREF) begin
-	if (Y_ADDR >= `SCREEN_HEIGHT - 1) begin
+	if ( ( Y_ADDR >= `SCREEN_HEIGHT - 1 ) || VSYNC ) begin
 		Y_ADDR = 0;
 	end
 	else begin
@@ -447,6 +447,7 @@ always @ (posedge PCLK) begin
 	if (VSYNC) begin 
 		W_EN = 0;
 		X_ADDR = 0;
+		//Y_ADDR = 0;
 		cycle = 0;
 		pixel_data_RGB332[7:0] = 0;
 		//cameradata[15:0] = 0;
