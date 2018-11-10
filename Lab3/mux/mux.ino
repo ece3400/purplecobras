@@ -14,8 +14,8 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   digitalWrite(s2, LOW);
-  digitalWrite(s1, HIGH);
-  digitalWrite(s0, LOW);
+  digitalWrite(s1, LOW);
+  digitalWrite(s0, HIGH);
 
   int wall = analogRead(walls);
   

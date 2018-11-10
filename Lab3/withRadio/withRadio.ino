@@ -128,18 +128,18 @@ void follow()
     leftservo.write(90);
     rightservo.write(90);
     
-    detectRobot();
-    // radio information
-    ping_out( 0b11000000 );
-      delay( 250 );
-      ping_out( to_send_0 );
-      delay( 250 );
-      ping_out( 0b10000000 );
-      delay(250);
-      ping_out( to_send_1 );
-
-    to_send_0 = 0b00000000;
-    to_send_1 = 0b00000000;
+//    detectRobot();
+//    // radio information
+//    ping_out( 0b11000000 );
+//      delay( 250 );
+//      ping_out( to_send_0 );
+//      delay( 250 );
+//      ping_out( 0b10000000 );
+//      delay(250);
+//      ping_out( to_send_1 );
+//
+//    to_send_0 = 0b00000000;
+//    to_send_1 = 0b00000000;
     
     while (robot == 1) {
       detectRobot();

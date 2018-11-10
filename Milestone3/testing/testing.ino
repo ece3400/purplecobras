@@ -22,7 +22,7 @@ int walls = A3;
 
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 400;
+int lineVoltage = 450;
 int LRwalls = 155;
 int Fwall = 100;
 int pause = 1200;
@@ -57,13 +57,13 @@ action next = FORWARD;
 
 bool maze[4][5];
 int path[20][2];
-int current[]= {3, 0}; //first is rows, second columns
+int current[]= {0, 0}; //first is rows, second columns
 maze_direction c_direction = North;
 int pointer = 1;
 
 void setup() {
   //setting up maze
-  maze[3][0] = true;
+  maze[0][0] = true;
   
   //wall selects
   pinMode(s2, OUTPUT);
@@ -126,6 +126,11 @@ void sample()
   
   leftAverage = (readL[0] + readL[1] + readL[2])/3;
   rightAverage = (readR[0] + readR[1] + readR[2])/3;
+
+  Serial.print("left : ");
+  Serial.println(leftAverage);
+  Serial.print("right : ");
+  Serial.println(rightAverage);
   //END LINE SENSORS
 }
 
@@ -161,32 +166,40 @@ void intersection(){
   bool rWall = detectRightWall();
   bool lWall = detectLeftWall();
   bool fWall = detectFrontWall();
-  
+
+  Serial.println("Updating maze");
   switch(c_direction) { //update current location
     case North :
-      current[0] = current[0] + 1;
-    case East :
+      Serial.println("NORTH");
       current[1] = current[1] + 1;
+      break;
+    case East :
+    Serial.println("EAST");
+      current[0] = current[0] + 1;
+      break;
     case South :
-      current[0] = current[0] - 1;
-    case West :
+      Serial.println("SOUTH");
       current[1] = current[1] - 1;
+      break;
+    case West :
+      Serial.println("WEST");
+      current[0] = current[0] - 1;
+      break;
   }
-
   maze[current[0]][current[1]] = true;
-  Serial.println(c_direction);
   
   path[pointer][0] = current[0];
   path[pointer][1] = current[1];
   
   if (rWall && lWall && fWall) {
-    Serial.println("HELP");
+    Serial.println("UTURN");
     backTrack();
     
   }
   else if (rWall && fWall && !lWall) {
+    Serial.println("LEFT TURN ATTEMPT");
     if (c_direction == North) {
-      if (!maze[current[0]][current[1]-1]) {
+      if (!maze[current[0]-1][current[1]]) {
         moveWest();
         pointer ++;
       }
@@ -195,7 +208,7 @@ void intersection(){
       }
     }
     else if (c_direction == East) {
-      if (!maze[current[0]+1][current[1]]) {
+      if (!maze[current[0]][current[1]+1]) {
         moveNorth();
         pointer ++;
       }
@@ -204,7 +217,7 @@ void intersection(){
       }
     }
     else if (c_direction == South) {
-      if (!maze[current[0]][current[1]+1]) {
+      if (!maze[current[0]+1][current[1]]) {
         moveEast();
         pointer++;
       }
@@ -213,7 +226,7 @@ void intersection(){
       }
     }
     else {
-      if (!maze[current[0]-1][current[1]]) {
+      if (!maze[current[0]][current[1]-1]) {
         moveSouth();
         pointer++;
       }
@@ -223,68 +236,73 @@ void intersection(){
     }
   }
   else if (!rWall) {
-    Serial.println("help");
+    Serial.println("RIGHT TURN ATTEMPT");
     if (c_direction == North) {
-      if (!maze[current[0]][current[1]+1]) {
+      Serial.println("NORTH");
+      if (!maze[current[0]+1][current[1]]) {
         Serial.println("MOVE EAST");
         moveEast();
         pointer++;
       }
       else {
         if (!fWall && !lWall) {
-          if (!maze[current[0]+1][current[1]]) {
+          if (!maze[current[0]][current[1]+1]) {
             Serial.println("MOVE NORTH");
             moveNorth();
             pointer++;
           }
-          else if (!maze[current[0]][current[1]-1]) {
+          else if (!maze[current[0]-1][current[1]]) {
             Serial.println("MOVE WEST");
             moveWest();
             pointer++;
           }
           else {
+            Serial.println("BACKTRACK");
             backTrack();
           }
         }
         else if (!fWall) {
-          if (!maze[current[0]+1][current[1]]) {
+          if (!maze[current[0]][current[1]]+1) {
             Serial.println("MOVE NORTH");
             moveNorth();
             pointer++;
           }
           else {
+            Serial.println("BACKTRACK");
             backTrack();
           }
         }
         else if (!lWall) {
-          if (!maze[current[0]][current[1]-1]) {
+          if (!maze[current[0]-1][current[1]]) {
             Serial.println("MOVE WEST");
             moveWest();
             pointer++;
           }
           else {
+            Serial.println("BACKTRACK");
             backTrack();
           }
         }
         else {
+          Serial.println("BACKTRACK");
           backTrack();
         }
       }
     }
     else if (c_direction == East) {
-      if (!maze[current[0]-1][current[1]]) {
+      if (!maze[current[0]][current[1]-1]) {
         Serial.println("MOVE SOUTH");
         moveSouth();
         pointer++;
       }
       else {
         if (!fWall && !lWall) {
-          if (!maze[current[0]][current[1]+1]) {
+          if (!maze[current[0]+1][current[1]]) {
             Serial.println("MOVE EAST");
             moveEast();
             pointer++;
           }
-          else if (!maze[current[0]+1][current[1]]) {
+          else if (!maze[current[0]][current[1]+1]) {
             Serial.println("MOVE NORTH");
             moveNorth();
             pointer++;
@@ -294,7 +312,7 @@ void intersection(){
           }
         }
         else if (!fWall) {
-          if (!maze[current[0]][current[1]+1]) {
+          if (!maze[current[0]+1][current[1]]) {
             Serial.println("MOVE EAST");
             moveEast();
             pointer++;
@@ -304,7 +322,7 @@ void intersection(){
           }
         }
         else if (!lWall) {
-          if (!maze[current[0]+1][current[1]]) {
+          if (!maze[current[0]][current[1]+1]) {
             Serial.println("MOVE NORTH");
             moveNorth();
             pointer++;
@@ -326,12 +344,12 @@ void intersection(){
       }
       else {
         if (!fWall && !lWall) {
-          if (!maze[current[0]-1][current[1]]) {
+          if (!maze[current[0]][current[1]-1]) {
             Serial.println("MOVE SOUTH");
             moveSouth();
             pointer++;
           }
-          else if (!maze[current[0]][current[1]+1]) {
+          else if (!maze[current[0]+1][current[1]]) {
             Serial.println("MOVE EAST");
             moveEast();
             pointer++;
@@ -341,7 +359,7 @@ void intersection(){
           }
         }
         else if (!fWall) {
-          if (!maze[current[0]-1][current[1]]) {
+          if (!maze[current[0]][current[1]-1]) {
             Serial.println("MOVE SOUTH");
             moveSouth();
             pointer++;
@@ -351,7 +369,7 @@ void intersection(){
           }
         }
         else if (!lWall) {
-          if (!maze[current[0]][current[1]+1]) {
+          if (!maze[current[0]+1][current[1]]) {
             Serial.println("MOVE EAST");  
             moveEast();
             pointer++;
@@ -366,17 +384,17 @@ void intersection(){
       }
     }
     else {
-      if (!maze[current[0]+1][current[1]]) {
+      if (!maze[current[0]][current[1]+1]) {
         moveNorth();
         pointer++;
       }
       else {
         if (!fWall && !lWall) {
-          if (!maze[current[0]][current[1]-1]) {
+          if (!maze[current[0]-1][current[1]]) {
             moveWest();
             pointer++;
           }
-          else if (!maze[current[0]-1][current[1]]) {
+          else if (!maze[current[0]][current[1]-1]) {
             moveSouth();
             pointer++;
           }
@@ -385,7 +403,7 @@ void intersection(){
           }
         }
         else if (!fWall) {
-          if (!maze[current[0]][current[1]-1]) {
+          if (!maze[current[0]-1][current[1]]) {
             moveWest();
             pointer++;
           }
@@ -394,7 +412,7 @@ void intersection(){
           }
         }
         else if (!lWall) {
-          if (!maze[current[0]-1][current[1]]) {
+          if (!maze[current[0]][current[1]-1]) {
             moveSouth();
             pointer++;
           }
@@ -409,13 +427,14 @@ void intersection(){
     }
   }
   else {
+    Serial.println("FORWARD ATTEMPT");
     if (c_direction == North) {
-      if (!maze[current[0]+1][current[1]]) {
+      if (!maze[current[0]][current[1]+1]) {
         moveNorth();
         pointer++;
       }
       else if (!lWall) {
-        if (!maze[current[0]][current[1]-1]) {
+        if (!maze[current[0]-1][current[1]]) {
           moveWest();
           pointer++;
         }
@@ -433,7 +452,7 @@ void intersection(){
         pointer++;
       }
       else if (!lWall) {
-        if (!maze[current[0]+1][current[1]]) {
+        if (!maze[current[0]][current[1]+1]) {
           moveNorth();
           pointer++;
         }
@@ -446,12 +465,12 @@ void intersection(){
       }
     }
     else if (c_direction == South) {
-      if (!maze[current[0]-1][current[1]]) {
+      if (!maze[current[0]][current[1]-1]) {
         moveSouth();
         pointer++;
       }
       else if (!lWall) {
-        if (!maze[current[0]][current[1]+1]) {
+        if (!maze[current[0]+1][current[1]]) {
           moveEast();
           pointer++;
         }
@@ -464,12 +483,12 @@ void intersection(){
       }
     }
     else {
-      if (!maze[current[0]][current[1]-1]) {
+      if (!maze[current[0]-1][current[1]]) {
         moveWest();
         pointer++;
       }
       else if (!lWall) {
-        if (!maze[current[0]-1][current[1]]) {
+        if (!maze[current[0]][current[1]-1]) {
           moveSouth();
           pointer++;
         }
@@ -637,90 +656,10 @@ void moveWest() {
   }
   c_direction = West;
 }
-//void change_direction(int how_many_turn) {
-//  switch( how_many_turn ) {
-//    // turn right
-//    case 0:
-//      switch( m_direction ) {
-//        case North:
-//          m_direction = East;
-//          to_send_0 = to_send_0 | direction_east;
-//          break;
-//        case East:
-//          m_direction = South;
-//          to_send_0 = to_send_0 | direction_south;
-//          break;
-//        case South:
-//          m_direction = West;
-//          to_send_0 = to_send_0 | direction_west;
-//          break;
-//        case West:
-//          m_direction = North;
-//          to_send_0 = to_send_0 | direction_north;
-//          break;
-//        default:
-//          m_direction = m_direction;
-//          break;
-//      }
-//      break;
-//    // U-turn
-//    case 1:
-//      switch( m_direction ) {
-//        case North:
-//          m_direction = South;
-//          to_send_0 = to_send_0 | direction_south;
-//          break;
-//        case East:
-//          m_direction = West;
-//          to_send_0 = to_send_0 | direction_west;
-//          break;
-//        case South:
-//          m_direction = North;
-//          to_send_0 = to_send_0 | direction_north;
-//          break;
-//        case West:
-//          m_direction = East;
-//          to_send_0 = to_send_0 | direction_east;
-//          break;
-//        default:
-//          m_direction = m_direction;
-//          break;
-//      }
-//       break;
-//    // turn left
-//    case 2:
-//      switch( m_direction ) {
-//        case North:
-//          m_direction = West;
-//          to_send_0 = to_send_0 | direction_west;
-//          break;
-//        case East:
-//          m_direction = South;
-//          to_send_0 = to_send_0 | direction_south;
-//          break;
-//        case South:
-//          m_direction = East;
-//          to_send_0 = to_send_0 | direction_east;
-//          break;
-//        case West:
-//          m_direction = North;
-//          to_send_0 = to_send_0 | direction_north;
-//          break;
-//        default:
-//          m_direction = m_direction;
-//          break;
-//      }
-//      break;
-//    // no turn
-//    default:
-//      m_direction = m_direction;
-//      break;
-//  }
-//}
 
 void backTrack() {
   int prevRow = path[pointer][0];
-  int prevCol = path[pointer][0];
+  int prevCol = path[pointer][1];
   if (prevRow == current[0]) {
     if (prevCol == current[1] - 1) {
       moveWest();
