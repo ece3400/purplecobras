@@ -1085,25 +1085,21 @@ the robot to do anything upon detection.
                     We set up the PLL according to the lab and created wires to deliver the clock signals to the proper places.
                   </p>
 		<p> <h6>2. Buffer Reader</h6>
-		After connecting the VGA Driver to the monitor, we checked that we properly saw the black screen in the top left corner.
+		After connecting the VGA Driver to the monitor, we checked that we properly saw the black screen in the top left corner. We now wanted to get the M9K block working with the VGA Driver. To do this, we had to connect the M9K module and VGA module to the correct clocks from our PLL. To show that we could read and write color for each pixel, we created a pattern to display. This was done by incrementing the x and y address at each clock cycle and then changing the value we assigned to pixel_data_RGB332 depending on the coordinates. We were able to make the following picture of a cross.
 		</p>
-	       <p class = text-left>
-      		 <code>
-			<br> always @ (posedge PLL_50) begin <br>
-			W_EN <= 1'b0; <br>
-			if ( X_ADDR == `SCREEN_WIDTH ) begin <br>
-			Y_ADDR <= Y_ADDR + 15'd1; <br>
-			X_ADDR <= 15'd0; <br>
-			end <br>
-		else if ( Y_ADDR < `SCREEN_HEIGHT )begin <br>
-		X_ADDR <= X_ADDR + 15'd1; <br>
-		end <br>
-		else begin <br>
-		end <br>
-		W_EN <= 1'b1; <br>
-		end <br>
-		 </code>
-    		</p>
+	      <img class="img-fluid d-block mx-auto" src="img/lab4/IMG_1933.JPG" alt="">
+	      <p> Figure 1: Hard-coded Cross </p>
+	      <img class="img-fluid d-block mx-auto" src="img/lab4/unnamed.png" alt="">
+	      <p> Figure 2: M9k and VGA Modules </p>
+	      <p> <h6>3. Downsampler</h6>
+	      After achieving this, we moved on to the Downsampler. For this, we had to set up a bunch of GPIO pins for the camera to use. Except for the 24 MHz clock signal that we outputted to the camera, the reset were inputs from the camera. Next, we set up an always block that updated at PCLK, the camera’s clock. Within the always block, we checked to see if VSYNC was high or HREF was low (VSYNC going high indicates the end of valid data in a frame, and HREF going low indicates the end of the data for a row) and in these cases, we set the write enable to 0, reset the x coordinate to 0, set which_byte so that we would start with the first byte of color information the next time we wrote, and set pixel data to 0 so that we could control which color we were writing. If neither of those conditions were true, we checked the value of which_byte to see which colors we were receiving, and depending on the value either set the first 2 (least significant) bits with our blue information or we set the most significant 6 bits with our red and green information. We used this method because the camera sends 2 bytes with 5 bits for both red and blue, and 6 bits for green. The above method changes this data to a 332 format that the M9K block can use. At the end of the second byte, we set write enable high again so that the M9K block can write the information over to the VGA module. Below is the code for our downsampler.
+	      </p>
+	    <img class="img-fluid d-block mx-auto" src="img/lab4/downsamplercode.png" alt="">
+	    <p> Figure 3: Downsampler code </p>
+	    <p> <h6> 4. Color Detection </h6>
+	    For color detection, we used an always block that runs when the clock goes high or VGA_VSYNC_NEG goes low. Within the always block, we determine whether each pixel has a majority red or blue content, and depending on the result, either increment the red or blue counter. Then after we finish a frame, we determine whether the values of the blue and red counters are above a certain threshold, and whether the blue or red counter has a greater value. Depending on the results, we then determine the value to send to the arduino (indicating red, blue, or no color). Below is the code we used.
+	    </p>
+		<img class="img-fluid d-block mx-auto" src="img/lab4/colordetectioncode.png" alt="">
 	      <h5>Arduino Team</h5>
 	      <p> <h6> Objective: Establish communication between camera and Arduino so camera registers can be read and written</h6> </p>
 			<p> <h6>Arduino Team Materials</h6>
@@ -1114,8 +1110,20 @@ the robot to do anything upon detection.
 			      <li> 24 MHz clock (from FPGA) </li>
                     </ul>
                   </p>
-			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together.  
+			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p> 
+			<img class="img-fluid d-block mx-auto" src="img/lab4/schematic.png" alt="">
+<p>  
 There was no communication occurring between the devices, so we checked both the FPGA and Arduino. Originally, we thought that the distorted clock signal (more sinusoidal than square) coming from the FPGA was causing the issue, but after some testing the issue was found to be the program stopping after calling Wire.endTransmission(). Then, after some googling, we switched out our knock-off Arduino for a real one, and the two immediately were able to communicate. We then compared register values before and after writing them to verify that they we could change them.</p>
+		
+		<p> <h5>Integration</h5>
+		Below is the picture of the color bar test after integrating the arduino and FPGA. </p>
+		<img class="img-fluid d-block mx-auto" src="img/lab4/colortest.JPG" alt="">
+			<p>The color bars somewhat correct.
+
+Here is the video output:
+
+		</p>
+		<img class="img-fluid d-block mx-auto" src="img/lab4/videooutput.PNG" alt="">
 		</div>
 	    	</div>
 		</div>
