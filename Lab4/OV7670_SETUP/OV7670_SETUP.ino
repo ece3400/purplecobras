@@ -193,11 +193,11 @@ void setup() {
   Serial.println(OV7670_write_register( 0x12, 0x80 )); 
   //delay
   delay(100);
-  Serial.println(OV7670_write_register( 0x12, 0x0E ));  //c should disable test, E should enable everything
+  Serial.println(OV7670_write_register( 0x12, 0x0C ));  //c should disable test, E should enable everything
   Serial.println(OV7670_write_register( 0x11, 0xC0 )); 
   Serial.println(OV7670_write_register( 0x0C, 0x08 )); 
   Serial.println(OV7670_write_register( 0x40, 0xD0 )); //confirmed good except output seems whack
-  Serial.println(OV7670_write_register( 0x42, 0x08 ));//more color test reg 42, 0 will turn off, 08 will turn on
+  Serial.println(OV7670_write_register( 0x42, 0x00 ));//more color test reg 42, 0 will turn off, 08 will turn on
   Serial.println(OV7670_write_register( 0x14, 0x0B ));
    
 // to turn color test on:
