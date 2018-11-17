@@ -3,15 +3,23 @@ Timing Analyzer Summary
 ------------------------------------------------------------
 
 Type  : Slow 1200mV 85C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 30.910
+Slack : 28.927
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 0.576
+Slack : 0.379
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Recovery 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 35.538
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Removal 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 2.645
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
-Slack : 9.744
+Slack : 9.743
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'CLOCK_50'
@@ -23,11 +31,19 @@ Slack : 19.747
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 31.872
+Slack : 29.996
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 0.516
+Slack : 0.374
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Recovery 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 36.016
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Removal 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 2.363
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
@@ -35,7 +51,7 @@ Slack : 9.709
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[2]'
-Slack : 9.745
+Slack : 9.747
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
@@ -43,11 +59,19 @@ Slack : 19.743
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 34.714
+Slack : 33.750
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Hold 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
-Slack : 0.307
+Slack : 0.197
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Recovery 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 37.415
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Removal 'sweetPLL_inst|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 1.524
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'

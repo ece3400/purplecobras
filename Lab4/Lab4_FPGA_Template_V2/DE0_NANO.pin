@@ -28,7 +28,7 @@
  --                 of its bank.
  --                  Bank 1:       3.3V
  --                  Bank 2:       2.5V
- --                  Bank 3:       2.5V
+ --                  Bank 3:       3.3V
  --                  Bank 4:       3.3V
  --                  Bank 5:       3.3V
  --                  Bank 6:       2.5V
@@ -99,7 +99,7 @@ GPIO_0_D[33]                 : B12       : output : 3.3-V LVTTL       :         
 RESERVED_INPUT_WITH_WEAK_PULLUP : B13       :        :                   :         : 7         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : B14       :        :                   :         : 7         :                
 GND                          : B15       : gnd    :                   :         :           :                
-RESULT[0]                    : B16       : output : 2.5 V             :         : 6         : N              
+RESULT[1]                    : B16       : output : 2.5 V             :         : 6         : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : C1        :        :                   :         : 1         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : C2        :        :                   :         : 1         :                
 GPIO_0_D[1]                  : C3        : output : 3.3-V LVTTL       :         : 8         : Y              
@@ -115,7 +115,7 @@ GND                          : C12       : gnd    :                   :         
 VCCIO7                       : C13       : power  :                   : 3.3V    : 7         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : C14       :        :                   :         : 7         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : C15       :        :                   :         : 6         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : C16       :        :                   :         : 6         :                
+RESULT[0]                    : C16       : output : 2.5 V             :         : 6         : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : D1        :        :                   :         : 1         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : D2        :        :                   :         : 1         :                
 GPIO_0_D[0]                  : D3        : output : 3.3-V LVTTL       :         : 8         : Y              
@@ -130,7 +130,7 @@ GPIO_0_D[31]                 : D11       : output : 3.3-V LVTTL       :         
 GPIO_0_D[32]                 : D12       : output : 3.3-V LVTTL       :         : 7         : Y              
 VCCD_PLL2                    : D13       : power  :                   : 1.2V    :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : D14       :        :                   :         : 7         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : D15       :        :                   :         : 6         :                
+RESULT[2]                    : D15       : output : 2.5 V             :         : 6         : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : D16       :        :                   :         : 6         :                
 KEY[1]                       : E1        : input  : 3.3-V LVTTL       :         : 1         : Y              
 GND                          : E2        : gnd    :                   :         :           :                
@@ -265,7 +265,7 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : N2        :        :                   :      
 RESERVED_INPUT_WITH_WEAK_PULLUP : N3        :        :                   :         : 3         :                
 VCCD_PLL1                    : N4        : power  :                   : 1.2V    :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : N5        :        :                   :         : 3         :                
-RESULT[1]                    : N6        : output : 2.5 V             :         : 3         : N              
+RESERVED_INPUT_WITH_WEAK_PULLUP : N6        :        :                   :         : 3         :                
 GND                          : N7        : gnd    :                   :         :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : N8        :        :                   :         : 3         :                
 GPIO_1_D[14]                 : N9        : input  : 3.3-V LVTTL       :         : 4         : Y              
@@ -279,10 +279,10 @@ GPIO_1_D[23]                 : N16       : input  : 3.3-V LVTTL       :         
 RESERVED_INPUT_WITH_WEAK_PULLUP : P1        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : P2        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : P3        :        :                   :         : 3         :                
-VCCIO3                       : P4        : power  :                   : 2.5V    : 3         :                
+VCCIO3                       : P4        : power  :                   : 3.3V    : 3         :                
 GND                          : P5        : gnd    :                   :         :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : P6        :        :                   :         : 3         :                
-VCCIO3                       : P7        : power  :                   : 2.5V    : 3         :                
+VCCIO3                       : P7        : power  :                   : 3.3V    : 3         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : P8        :        :                   :         : 3         :                
 GPIO_1_D[13]                 : P9        : input  : 3.3-V LVTTL       :         : 4         : Y              
 VCCIO4                       : P10       : power  :                   : 3.3V    : 4         :                
@@ -308,7 +308,7 @@ GPIO_1_D[4]                  : R13       : input  : 3.3-V LVTTL       :         
 GPIO_1_D[22]                 : R14       : input  : 3.3-V LVTTL       :         : 4         : Y              
 GND                          : R15       : gnd    :                   :         :           :                
 GPIO_1_D[18]                 : R16       : input  : 3.3-V LVTTL       :         : 5         : Y              
-VCCIO3                       : T1        : power  :                   : 2.5V    : 3         :                
+VCCIO3                       : T1        : power  :                   : 3.3V    : 3         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : T2        :        :                   :         : 3         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : T3        :        :                   :         : 3         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : T4        :        :                   :         : 3         :                

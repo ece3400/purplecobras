@@ -25,23 +25,25 @@
 //  
 //  // TODO: WRITE KEY REGISTERS
 //  //there should be 8 of them
-////laasyas stuff
-////  Serial.println("starting write");
-////  Serial.println(OV7670_write_register( 0x12, 0x80 )); 
+//
+//  Serial.println("starting write");
+//  Serial.println(OV7670_write_register( 0x12, 0x80 )); 
 //  //delay
 //  delay(100);
-//  Serial.println(OV7670_write_register( 0x12, 0x0E ));  //c should disable test, E should enable everything
+//  Serial.println(OV7670_write_register( 0x12, 0x0C ));  //c should disable test, E should enable everything
 //  Serial.println(OV7670_write_register( 0x11, 0xC0 )); 
 //  Serial.println(OV7670_write_register( 0x0C, 0x08 )); 
 //  Serial.println(OV7670_write_register( 0x40, 0xD0 )); //confirmed good except output seems whack
-//  Serial.println(OV7670_write_register( 0x42, 0x08 ));//more color test reg 42, 0 will turn off, 08 will turn on
+//  Serial.println(OV7670_write_register( 0x42, 0x00 ));//more color test reg 42, 0 will turn off, 08 will turn on
 //  Serial.println(OV7670_write_register( 0x14, 0x0B ));
-//  Serial.println(OV7670_write_register( 0x8C, 0x00 ));
 //   
 //// to turn color test on:
 //// replace "Serial.println(OV7670_write_register( 0x12, 0x0C ));" with  Serial.println(OV7670_write_register( 0x12, 0x0E ));
 //// replace "Serial.println(OV7670_write_register( 0x42, 0x00 ));" with Serial.println(OV7670_write_register( 0x42, 0x08 ));
 //
+//
+//  read_key_registers();
+//  set_color_matrix();
 //    // put your setup code here, to run once:
 //  pinMode(8, INPUT); 
 //  pinMode(9, INPUT); 
@@ -84,6 +86,10 @@
 //  reg40 = read_register_value(0x40); //change res 
 //  Serial.println( "reg40" );
 //  Serial.println( reg40 );
+////  reg3e = read_register_value(62); //change res
+////  Serial.println( reg3e );
+////  reg12 = read_register_value(18); //change res
+////  Serial.println( reg12 );
 //  reg42 = read_register_value(0x42); //change res
 //  Serial.println( "reg42" );
 //  Serial.println( reg42 );
@@ -161,6 +167,7 @@
 //    OV7670_write_register(0x6f, 0x9f);
 //    OV7670_write_register(0xb0, 0x84);
 //}
+
 #include <Wire.h>
 
 #define OV7670_I2C_ADDRESS 0x21 /*TODO: write this in hex (eg. 0xAB) */
@@ -210,6 +217,7 @@ void setup() {
     // put your setup code here, to run once:
   pinMode(8, INPUT); 
   pinMode(9, INPUT); 
+  pinMode(10, INPUT);
   //00 means not red or blue
   //01 means red
   //10 means blue
@@ -218,21 +226,35 @@ void setup() {
 
 int MSB = 0; //leftmost
 int LSB = 0; //rightmost
+int B = 0;
 
 
 void loop(){
     // put your main code here, to run repeatedly:
   
   MSB = digitalRead(8);
-  LSB = digitalRead(9);
-  if(MSB == LOW && LSB == LOW){ //nothing
+  B = digitalRead(9);
+  LSB = digitalRead(10);
+  if(MSB == LOW && B == LOW && LSB == LOW){ //nothing
     Serial.println("no color");
   }
-  else if(MSB == LOW && LSB == HIGH){
-    Serial.println("RED");
+  else if(MSB == LOW && B == LOW && LSB == HIGH){
+    Serial.println("BLUE TRIANGLE");
   }
-  else if(MSB == HIGH && LSB == LOW){
-    Serial.println("BLUE");
+  else if(MSB == LOW && B == HIGH && LSB == LOW){
+    Serial.println("BLUE DIAMOND");
+  }
+  else if(MSB == LOW && B == HIGH && LSB == HIGH){
+    Serial.println("BLUE SQUARE");
+  }
+  else if(MSB == HIGH && B == LOW && LSB == LOW){
+    Serial.println("RED TRIANGLE");
+  }
+  else if(MSB == HIGH && B == LOW && LSB == HIGH){
+    Serial.println("RED DIAMOND");
+  }
+  else if(MSB == HIGH && B == HIGH && LSB == LOW){
+    Serial.println("RED SQUARE");
   }
   Serial.println( "loop" );
 }

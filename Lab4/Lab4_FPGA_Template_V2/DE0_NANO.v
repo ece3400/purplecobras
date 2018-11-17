@@ -64,9 +64,9 @@ wire [14:0] WRITE_ADDRESS;
 reg [14:0] READ_ADDRESS; 
 
 assign WRITE_ADDRESS = X_ADDR + Y_ADDR*(`SCREEN_WIDTH);
-//assign GPIO_0_D[31] = RESULT[1];
-//assign GPIO_0_D[33] = RESULT[0];
-assign GPIO_0_D[29] = 1'b1;
+assign GPIO_0_D[27] = RESULT[2];
+assign GPIO_0_D[29] = RESULT[1];
+assign GPIO_0_D[31] = RESULT[0];
 ///// VGA INPUTS/OUTPUTS /////
 wire 			VGA_RESET;
 wire [7:0]	VGA_COLOR_IN;
@@ -83,7 +83,7 @@ assign GPIO_0_D[33] = c0_sig;
 
 
 ///// I/O for Img Proc /////
-output wire [1:0] RESULT;
+output wire [2:0] RESULT;
 
 /* WRITE ENABLE */
 reg W_EN;
