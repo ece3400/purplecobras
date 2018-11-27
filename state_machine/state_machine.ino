@@ -9,8 +9,8 @@ int rightWall = A2;
 
 //CALIBRATED GLOBAL VARIABLES
 int lineVoltage = 700;
-int LRwalls = 120;
-int Fwall = 100;
+int LRwalls = 200;
+int Fwall = 200;
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
@@ -470,6 +470,7 @@ void loop() {
     case INTERSECTION:
       switch (action) {
         case DETECT_WALLS :
+          Serial.println("Detect Walls");
           leftservo.write(90);
           rightservo.write(90);
           delay(1000); 
@@ -478,7 +479,25 @@ void loop() {
           if (rWall) {
             Serial.println("right wall");
           }
+          else if ( lWall ) {
+            Serial.println("left wall");
+          }
           fWall = detectFrontWall();
+<<<<<<< HEAD
+=======
+          if ( fWall ) {
+            Serial.println("front Wall");
+          }
+          action = CHECK;
+        case CHECK :
+          maze_info();
+          for (int i = 0; i < 5; i ++) {
+            for (int j = 0; j < 4; j ++) {
+              Serial.print(maze[i][j]);
+            }
+            Serial.println();
+          }
+>>>>>>> 5bab837f79f26547e6ba02382db2a5bdafa5eaa8
           action = MOVE;
 //        case CHECK :
 //          maze_info();
