@@ -183,6 +183,8 @@ void turnLeft() {
 }
 
 void turnRight() {
+  Serial.println("Got Here");
+  delay(50);
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
@@ -211,6 +213,7 @@ void turnRight() {
   }
   leftservo.write(90);
   rightservo.write(90);
+  Serial.println("Done turning right");
 }
 
 bool detectRightWall() {
@@ -424,15 +427,18 @@ void turns() {
 ////  }
   // U-turn
     if (fWall && lWall && rWall) {
+      Serial.println("U-Turn");
       turnRight();
       turnRight();
     }
     // Left Turn
     else if (fWall && !lWall && rWall) {
+      Serial.println("Left Turn");
       turnLeft();
     }
     // Right Turn
     else if (!rWall) {
+      Serial.println("Right Turn");
       turnRight();
     }
     // Go forward
@@ -483,29 +489,20 @@ void loop() {
             Serial.println("left wall");
           }
           fWall = detectFrontWall();
-<<<<<<< HEAD
-=======
           if ( fWall ) {
             Serial.println("front Wall");
           }
           action = CHECK;
+          break;
         case CHECK :
-          maze_info();
-          for (int i = 0; i < 5; i ++) {
-            for (int j = 0; j < 4; j ++) {
-              Serial.print(maze[i][j]);
-            }
-            Serial.println();
-          }
->>>>>>> 5bab837f79f26547e6ba02382db2a5bdafa5eaa8
+          //maze_info();
           action = MOVE;
-//        case CHECK :
-//          maze_info();
-//          action = MOVE;
+          break;
         case MOVE : 
           stepPast();
           turns();
           action = DETECT_WALLS;
+          break;
         default :
           state = FOLLOW_LINE;
           break;
