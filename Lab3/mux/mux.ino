@@ -17,7 +17,7 @@ void loop() {
 //  digitalWrite(s1, LOW);
 //  digitalWrite(s0, HIGH);
 
-  int wall = analogRead(A2);
+  int wall = analogRead(A3);
   
   Serial.println(wall);
 
