@@ -378,50 +378,68 @@ void backtrack(){
 }
 
 void turns() {
-  if ((relativeState & 0b00000100) > 1) {
-    turnRight();
-    moves[count] = 1; //right
-    backtracking = false;
-  }
-  else if ((relativeState & 0b00001000) > 1) {
-    forward();
-    count++;
-    moves[count] = 2; //straight
-    backtracking = false;
-  }
-  else if ((relativeState & 0b00000001) > 1) {
-    turnLeft();
-    moves[count] = 3; //left
-    backtracking = false;
-  }
-  else {
-    if (backtracking) {
-      backtrack();
-    }
-    else {
-      //uturn
-      turnRight();
-      turnRight();
-      backtrack();
-    }
-  }
-//  if ( rWall && lWall && fWall ) {
-//    Serial.println("walls on all sides");
-//    turnLeft();
-//    turnLeft();
-//  }
-//  else if ( rWall && fWall && !lWall ) {
-//    Serial.println("no left wall");
-//    turnLeft();
-//  }
-//  else if ( !rWall ) {
-//    Serial.println("no right wall");
+//  if ((relativeState & 0b00000100) > 1) {
 //    turnRight();
+//    moves[count] = 1; //right
+//    backtracking = false;
+//  }
+//  else if ((relativeState & 0b00001000) > 1) {
+//    forward();
+//    count++;
+//    moves[count] = 2; //straight
+//    backtracking = false;
+//  }
+//  else if ((relativeState & 0b00000001) > 1) {
+//    turnLeft();
+//    moves[count] = 3; //left
+//    backtracking = false;
 //  }
 //  else {
-//    
-//    forward();
+//    if (backtracking) {
+//      backtrack();
+//    }
+//    else {
+//      //uturn
+//      turnRight();
+//      turnRight();
+//      backtrack();
+//    }
 //  }
+////  if ( rWall && lWall && fWall ) {
+////    Serial.println("walls on all sides");
+////    turnLeft();
+////    turnLeft();
+////  }
+////  else if ( rWall && fWall && !lWall ) {
+////    Serial.println("no left wall");
+////    turnLeft();
+////  }
+////  else if ( !rWall ) {
+////    Serial.println("no right wall");
+////    turnRight();
+////  }
+////  else {
+////    
+////    forward();
+////  }
+  // U-turn
+    if (fWall && lWall && rWall) {
+      turnRight();
+      turnRight();
+    }
+    // Left Turn
+    else if (fWall && !lWall && rWall) {
+      turnLeft();
+    }
+    // Right Turn
+    else if (!rWall) {
+      turnRight();
+    }
+    // Go forward
+    else {
+      leftservo.write(135);
+      rightservo.write(45);
+    }
 }
 
 void loop() {
@@ -461,16 +479,10 @@ void loop() {
             Serial.println("right wall");
           }
           fWall = detectFrontWall();
-          action = CHECK;
-        case CHECK :
-          maze_info();
-          for (int i = 0; i < 5; i ++) {
-            for (int j = 0; j < 4; j ++) {
-              Serial.print(maze[i][j]);
-            }
-            Serial.println();
-          }
           action = MOVE;
+//        case CHECK :
+//          maze_info();
+//          action = MOVE;
         case MOVE : 
           stepPast();
           turns();
