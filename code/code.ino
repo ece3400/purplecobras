@@ -3,9 +3,9 @@
 Servo rightservo;
 Servo leftservo;
 
-int sensorM = A1;
-int sensorR = A2;
-int sensorL = A0;
+//int sensorM = A1;
+int sensorR = A5;
+int sensorL = A4;
 
 int turnCount = 0;
 
@@ -26,7 +26,7 @@ void loop() {
   //brown 3V -> 4.5
   //white 0V -> 3.3
 
-  readM = analogRead(sensorM);
+//  readM = analogRead(sensorM);
   readR = analogRead(sensorR);
   readL = analogRead(sensorL);
   

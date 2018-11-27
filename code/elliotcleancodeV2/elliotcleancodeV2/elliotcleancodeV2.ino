@@ -1,11 +1,11 @@
 #include <Servo.h>
 
 //ARUINO INPUTS
-int sensorL = A0;
-int sensorR = A2;
+int sensorL = A4;
+int sensorR = A5;
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 700;
+int lineVoltage = 800;
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
@@ -55,8 +55,7 @@ void sample()
 void follow()
 {
   if (rightAverage >= lineVoltage && leftAverage >= lineVoltage) {
-    leftservo.write(135);
-    rightservo.write(45);
+    forward();
   }
   else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
     leftservo.write(135);
@@ -67,10 +66,54 @@ void follow()
     rightservo.write(45);
   }
   else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
-    turn(true);
+    turnRight();
   }
 }
 
+void forward() {
+  leftservo.write(135);
+  rightservo.write(45);
+}
+
+void turnLeft() {
+  leftservo.write(90);
+  rightservo.write(45);
+  
+  sample();
+  
+  while(leftAverage > lineVoltage || rightAverage > lineVoltage) {
+    sample();
+  }
+  while (leftAverage < lineVoltage || rightAverage < lineVoltage) {
+    sample();
+  }
+
+  leftservo.write(90);
+  rightservo.write(90);
+}
+
+void turnRight() {
+  leftservo.write(180);
+  rightservo.write(180);
+  
+  //sample();
+  leftAverage = analogRead(A4);
+  rightAverage = analogRead(A5);
+  
+  while(leftAverage > lineVoltage || rightAverage > lineVoltage) {
+    //sample();
+    leftAverage = analogRead(A4);
+    rightAverage = analogRead(A5);
+  }
+  while (leftAverage < lineVoltage || rightAverage < lineVoltage) {
+    //sample();
+    leftAverage = analogRead(A4);
+    rightAverage = analogRead(A5);
+  }
+
+  leftservo.write(90);
+  rightservo.write(90);
+}
 /*Turns the robot according to line sensor readings. A direction of 1 is a right turn.*/
 void turn(int direction) {
     int side_passed_once = 0;

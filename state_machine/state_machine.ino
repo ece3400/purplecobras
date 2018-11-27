@@ -1,15 +1,15 @@
 #include <Servo.h>
 
 //ARUINO INPUTS
-int sensorL = A1;
-int sensorR = A2;
-int leftWall = A3;
-int frontWall = A4;
-int rightWall = A5;
+int sensorL = A4;
+int sensorR = A5;
+int leftWall = A1;
+int frontWall = A3;
+int rightWall = A2;
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 400;
-int LRwalls = 155;
+int lineVoltage = 700;
+int LRwalls = 120;
 int Fwall = 100;
 
 //NON-CALIBRATED GLOBAL VARIABLES
@@ -130,70 +130,96 @@ void follow() {
   }
 }
 
-void forward() {
+void stepPast () {
+  leftservo.write(180);
+  rightservo.write(0);
+  //sample();
+  leftAverage = analogRead(sensorL);
+  rightAverage = analogRead(sensorR);
+  
+  while (leftAverage < lineVoltage && rightAverage < lineVoltage) {
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
+  }
+  delay(300);
+  leftservo.write(90);
+  rightservo.write(90);
+}
+
+void forward () {
   leftservo.write(135);
   rightservo.write(45);
 }
 
 void turnLeft() {
-  leftservo.write(90);
-  rightservo.write(45);
+  leftAverage = analogRead(sensorL);
+  rightAverage = analogRead(sensorR);
   
-  sample();
+  leftservo.write(0);
+  rightservo.write(0);
   
-  while(leftAverage > lineVoltage || rightAverage > lineVoltage) {
-    sample();
+  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
   }
-  while (leftAverage < lineVoltage || rightAverage < lineVoltage) {
-    sample();
+  while(leftAverage > lineVoltage && rightAverage < lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
   }
-
+  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
+  }
+  while (leftAverage < lineVoltage && rightAverage > lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
+  }
   leftservo.write(90);
   rightservo.write(90);
 }
 
 void turnRight() {
-  leftservo.write(135);
-  rightservo.write(90);
+  leftAverage = analogRead(sensorL);
+  rightAverage = analogRead(sensorR);
   
-  sample();
+  leftservo.write(180);
+  rightservo.write(180);
   
-  while(leftAverage > lineVoltage || rightAverage > lineVoltage) {
-    sample();
+  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
   }
-  while (leftAverage < lineVoltage || rightAverage < lineVoltage) {
-    sample();
+  while(leftAverage < lineVoltage && rightAverage > lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
   }
-
+  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
+  }
+  while (leftAverage > lineVoltage && rightAverage < lineVoltage) {
+    delay(50);
+    leftAverage = analogRead(sensorL);
+    rightAverage = analogRead(sensorR);
+  }
   leftservo.write(90);
   rightservo.write(90);
 }
 
-void uTurn() {
-  leftservo.write(135);
-  rightservo.write(135);
-
-  sample();
-  
-  while(leftAverage > lineVoltage || rightAverage > lineVoltage) {
-    sample();
-  }
-  while (leftAverage < lineVoltage || rightAverage < lineVoltage) {
-    sample();
-  }
-
-  leftservo.write(90);
-  rightservo.write(90);
-  
-}
 bool detectRightWall() {
 //  digitalWrite(s2, LOW);
 //  digitalWrite(s1, LOW);
 //  digitalWrite(s0, LOW);
 
   //read_wallR = analogRead(walls);
-  Serial.println(analogRead(A5));
-  if (analogRead(A5) >= LRwalls) {
+  if (analogRead(rightWall) >= LRwalls) {
     return true;
   }
   else {
@@ -207,8 +233,7 @@ bool detectFrontWall() {
 //  digitalWrite(s0, HIGH);
 
   //int read_wallF = analogRead(walls);
-Serial.println(analogRead(A4));
-  if (analogRead(A4) >= Fwall) {
+  if (analogRead(frontWall) >= Fwall) {
     return true;
   }
   else {
@@ -222,9 +247,8 @@ bool detectLeftWall() {
 //  digitalWrite(s0, LOW);
 
   //read_wallL = analogRead(walls);
-Serial.println(analogRead(A3));
   
-  if (analogRead(A3) >= LRwalls) {
+  if (analogRead(leftWall) >= LRwalls) {
     return true;
   }
   else {
@@ -258,14 +282,15 @@ char fourBitWrapLeft(char x, int n)
   return x;
 }
 
+//i changed the !rWall to be just rWall because you want to or it when there is a wall
 void maze_info() {
-  if (!rWall) {
+  if (rWall) {
     relativeState = relativeState | right;
   }
-  if (!lWall) {
+  if (lWall) {
     relativeState = relativeState | left;
   }
-  if (!fWall) {
+  if (fWall) {
     relativeState = relativeState | front;
   }
 
@@ -374,7 +399,9 @@ void turns() {
       backtrack();
     }
     else {
-      uTurn();
+      //uturn
+      turnRight();
+      turnRight();
       backtrack();
     }
   }
@@ -424,14 +451,30 @@ void loop() {
       break;
     case INTERSECTION:
       switch (action) {
-        case DETECT_WALLS : 
+        case DETECT_WALLS :
+          leftservo.write(90);
+          rightservo.write(90);
+          delay(1000); 
           lWall = detectLeftWall();
           rWall = detectRightWall();
+          if (rWall) {
+            Serial.println("right wall");
+          }
           fWall = detectFrontWall();
-//        case CHECK :
-//          maze_info();
+          action = CHECK;
+        case CHECK :
+          maze_info();
+          for (int i = 0; i < 5; i ++) {
+            for (int j = 0; j < 4; j ++) {
+              Serial.print(maze[i][j]);
+            }
+            Serial.println();
+          }
+          action = MOVE;
         case MOVE : 
-          uTurn();//turns();
+          stepPast();
+          turns();
+          action = DETECT_WALLS;
         default :
           state = FOLLOW_LINE;
           break;

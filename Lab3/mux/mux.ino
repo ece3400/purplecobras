@@ -6,18 +6,18 @@ int s0 = 10;
 int walls = A3;
 void setup() {
  Serial.begin(9600);
- pinMode(s0, OUTPUT);
- pinMode(s1, OUTPUT);
- pinMode(s2, OUTPUT);
+// pinMode(s0, OUTPUT);
+// pinMode(s1, OUTPUT);
+// pinMode(s2, OUTPUT);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(s2, LOW);
-  digitalWrite(s1, LOW);
-  digitalWrite(s0, HIGH);
+//  digitalWrite(s2, LOW);
+//  digitalWrite(s1, LOW);
+//  digitalWrite(s0, HIGH);
 
-  int wall = analogRead(walls);
+  int wall = analogRead(A2);
   
   Serial.println(wall);
 

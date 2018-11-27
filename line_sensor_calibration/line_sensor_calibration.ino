@@ -1,6 +1,6 @@
-int sensorL = A1;
-int sensorR = A2;
-int lineVoltage = 700;
+int sensorL = A4;
+int sensorR = A5;
+int lineVoltage = 800;
 
 void setup() {
   // put your setup code here, to run once:
@@ -14,18 +14,20 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   //LINE SENSORS
-  readR[0] = readR[1];
-  readR[1] = readR[2];
-  readR[2] = analogRead(sensorR);
-  readL[0] = readL[1];
-  readL[1] = readL[2];
-  readL[2] = analogRead(sensorL);
-  
-  double leftAverage = (readL[0] + readL[1] + readL[2])/3;
-  double rightAverage = (readR[0] + readR[1] + readR[2])/3;
- 
+//  readR[0] = readR[1];
+//  readR[1] = readR[2];
+//  readR[2] = analogRead(sensorR);
+//  readL[0] = readL[1];
+//  readL[1] = readL[2];
+//  readL[2] = analogRead(sensorL);
+//  
+//  double leftAverage = (readL[0] + readL[1] + readL[2])/3;
+//  double rightAverage = (readR[0] + readR[1] + readR[2])/3;
+
+  int R = analogRead(sensorR);
+  int L = analogRead(sensorL);
   Serial.print("left : ");
-  Serial.println(leftAverage);
+  Serial.println(L);
   Serial.print("right : ");
-  Serial.println(rightAverage);
+  Serial.println(R);
 }

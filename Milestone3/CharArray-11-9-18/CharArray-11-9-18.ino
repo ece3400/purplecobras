@@ -1,25 +1,28 @@
 #include <Servo.h>
-#include "radio.h"
+//#include "radio.h"
 
 //#include <SPI.h>
 //#include "nRF24L01.h"
 //#include "RF24.h"
 //#include "printf.h"
 
-#define LOG_OUT 1 // use the log output function
-#define FFT_N 128 // set to 128 point fft
-#include <FFT.h>
+//#define LOG_OUT 1 // use the log output function
+//#define FFT_N 128 // set to 128 point fft
+//#include <FFT.h>
 
 //ARUINO INPUTS
-int sensorL = A1;
-int sensorR = A2;
+int sensorL = A4;
+int sensorR = A5;
 
+int leftWall = A1;
+int frontWall = A3;
+int rightWall = A2;
 //wall selector
-int s2 = 12;
-int s1 = 11;
-int s0 = 10;
-//wall sensor
-int walls = A3;
+//int s2 = 12;
+//int s1 = 11;
+//int s0 = 10;
+////wall sensor
+//int walls = A3;
 
 //wall mux
 //000 Left
@@ -28,7 +31,7 @@ int walls = A3;
 
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 400;
+int lineVoltage = 800;
 int LRwalls = 155;
 int Fwall = 100;
 int pause = 1200;
@@ -58,19 +61,6 @@ char front = 0b00001000;
 char right = 0b00000100;
 char left = 0b00000001;
 
-short maze[cols][rows] = 
-  { {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-  };
-int moves[rows*cols*3];
-int current[2]= {0, 0}; //first is x, second y
-int count = 0;
-bool backtracking = false;
-maze_direction c_direction = North;
-
 enum maze_direction {
   north,
   south,
@@ -78,14 +68,27 @@ enum maze_direction {
   west
 };
 
+short maze[5][4] = 
+  { {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+  };
+int moves[60];//rows*cols*3];
+int current[2]= {0, 0}; //first is x, second y
+int count = 0;
+bool backtracking = false;
+maze_direction c_direction = north;
+
 void setup() {
   //setting up maze
   maze[0][0] = true;
   
   //wall selects
-  pinMode(s2, OUTPUT);
-  pinMode(s1, OUTPUT);
-  pinMode(s0, OUTPUT);
+//  pinMode(s2, OUTPUT);
+//  pinMode(s1, OUTPUT);
+//  pinMode(s0, OUTPUT);
   
   Serial.begin(9600);
   //printf_begin();
@@ -94,13 +97,13 @@ void setup() {
   pinMode(7, OUTPUT);
   servoSetup();
 
-  radioSetup();
-
-  int mic = 0;
-  while (mic == 0) {
-    mic = detectMicrophone();
-    Serial.println("Waiting for mic");
-  }
+//  radioSetup();
+//
+//  int mic = 0;
+//  while (mic == 0) {
+//    mic = detectMicrophone();
+//    Serial.println("Waiting for mic");
+//  }
 }
 
 int readL[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
@@ -166,6 +169,7 @@ void intersection(){
 // not sure if this stopping is necessary or not
   leftservo.write(90);
   rightservo.write(90);
+  delay(500);
   char relativeState = 0; // 1 means can go
   char absoluteState = 0; // 1 means can go
 
@@ -182,14 +186,14 @@ void intersection(){
   if (!fWall) {
     relativeState = relativeState | front;
   }
-  detectRobot();
-  if (robot == 1) {
-    to_send_0 = to_send_0 | robot_present;
-    relativeState = relativeState & ~front;
-    digitalWrite(7, HIGH);
-    delay(500);
-  }
-  digitalWrite(7, LOW);
+//  detectRobot();
+//  if (robot == 1) {
+//    to_send_0 = to_send_0 | robot_present;
+//    relativeState = relativeState & ~front;
+//    digitalWrite(7, HIGH);
+//    delay(500);
+//  }
+//  digitalWrite(7, LOW);
 
   absoluteState = relativeState;
   if (c_direction == east){
@@ -201,40 +205,40 @@ void intersection(){
   if (c_direction == west){
     absoluteState = fourBitWrap(absoluteState, 3);
   }
-  
-  if ((absoluteState & 0b00001000) == 0){
-    to_send_1 = to_send_1 | wall_present_north;
-  }
-  if ((absoluteState & 0b00000100) == 0){
-    to_send_1 = to_send_1 | wall_present_east;
-  }
-  if ((absoluteState & 0b00000010) == 0){
-    to_send_1 = to_send_1 | wall_present_west;
-  }
-  if ((absoluteState & 0b00000001) == 0){
-    to_send_1 = to_send_1 | wall_present_south;
-  }
-  
-  // radio information
-  ping_out( 0b11000000 );
-  delay( 250 );
-  ping_out( to_send_0 );
-  delay( 250 );
-  ping_out( 0b10000000 );
-  delay(250);
-  ping_out( to_send_1 );
-  
-  to_send_0 = 0b00000000;
-  to_send_1 = 0b00000000;
+//  
+//  if ((absoluteState & 0b00001000) == 0){
+//    to_send_1 = to_send_1 | wall_present_north;
+//  }
+//  if ((absoluteState & 0b00000100) == 0){
+//    to_send_1 = to_send_1 | wall_present_east;
+//  }
+//  if ((absoluteState & 0b00000010) == 0){
+//    to_send_1 = to_send_1 | wall_present_west;
+//  }
+//  if ((absoluteState & 0b00000001) == 0){
+//    to_send_1 = to_send_1 | wall_present_south;
+//  }
+//  
+//  // radio information
+//  ping_out( 0b11000000 );
+//  delay( 250 );
+//  ping_out( to_send_0 );
+//  delay( 250 );
+//  ping_out( 0b10000000 );
+//  delay(250);
+//  ping_out( to_send_1 );
+//  
+//  to_send_0 = 0b00000000;
+//  to_send_1 = 0b00000000;
 
   switch(c_direction) {
-    case North :
+    case north :
       current[1] = current[1] + 1;
-    case East :
+    case east :
       current[0] = current[0] + 1;
-    case South :
+    case south :
       current[1] = current[1] - 1;
-    case West :
+    case west :
       current[0] = current[0] - 1;
   }
   
@@ -267,7 +271,7 @@ void intersection(){
     relativeState = fourBitWrapLeft(relativeState, 3);
   }
   
-  
+  Serial.println("starting turns");
   if ((relativeState & 0b00000100) > 1) {
     turn(1);
     moves[count] = 1; //right
@@ -317,10 +321,11 @@ void turn(int direction) {
     }
 
     delay(pause);
+    Serial.println("end turn");
     leftservo.write(135);
     rightservo.write(45);
 }
-void backTrack(){
+void backtrack(){
   if (backtracking == false)
   {
     follow();
@@ -345,13 +350,13 @@ void backTrack(){
 }
 
 bool detectRightWall() {
-  digitalWrite(s2, LOW);
-  digitalWrite(s1, LOW);
-  digitalWrite(s0, LOW);
+//  digitalWrite(s2, LOW);
+//  digitalWrite(s1, LOW);
+//  digitalWrite(s0, LOW);
 
   //read_wallR = analogRead(walls);
 
-  if (analogRead(walls) >= LRwalls) {
+  if (analogRead(rightWall) >= LRwalls) {
     return true;
   }
   else {
@@ -360,14 +365,14 @@ bool detectRightWall() {
 }
 
 bool detectFrontWall() {
-  digitalWrite(s2, LOW);
-  digitalWrite(s1, LOW);
-  digitalWrite(s0, HIGH);
+//  digitalWrite(s2, LOW);
+//  digitalWrite(s1, LOW);
+//  digitalWrite(s0, HIGH);
 
   //int read_wallF = analogRead(walls);
 
   
-  if (analogRead(walls) >= Fwall) {
+  if (analogRead(frontWall) >= Fwall) {
     return true;
   }
   else {
@@ -376,14 +381,14 @@ bool detectFrontWall() {
 }
 
 bool detectLeftWall() {
-  digitalWrite(s2, LOW);
-  digitalWrite(s1, HIGH);
-  digitalWrite(s0, LOW);
+//  digitalWrite(s2, LOW);
+//  digitalWrite(s1, HIGH);
+//  digitalWrite(s0, LOW);
 
   //read_wallL = analogRead(walls);
 
   
-  if (analogRead(walls) >= LRwalls) {
+  if (analogRead(leftWall) >= LRwalls) {
     return true;
   }
   else {
@@ -391,82 +396,82 @@ bool detectLeftWall() {
   }
 }
 
-void detectRobot() { 
-  //default adc values
-  unsigned int default_timsk = TIMSK0;
-  unsigned int default_adcsra = ADCSRA;
-  unsigned int default_admux = ADMUX;
-  unsigned int default_didr = DIDR0;
-
-  //setup 
-  TIMSK0 = 0; // turn off timer0 for lower jitter
-  ADCSRA = 0xe5; // set the adc to free running mode
-  ADMUX = 0x40; // use adc0
-  DIDR0 = 0x01; // turn off the digital input for adc0
-  
-  cli();
-  for (int i = 0 ; i < 256 ; i += 2) { // save 128 samples
-      while(!(ADCSRA & 0x10)); // wait for adc to be ready
-      ADCSRA = 0xf5; // restart adc
-      byte m = ADCL; // fetch adc data
-      byte j = ADCH;
-      int k = (j << 8) | m; // form into an int
-      k -= 0x0200; // form into a signed int
-      k <<= 6; // form into a 16b signed int
-      fft_input[i] = k; // put real data into even bins
-      fft_input[i+1] = 0; // set odd bins to 0
-    }
-
-  fft_window(); // window the data for better frequency response
-  fft_reorder(); // reorder the data before doing the fft
-  fft_run(); // process the data in the fft
-  fft_mag_log(); // take the output of the fft
-  sei();
-
-  Serial.println(fft_log_out[23]);
-  
-  if (fft_log_out[23] >= 70) {
-    TIMSK0 = default_timsk;
-    ADCSRA = default_adcsra;
-    ADMUX = default_admux;
-    DIDR0 = default_didr;
-    robot = 1;  
-  }
-  else {
-    TIMSK0 = default_timsk;
-    ADCSRA = default_adcsra;
-    ADMUX = default_admux;
-    DIDR0 = default_didr;
-    robot = 0;
-  }
-}
-
-int detectMicrophone () {
-  cli();
-  for (int i = 0 ; i < 256 ; i += 2) {
-    fft_input[i] = analogRead(A4); // <-- NOTE THIS LINE
-    fft_input[i+1] = 0;
-  }
-
-  fft_window();
-  fft_reorder();
-  fft_run();
-  fft_mag_log();
-  sei();
-
-  //whatever bin number decided goes after the log_out
-  // decide threshold by testing the microphone at different distances(?)
-  if (fft_log_out[10] > mic_threshold) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
+//void detectRobot() { 
+//  //default adc values
+//  unsigned int default_timsk = TIMSK0;
+//  unsigned int default_adcsra = ADCSRA;
+//  unsigned int default_admux = ADMUX;
+//  unsigned int default_didr = DIDR0;
+//
+//  //setup 
+//  TIMSK0 = 0; // turn off timer0 for lower jitter
+//  ADCSRA = 0xe5; // set the adc to free running mode
+//  ADMUX = 0x40; // use adc0
+//  DIDR0 = 0x01; // turn off the digital input for adc0
+//  
+//  cli();
+//  for (int i = 0 ; i < 256 ; i += 2) { // save 128 samples
+//      while(!(ADCSRA & 0x10)); // wait for adc to be ready
+//      ADCSRA = 0xf5; // restart adc
+//      byte m = ADCL; // fetch adc data
+//      byte j = ADCH;
+//      int k = (j << 8) | m; // form into an int
+//      k -= 0x0200; // form into a signed int
+//      k <<= 6; // form into a 16b signed int
+//      fft_input[i] = k; // put real data into even bins
+//      fft_input[i+1] = 0; // set odd bins to 0
+//    }
+//
+//  fft_window(); // window the data for better frequency response
+//  fft_reorder(); // reorder the data before doing the fft
+//  fft_run(); // process the data in the fft
+//  fft_mag_log(); // take the output of the fft
+//  sei();
+//
+//  Serial.println(fft_log_out[23]);
+//  
+//  if (fft_log_out[23] >= 70) {
+//    TIMSK0 = default_timsk;
+//    ADCSRA = default_adcsra;
+//    ADMUX = default_admux;
+//    DIDR0 = default_didr;
+//    robot = 1;  
+//  }
+//  else {
+//    TIMSK0 = default_timsk;
+//    ADCSRA = default_adcsra;
+//    ADMUX = default_admux;
+//    DIDR0 = default_didr;
+//    robot = 0;
+//  }
+//}
+//
+//int detectMicrophone () {
+//  cli();
+//  for (int i = 0 ; i < 256 ; i += 2) {
+//    fft_input[i] = analogRead(A4); // <-- NOTE THIS LINE
+//    fft_input[i+1] = 0;
+//  }
+//
+//  fft_window();
+//  fft_reorder();
+//  fft_run();
+//  fft_mag_log();
+//  sei();
+//
+//  //whatever bin number decided goes after the log_out
+//  // decide threshold by testing the microphone at different distances(?)
+//  if (fft_log_out[10] > mic_threshold) {
+//    return 1;
+//  }
+//  else {
+//    return 0;
+//  }
+//}
 
 char fourBitWrap(char x, int n)
 {
-  for (a = 0; a < n; a++)
+  for (int a = 0; a < n; a++)
   {
     char temp = x & 0b00000001;
     temp = temp << 3;
@@ -478,7 +483,7 @@ char fourBitWrap(char x, int n)
 }
 char fourBitWrapLeft(char x, int n)
 {
-  for (a = 0; a < n; a++)
+  for (int a = 0; a < n; a++)
   {
     char temp = x & 0b00001000;
     temp = temp >> 3;

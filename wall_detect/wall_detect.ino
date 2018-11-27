@@ -1,11 +1,11 @@
 #include <Servo.h>
 
 //ARUINO INPUTS
-int sensorL = A1;
-int sensorR = A2;
-int wallR = A3;
-int wallL = A4;
-int wallF = A5;
+int sensorL = A4;
+int sensorR = A5;
+int wallR = A2;
+int wallL = A1;
+int wallF = A3;
 
 //CALIBRATED GLOBAL VARIABLES
 int lineVoltage = 700;
