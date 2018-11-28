@@ -39,6 +39,16 @@ enum actions {
 states state = FOLLOW_LINE;
 actions action = DETECT_WALLS;
 
+// radio information
+unsigned char to_send_0 = 0b00000000;
+unsigned char to_send_1 = 0b00000000;
+
+int rows = 4; //length along y direction
+int cols = 5; //length along x direction
+char northWall = 0b00001000;
+char eastWall = 0b00000100;
+char southWall = 0b00000010;
+char westWall = 0b00000001;
 
 /*Sets up servos*/
 void servoSetup()
