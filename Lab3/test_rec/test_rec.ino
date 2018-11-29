@@ -52,7 +52,7 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_pong_back;
 
 //testing variables
-int current_location[2] = {-1, 1};
+//int current_location[2] = {-1,1};
 int current_location_rec[2] = {0, 1};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
@@ -175,13 +175,17 @@ void pong_back() {
   }
 }
 
+
+int Direction;
 String Direction_str = "";
 
 void parse_byte_1( unsigned char response ) {
-  int Direction, Move;
+  int Move;
   Direction = ( response & (0b00001100) ) >> 2;
   Direction_str = "";
   Move = ( response & (0b00010000) ) >> 4;
+  Serial.println(Move);
+  Serial.println(Direction);
   if ( Move ) {
     //Serial.println(Direction);
     switch(Direction){
@@ -277,20 +281,61 @@ void parse_byte_2 ( unsigned char response ) {
       break;
   }
 
-  int North_wall,East_wall, South_wall, West_wall;
-  North_wall = ( response & (0b00001000) ) >> 3;
-  East_wall = ( response & (0b00000100) ) >> 2;
-  South_wall = ( response & (0b00000010) ) >> 1;
-  West_wall = ( response & (0b00000001) );
-  String Wall_str = "";
-  if ( North_wall ) Wall_str += ",north=True";
-  //else Wall_str += ",north=False";
-  if ( East_wall ) Wall_str += ",east=True";
-  //else Wall_str += ",east=False";
-  if ( South_wall )Wall_str += ",south=True" ;
-  //else Wall_str += ",south=False";
-  if ( West_wall ) Wall_str += ",west=True";
-  //else Wall_str += ",west=False";
+    String Wall_str = "";
+    int North_wall,East_wall, South_wall, West_wall;
+    North_wall = ( response & (0b00001000) ) >> 3;
+    East_wall = ( response & (0b00000100) ) >> 2;
+    South_wall = ( response & (0b00000010) ) >> 1;
+    West_wall = ( response & (0b00000001) );
+  switch(Direction){
+      // north
+      case 0:
+          if ( North_wall ) Wall_str += ",north=True";
+        //else Wall_str += ",north=False";
+        if ( East_wall ) Wall_str += ",east=True";
+        //else Wall_str += ",east=False";
+        if ( South_wall )Wall_str += ",south=True" ;
+        //else Wall_str += ",south=False";
+        if ( West_wall ) Wall_str += ",west=True";
+        //else Wall_str += ",west=False";
+        break;
+      // east
+      case 1:
+          if ( North_wall ) Wall_str += ",east=True";
+        //else Wall_str += ",north=False";
+        if ( East_wall ) Wall_str += ",south=True";
+        //else Wall_str += ",east=False";
+        if ( South_wall )Wall_str += ",west=True" ;
+        //else Wall_str += ",south=False";
+        if ( West_wall ) Wall_str += ",north=True";
+        //else Wall_str += ",west=False";
+        break;
+      // south
+      case 2:
+          if ( North_wall ) Wall_str += ",south=True";
+        //else Wall_str += ",north=False";
+        if ( East_wall ) Wall_str += ",west=True";
+        //else Wall_str += ",east=False";
+        if ( South_wall )Wall_str += ",north=True" ;
+        //else Wall_str += ",south=False";
+        if ( West_wall ) Wall_str += ",east=True";
+        //else Wall_str += ",west=False";
+        break;
+      // west
+       case 3:
+       if ( North_wall ) Wall_str += ",west=True";
+      //else Wall_str += ",north=False";
+      if ( East_wall ) Wall_str += ",north=True";
+      //else Wall_str += ",east=False";
+      if ( South_wall )Wall_str += ",east=True" ;
+      //else Wall_str += ",south=False";
+      if ( West_wall ) Wall_str += ",south=True";
+      //else Wall_str += ",west=False";
+         break;
+       default:
+         break;
+      }
+  
 
 
   String to_Gui = "";
