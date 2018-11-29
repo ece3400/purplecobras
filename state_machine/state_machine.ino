@@ -1,4 +1,7 @@
 #include <Servo.h>
+#include <SPI.h>
+#include "nRF24L01.h"
+#include "RF24.h"
 
 //ARUINO INPUTS
 int sensorL = A4;
@@ -39,16 +42,48 @@ enum actions {
 states state = FOLLOW_LINE;
 actions action = DETECT_WALLS;
 
-// radio information
+//radio information
+RF24 radio(9,10);
+
+
+// Radio pipe addresses for the 2 nodes to communicate.
+const uint64_t pipes[2] = { 0x0000000004LL, 0x0000000005LL };
+
+// The various roles supported by this sketch
+typedef enum { role_ping_out = 1, role_pong_back } role_e;
+
+// The debug-friendly names of those roles
+const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
+
+// The role of the current running sketch
+role_e role = role_ping_out;
+
+// parameters to put into each square
+byte wall_present_north = 0b0001000;
+byte wall_present_east = 0b0000100;
+byte wall_present_south = 0b0000010;
+byte wall_present_west = 0b00000001;
+
+byte treasure_present_circle = 0b00100000;
+byte treasure_present_triangle = 0b01000000;
+byte treasure_present_square = 0b01100000;
+
+byte treasure_color_red = 0b10000000;
+byte treasure_color_blue = 0b00000000;
+
+byte robot_present = 0b00000001;
+
+byte explored = 0b00000010;
+
+byte direction_north = 0b00010000;
+byte direction_east =  0b00010100;
+byte direction_south = 0b00011000;
+byte direction_west =  0b00011100;
+
 unsigned char to_send_0 = 0b00000000;
 unsigned char to_send_1 = 0b00000000;
 
-int rows = 4; //length along y direction
-int cols = 5; //length along x direction
-char northWall = 0b00001000;
-char eastWall = 0b00000100;
-char southWall = 0b00000010;
-char westWall = 0b00000001;
+int done_sending = 0;
 
 /*Sets up servos*/
 void servoSetup()
@@ -59,9 +94,40 @@ void servoSetup()
   leftservo.write(90);
 }
 
+/*sets up radio */
+void radioSetup() 
+{
+  radio.begin();
+
+  // optionally, increase the delay between retries & # of retries
+  radio.setRetries(15,15);
+  radio.setAutoAck(true);
+  // set the channel
+  radio.setChannel(0x50);
+  // set the power
+  // RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_MED=-6dBM, and RF24_PA_HIGH=0dBm.
+  radio.setPALevel(RF24_PA_MIN);
+  //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
+  radio.setDataRate(RF24_250KBPS);
+
+  // optionally, reduce the payload size.  seems to
+  // improve reliability
+  radio.setPayloadSize(8);
+
+  // Open pipes to other nodes for communication
+  radio.openWritingPipe(pipes[0]);
+  radio.openReadingPipe(1,pipes[1]);
+
+  // Start listening
+  radio.startListening();
+
+  // Dump the configuration of the rf unit for debugging
+  radio.printDetails();
+}
 void setup() {
   Serial.begin(9600);
   servoSetup();
+  radioSetup();
   state = FOLLOW_LINE;
 }
 
@@ -251,6 +317,74 @@ void turns() {
   }
 }
 
+void ping_out (unsigned char to_send) {
+  done_sending = 0;
+  if (role == role_ping_out ) {
+    // First, stop listening so we can talk.
+    radio.stopListening();
+  
+    // Take the time, and send it.  This will block until complete
+    unsigned long time = millis();
+    //printf("Now sending %lu...",to_send);
+    bool ok = radio.write( &to_send, sizeof(unsigned char) );
+    
+    if (ok) {
+      //printf("ok...");
+    }
+    else{
+      //printf("failed.\n\r");
+    }
+    
+    // Now, continue listening
+    radio.startListening();
+    
+    // Wait here until we get a response, or timeout (250ms)
+    unsigned long started_waiting_at = millis();
+    bool timeout = false;
+    while ( ! radio.available() && ! timeout )
+    if (millis() - started_waiting_at > 200 )
+      timeout = true;
+    
+    // Describe the results
+    if ( timeout )
+    {
+      //printf("Failed, response timed out.\n\r");
+    }
+    else
+    {
+      // Grab the response, compare, and send to debugging spew
+      unsigned char got_char;
+      radio.read( &got_char, sizeof(unsigned char) );
+
+      if (got_char == to_send) {
+        // Spew it
+        //printf("Got response %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
+      }
+      else {
+        //printf("Got WRONG RESPONSE %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
+      }
+  }
+  
+    // Try again 1s later
+    delay(1000);
+  }
+  done_sending = 1;
+}
+
+void sendRadio() {
+  ping_out( 0b11000000 );
+  while ( !done_sending ) {};
+  //delay( 250 );
+  ping_out( to_send_0 );
+  while ( !done_sending ) {};
+  //delay( 400 );
+  ping_out( 0b10000000 );
+  while ( !done_sending ) {};
+  //delay(250);
+  ping_out( to_send_1 );
+  while ( !done_sending ) {};
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   switch (state) {
@@ -282,7 +416,6 @@ void loop() {
           Serial.println("detecting intersection");
           leftservo.write(90);
           rightservo.write(90);
-          delay(1000); 
           lWall = detectLeftWall();
           rWall = detectRightWall();
           fWall = detectFrontWall();
