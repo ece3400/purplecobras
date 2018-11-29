@@ -11,9 +11,9 @@ int frontWall = A3;
 int rightWall = A2;
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 800;
-int LRwalls = 120;
-int Fwall = 100;
+int lineVoltage = 400;
+int LRwalls = 150;
+int Fwall = 150;
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
@@ -45,7 +45,6 @@ actions action = DETECT_WALLS;
 //radio information
 RF24 radio(9,10);
 
-
 // Radio pipe addresses for the 2 nodes to communicate.
 const uint64_t pipes[2] = { 0x0000000004LL, 0x0000000005LL };
 
@@ -59,10 +58,10 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_ping_out;
 
 // parameters to put into each square
-byte wall_present_north = 0b0001000;
-byte wall_present_east = 0b0000100;
-byte wall_present_south = 0b0000010;
-byte wall_present_west = 0b00000001;
+byte wall_present_north = 0b0001000; //front
+byte wall_present_east = 0b0000100; //right
+//byte wall_present_south = 0b0000010;
+byte wall_present_west = 0b00000001; //left
 
 byte treasure_present_circle = 0b00100000;
 byte treasure_present_triangle = 0b01000000;
@@ -84,6 +83,15 @@ unsigned char to_send_0 = 0b00000000;
 unsigned char to_send_1 = 0b00000000;
 
 int done_sending = 0;
+
+enum maze_direction {
+  North,
+  East,
+  South,
+  West
+};
+
+maze_direction m_direction = North;
 
 /*Sets up servos*/
 void servoSetup()
@@ -138,15 +146,21 @@ double rightAverage;
 
 void sample()
 {
-  readR[0] = readR[1];
-  readR[1] = readR[2];
-  readR[2] = analogRead(sensorR);
-  readL[0] = readL[1];
-  readL[1] = readL[2];
-  readL[2] = analogRead(sensorL);
+//  readR[0] = readR[1];
+//  readR[1] = readR[2];
+//  readR[2] = analogRead(sensorR);
+//  readL[0] = readL[1];
+//  readL[1] = readL[2];
+//  readL[2] = analogRead(sensorL);
+  int left_1 = analogRead(sensorL);
+  int right_1 = analogRead(sensorR);
+  int left_2 = analogRead(sensorL);
+  int right_2 = analogRead(sensorR);
+  int left_3 = analogRead(sensorL);
+  int right_3 = analogRead(sensorR);
   
-  leftAverage = (readL[0] + readL[1] + readL[2])/3;
-  rightAverage = (readR[0] + readR[1] + readR[2])/3;
+  leftAverage = (left_1 + left_2 + left_3)/3;
+  rightAverage = (right_1 + right_2 + right_3)/3;
 }
 
 void follow() {
@@ -225,6 +239,7 @@ void turnLeft() {
 }
 
 void turnRight() {
+  Serial.println("turning");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
@@ -251,8 +266,10 @@ void turnRight() {
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
+  
   leftservo.write(90);
   rightservo.write(90);
+  Serial.println("end of right turn");
 }
 
 bool detectRightWall() {
@@ -262,6 +279,7 @@ bool detectRightWall() {
 
   //read_wallR = analogRead(walls);
   if (analogRead(rightWall) >= LRwalls) {
+    Serial.println("right wall");
     return true;
   }
   else {
@@ -276,6 +294,7 @@ bool detectFrontWall() {
 
   //int read_wallF = analogRead(walls);
   if (analogRead(frontWall) >= Fwall) {
+    Serial.println("front wall");
     return true;
   }
   else {
@@ -291,6 +310,7 @@ bool detectLeftWall() {
   //read_wallL = analogRead(walls);
   
   if (analogRead(leftWall) >= LRwalls) {
+    Serial.println("left wall");
     return true;
   }
   else {
@@ -298,18 +318,99 @@ bool detectLeftWall() {
   }
 }
 
+void change_direction(int how_many_turn) {
+  switch( how_many_turn ) {
+    // turn right
+    case 0:
+      switch( m_direction ) {
+        case North:
+          m_direction = East;
+          to_send_0 = to_send_0 | direction_east;
+          break;
+        case East:
+          m_direction = South;
+          to_send_0 = to_send_0 | direction_south;
+          break;
+        case South:
+          m_direction = West;
+          to_send_0 = to_send_0 | direction_west;
+          break;
+        case West:
+          m_direction = North;
+          to_send_0 = to_send_0 | direction_north;
+          break;
+        default:
+          m_direction = m_direction;
+          break;
+      }
+      break;
+    // U-turn
+    case 1:
+      switch( m_direction ) {
+        case North:
+          m_direction = South;
+          to_send_0 = to_send_0 | direction_south;
+          break;
+        case East:
+          m_direction = West;
+          to_send_0 = to_send_0 | direction_west;
+          break;
+        case South:
+          m_direction = North;
+          to_send_0 = to_send_0 | direction_north;
+          break;
+        case West:
+          m_direction = East;
+          to_send_0 = to_send_0 | direction_east;
+          break;
+        default:
+          m_direction = m_direction;
+          break;
+      }
+       break;
+    // turn left
+    case 2:
+      switch( m_direction ) {
+        case North:
+          m_direction = West;
+          to_send_0 = to_send_0 | direction_west;
+          break;
+        case East:
+          m_direction = South;
+          to_send_0 = to_send_0 | direction_south;
+          break;
+        case South:
+          m_direction = East;
+          to_send_0 = to_send_0 | direction_east;
+          break;
+        case West:
+          m_direction = North;
+          to_send_0 = to_send_0 | direction_north;
+          break;
+        default:
+          m_direction = m_direction;
+          break;
+      }
+      break;
+    // no turn
+    default:
+      m_direction = m_direction;
+      break;
+  }
+}
+
 void turns() {
   if ( rWall && lWall && fWall ) {
-    Serial.println("walls on all sides");
+    change_direction(1);
     turnLeft();
     turnLeft();
   }
   else if ( rWall && fWall && !lWall ) {
-    Serial.println("no left wall");
+    change_direction(2);
     turnLeft();
   }
   else if ( !rWall ) {
-    Serial.println("no right wall");
+    change_direction(0);
     turnRight();
   }
   else {
@@ -390,6 +491,10 @@ void loop() {
   switch (state) {
     case FOLLOW_LINE:
       sample();
+      Serial.print("left : ");
+  Serial.println(leftAverage);
+  Serial.print("right : ");
+  Serial.println(rightAverage);
       if (rightAverage >= lineVoltage && leftAverage >= lineVoltage) {
         forward();
         state = FOLLOW_LINE;
@@ -412,16 +517,34 @@ void loop() {
       break;
     case INTERSECTION:
       switch (action) {
+        Serial.print("left : ");
+  Serial.println(leftAverage);
+  Serial.print("right : ");
+  Serial.println(rightAverage);
         case DETECT_WALLS :
-          Serial.println("detecting intersection");
           leftservo.write(90);
           rightservo.write(90);
           lWall = detectLeftWall();
           rWall = detectRightWall();
           fWall = detectFrontWall();
+
+          if (lWall) {
+            to_send_1 |= wall_present_west; 
+          }
+          if (rWall) {
+            to_send_1 |= wall_present_east;
+          }
+          if (fWall) {
+            to_send_1 |= wall_present_north;
+          }
+          
         case MOVE : 
+          sendRadio();
+          to_send_0 = 0b00000000;
+          to_send_1 = 0b00000000;
           stepPast();
           turns();
+          state = FOLLOW_LINE;
         default :
           state = FOLLOW_LINE;
           break;
