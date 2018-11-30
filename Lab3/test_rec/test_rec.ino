@@ -52,7 +52,7 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_pong_back;
 
 //testing variables
-//int current_location[2] = {-1,1};
+//int current_location[2] = {0,0};
 int current_location_rec[2] = {0, 1};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
@@ -114,10 +114,11 @@ void setup(void)
 
 void loop(void)
 {
-  while (role == role_pong_back ) {
-    pong_back();
-    //change_roles();
-  }
+  Serial.println("0,0, west=false");
+//  while (role == role_pong_back ) {
+//    pong_back();
+//    //change_roles();
+//  }
 }
 
 void pong_back() {
