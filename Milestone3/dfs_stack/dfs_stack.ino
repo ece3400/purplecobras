@@ -436,27 +436,27 @@ void turns() {
 
 //CHANGE THIS BASED OFF OF GUI 
 //for now North decrement row, west decrement col
-int getX(int m) {
+int getY(int m, int y) {
   if (m == North) {
-    return current_y - 1;
+    return y - 1;
   }
   else if (m == South) {
-    return current_y + 1;
+    return y + 1;
   }
   else {
-    return current_y;
+    return y;
   }
 }
 
-int getY(int m) {
+int getX(int m, int x) {
   if (m == East) {
-    return current_x - 1;
+    return x + 1;
   }//
   else if (m == West) {
-    return current_x + 1;
+    return x - 1;
   }
   else {
-    return current_x;
+    return x;
   }
 }
 
@@ -471,12 +471,28 @@ void dfs() {
   int right = (m_direction + 1) % 4;
   int left = (m_direction + 3) % 4;
   
-  int rx = getX(right);
-  int ry = getY(right);
-  int lx = getX(left);
-  int ly = getY(left);
-  int fx = getX(m_direction);
-  int fy = getY(m_direction);
+  Serial.print("current x: ");
+  Serial.println(current_x);
+  Serial.print("current y: ");
+  Serial.println(current_y);
+  int rx = getX(right, current_x);
+  int ry = getY(right, current_y);
+  int lx = getX(left, current_x);
+  int ly = getY(left, current_y);
+  int fx = getX(m_direction, current_x);
+  int fy = getY(m_direction, current_y);
+  Serial.print("rx: ");
+  Serial.println(rx);
+  Serial.print("ry: ");
+  Serial.println(ry);
+  Serial.print("lx: ");
+  Serial.println(lx);
+  Serial.print("ly: ");
+  Serial.println(ly);
+  Serial.print("fx: ");
+  Serial.println(fx);
+  Serial.print("fy: ");
+  Serial.println(fy);
 
   bool r_blocked = false;
   bool l_blocked = false;
@@ -556,8 +572,8 @@ void dfs() {
       forward();
     }
     else {
-      int ux = getX(next);
-      int uy = getY(next);
+      int ux = getX(next, current_x);
+      int uy = getY(next, current_y);
       current_x = ux;
       current_y = uy;
       turnRight();
