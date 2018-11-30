@@ -93,8 +93,8 @@ enum maze_direction {
 
 maze_direction m_direction = North;
 
-#define MAZE_X 4
-#define MAZE_Y 5
+#define MAZE_X 9
+#define MAZE_Y 9
 
 struct node {
   bool visited;
@@ -105,6 +105,7 @@ node maze[MAZE_X][MAZE_Y];
 
 int current_x = 0;
 int current_y = 0;
+bool backtracking = false;
 
 /*Sets up servos*/
 void servoSetup()
@@ -459,7 +460,9 @@ int getY(int m) {
 
 void updateMaze() {
   maze[current_x][current_y].visited = true;
-  maze[current_x][current_y].dir = m_direction;
+  if (!backtracking) {
+    maze[current_x][current_y].dir = m_direction;
+  }
 }
 
 void dfs() {
@@ -510,17 +513,20 @@ void dfs() {
   }
   
   if (!r_blocked) {
+    backtracking = false;
     current_x = rx;
     current_y = ry;
     turnRight();
     change_direction(0);
   }
   else if (!f_blocked) {
+    backtracking = false;
     current_x = fx;
     current_y = fy;
     forward();
   }
   else if (!l_blocked) {
+    backtracking = false;
     current_x = lx;
     current_y = ly;
     turnLeft();
@@ -528,6 +534,7 @@ void dfs() {
   }
   else {
     //reversing the direction
+    backtracking = true;
     int next = (maze[current_x][current_y].dir + 2) % 4;
     if (next == right) {
       current_x = rx;
@@ -724,8 +731,8 @@ void loop() {
 //          to_send_0 = 0b00000000;
 //          to_send_1 = 0b00000000;
           stepPast();
-          //dfs();
-          turns();
+          dfs();
+          //turns();
           state = FOLLOW_LINE;
         default :
           state = FOLLOW_LINE;
