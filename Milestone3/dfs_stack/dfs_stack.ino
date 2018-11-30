@@ -11,17 +11,17 @@ int frontWall = A3;
 int rightWall = A2;
 
 //CALIBRATED GLOBAL VARIABLES
-int lineVoltage = 400;
-int LRwalls = 150;
-int Fwall = 150;
+#define LV 400
+#define LRWALLS 150
+#define FWALLS 150
 
 //NON-CALIBRATED GLOBAL VARIABLES
 Servo rightservo;
 Servo leftservo;
 
-bool lWall;
-bool rWall;
-bool fWall;
+bool l_Wall;
+bool r_Wall;
+bool f_Wall;
 
 //states for the outside loop
 enum states {
@@ -93,8 +93,8 @@ enum maze_direction {
 
 maze_direction m_direction = North;
 
-#define MAZE_X 3
-#define MAZE_Y 343
+#define MAZE_X 4
+#define MAZE_Y 5
 
 struct node {
   bool visited;
@@ -164,11 +164,12 @@ void setup() {
   servoSetup();
   radioSetup();
   mazeSetup();
+  pinMode(LED_BUILTIN, OUTPUT);
   state = FOLLOW_LINE;
 }
 
-int readL[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
-int readR[3] = {lineVoltage + 100, lineVoltage + 100, lineVoltage + 100};
+int readL[3] = {LV + 100, LV + 100, LV + 100};
+int readR[3] = {LV + 100, LV + 100, LV + 100};
 double leftAverage;
 double rightAverage;
 
@@ -193,21 +194,21 @@ void sample()
 
 void follow() {
     sample();
-  if (rightAverage >= lineVoltage && leftAverage >= lineVoltage) {
+  if (rightAverage >= LV && leftAverage >= LV) {
     forward();
     state = FOLLOW_LINE;
   }
-  else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
+  else if (rightAverage < LV && leftAverage < LV) {
     state = INTERSECTION;
   }
   // Continue turning right
-  else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
+  else if (rightAverage < LV && leftAverage >= LV) {
     leftservo.write(135);
     rightservo.write(90);
     state = FOLLOW_LINE;
   }
   // Continue turning left
-  else if (rightAverage >= lineVoltage && leftAverage < lineVoltage) {
+  else if (rightAverage >= LV && leftAverage < LV) {
     leftservo.write(90);
     rightservo.write(45);
     state = FOLLOW_LINE;
@@ -221,7 +222,7 @@ void stepPast () {
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
-  while (leftAverage < lineVoltage && rightAverage < lineVoltage) {
+  while (leftAverage < LV && rightAverage < LV) {
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
@@ -236,28 +237,29 @@ void forward () {
 }
 
 void turnLeft() {
+  Serial.println("turning left");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
   leftservo.write(0);
   rightservo.write(0);
   
-  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+  while(leftAverage > LV && rightAverage > LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
-  while(leftAverage > lineVoltage && rightAverage < lineVoltage) {
+  while(leftAverage > LV && rightAverage < LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
-  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+  while(leftAverage > LV && rightAverage > LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
-  while (leftAverage < lineVoltage && rightAverage > lineVoltage) {
+  while (leftAverage < LV && rightAverage > LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
@@ -273,22 +275,22 @@ void turnRight() {
   leftservo.write(180);
   rightservo.write(180);
   
-  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+  while(leftAverage > LV && rightAverage > LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
-  while(leftAverage < lineVoltage && rightAverage > lineVoltage) {
+  while(leftAverage < LV && rightAverage > LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
-  while(leftAverage > lineVoltage && rightAverage > lineVoltage) {
+  while(leftAverage > LV && rightAverage > LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
   }
-  while (leftAverage > lineVoltage && rightAverage < lineVoltage) {
+  while (leftAverage > LV && rightAverage < LV) {
     delay(50);
     leftAverage = analogRead(sensorL);
     rightAverage = analogRead(sensorR);
@@ -304,7 +306,7 @@ bool detectRightWall() {
 //  digitalWrite(s0, LOW);
 
   //read_wallR = analogRead(walls);
-  if (analogRead(rightWall) >= LRwalls) {
+  if (analogRead(rightWall) >= LRWALLS) {
     return true;
   }
   else {
@@ -318,7 +320,7 @@ bool detectFrontWall() {
 //  digitalWrite(s0, HIGH);
 
   //int read_wallF = analogRead(walls);
-  if (analogRead(frontWall) >= Fwall) {
+  if (analogRead(frontWall) >= FWALLS) {
     return true;
   }
   else {
@@ -333,7 +335,7 @@ bool detectLeftWall() {
 
   //read_wallL = analogRead(walls);
   
-  if (analogRead(leftWall) >= LRwalls) {
+  if (analogRead(leftWall) >= LRWALLS) {
     return true;
   }
   else {
@@ -410,33 +412,33 @@ void change_direction(int how_many_turn) {
   }
 }
 
-//void turns() {
-//  if ( rWall && lWall && fWall ) {
-//    change_direction(1);
-//    turnLeft();
-//    turnLeft();
-//  }
-//  else if ( rWall && fWall && !lWall ) {
-//    change_direction(2);
-//    turnLeft();
-//  }
-//  else if ( !rWall ) {
-//    change_direction(0);
-//    turnRight();
-//  }
-//  else {
-//    forward();
-//  }
-//}
+void turns() {
+  if ( r_Wall && l_Wall && f_Wall ) {
+    change_direction(1);
+    turnLeft();
+    turnLeft();
+  }
+  else if ( r_Wall && f_Wall && !l_Wall ) {
+    change_direction(2);
+    turnLeft();
+  }
+  else if ( !r_Wall ) {
+    change_direction(0);
+    turnRight();
+  }
+  else {
+    forward();
+  }
+}
 
 //CHANGE THIS BASED OFF OF GUI 
 //for now North decrement row, west decrement col
 int getX(int m) {
   if (m == North) {
-    return current_x -1;
+    return current_x + 1;
   }
   else if (m == South) {
-    return current_x + 1;
+    return current_x - 1;
   }
   else {
     return current_x;
@@ -445,8 +447,8 @@ int getX(int m) {
 
 int getY(int m) {
   if (m == East) {
-    return current_y +1;
-  }
+    return current_y + 1;
+  }//
   else if (m == West) {
     return current_y - 1;
   }
@@ -463,7 +465,6 @@ void updateMaze() {
 void dfs() {
   int right = (m_direction + 1) % 4;
   int left = (m_direction + 3) % 4;
-  int back = (m_direction + 2) % 4;
   
   int rx = getX(right);
   int ry = getY(right);
@@ -471,21 +472,19 @@ void dfs() {
   int ly = getY(left);
   int fx = getX(m_direction);
   int fy = getY(m_direction);
-  int ux = getX(back);
-  int uy = getY(back);
 
   bool r_blocked = false;
   bool l_blocked = false;
   bool f_blocked = false;
 
   //if there are walls blocking
-  if ( rWall ) {
+  if ( r_Wall ) {
     r_blocked = true;
   }
-  if ( lWall ) {
+  if ( l_Wall ) {
     l_blocked = true;
   }
-  if ( fWall ) {
+  if ( f_Wall ) {
     f_blocked = true;
   }
 
@@ -498,6 +497,16 @@ void dfs() {
   }
   if (maze[fx][fy].visited) {
     f_blocked = true;
+  }
+
+  if (r_blocked) {
+    Serial.println("r blocked");
+  }
+  if (l_blocked) {
+    Serial.println("l blocked");
+  }
+  if (f_blocked) {
+    Serial.println("f blocked");
   }
   
   if (!r_blocked) {
@@ -538,6 +547,8 @@ void dfs() {
       forward();
     }
     else {
+      int ux = getX(next);
+      int uy = getY(next);
       current_x = ux;
       current_y = uy;
       turnRight();
@@ -630,13 +641,13 @@ void updateBytes() {
       break;
   }
 
-  if (lWall) {
+  if (l_Wall) {
     to_send_1 |= wall_present_west; 
   }
-  if (rWall) {
+  if (r_Wall) {
     to_send_1 |= wall_present_east;
   }
-  if (fWall) {
+  if (f_Wall) {
     to_send_1 |= wall_present_north;
   }
   
@@ -656,26 +667,42 @@ void printMaze() {
   }
 }
 
+void printDirection() {
+  if (m_direction == North) {
+    Serial.println("N");
+  }
+  else if (m_direction == East) {
+    Serial.println("E");
+  }
+  else if (m_direction == South) {
+    Serial.println("S");
+  }
+  else{
+    Serial.println("W");
+  }
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   switch (state) {
     case FOLLOW_LINE:
       sample();
-      if (rightAverage >= lineVoltage && leftAverage >= lineVoltage) {
+      Serial.println("hi");
+      if (rightAverage >= LV && leftAverage >= LV) {
         forward();
         state = FOLLOW_LINE;
       }
-      else if (rightAverage < lineVoltage && leftAverage < lineVoltage) {
+      else if (rightAverage < LV && leftAverage < LV) {
         state = INTERSECTION;
       }
       // Continue turning right
-      else if (rightAverage < lineVoltage && leftAverage >= lineVoltage) {
+      else if (rightAverage < LV && leftAverage >= LV) {
         leftservo.write(135);
         rightservo.write(90);
         state = FOLLOW_LINE;
       }
       // Continue turning left
-      else if (rightAverage >= lineVoltage && leftAverage < lineVoltage) {
+      else if (rightAverage >= LV && leftAverage < LV) {
         leftservo.write(90);
         rightservo.write(45);
         state = FOLLOW_LINE;
@@ -688,16 +715,17 @@ void loop() {
           rightservo.write(90);
           updateMaze();
           printMaze();
-          lWall = detectLeftWall();
-          rWall = detectRightWall();
-          fWall = detectFrontWall();
+          printDirection();
+          l_Wall = detectLeftWall();
+          r_Wall = detectRightWall();
+          f_Wall = detectFrontWall();
         case MOVE : 
 //          sendRadio();
 //          to_send_0 = 0b00000000;
 //          to_send_1 = 0b00000000;
           stepPast();
-          dfs();
-          //turns();
+          //dfs();
+          turns();
           state = FOLLOW_LINE;
         default :
           state = FOLLOW_LINE;
