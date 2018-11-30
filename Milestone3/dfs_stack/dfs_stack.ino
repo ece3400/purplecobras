@@ -74,6 +74,8 @@ byte robot_present = 0b00000001;
 
 byte explored = 0b00000010;
 
+byte Move = 0b00010000;
+
 byte direction_north = 0b00010000;
 byte direction_east =  0b00010100;
 byte direction_south = 0b00011000;
@@ -635,16 +637,16 @@ void sendRadio() {
 void updateBytes() {
   switch (m_direction) {
     case North :
-      to_send_0 = to_send_0 | direction_north;
+      to_send_0 = to_send_0 | direction_north | Move;
       break;
     case South :
-      to_send_0 = to_send_0 | direction_south;
+      to_send_0 = to_send_0 | direction_south | Move;
       break;
     case East :
-      to_send_0 = to_send_0 | direction_east;
+      to_send_0 = to_send_0 | direction_east | Move;
       break;
     case West :
-      to_send_0 = to_send_0 | direction_west;
+      to_send_0 = to_send_0 | direction_west | Move;
       break;
   }
 
