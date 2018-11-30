@@ -93,7 +93,7 @@ enum maze_direction {
   West
 };
 
-maze_direction m_direction = North;
+maze_direction m_direction = South;
 
 #define MAZE_X 9
 #define MAZE_Y 9
@@ -438,25 +438,25 @@ void turns() {
 //for now North decrement row, west decrement col
 int getX(int m) {
   if (m == North) {
-    return current_x + 1;
+    return current_y - 1;
   }
   else if (m == South) {
-    return current_x - 1;
+    return current_y + 1;
   }
   else {
-    return current_x;
+    return current_y;
   }
 }
 
 int getY(int m) {
   if (m == East) {
-    return current_y + 1;
+    return current_x - 1;
   }//
   else if (m == West) {
-    return current_y - 1;
+    return current_x + 1;
   }
   else {
-    return current_y;
+    return current_x;
   }
 }
 
