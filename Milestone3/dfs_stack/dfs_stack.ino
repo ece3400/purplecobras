@@ -164,7 +164,6 @@ void setup() {
   servoSetup();
   radioSetup();
   mazeSetup();
-  choose = f;
   state = FOLLOW_LINE;
 }
 
