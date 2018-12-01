@@ -103,7 +103,7 @@ struct node {
   maze_direction dir;
 };
 
-node maze[MAZE_X][MAZE_Y];
+node maze[MAZE_Y][MAZE_X];
 
 int current_x = 0;
 int current_y = 0;
@@ -150,8 +150,8 @@ void radioSetup()
 }
 
 void mazeSetup() {
-  for (int i = 0; i < MAZE_X; i++) {
-    for (int j = 0; j <MAZE_Y; j++) {
+  for (int i = 0; i < MAZE_Y; i++) {
+    for (int j = 0; j <MAZE_X; j++) {
       if (i == 0 && j == 0) {
         maze[i][j].visited = true;
       }
@@ -239,34 +239,43 @@ void forward () {
   rightservo.write(45);
 }
 
+void turnAround() {
+  leftAverage = analogRead(sensorL);
+  rightAverage = analogRead(sensorR);
+  
+  leftservo.write(0);
+  rightservo.write(0);
+  delay(1400);
+}
 void turnLeft() {
-  Serial.println("turning left");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
   leftservo.write(0);
   rightservo.write(0);
   
-  while(leftAverage > LV && rightAverage > LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
-  while(leftAverage > LV && rightAverage < LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
-  while(leftAverage > LV && rightAverage > LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
-  while (leftAverage < LV && rightAverage > LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
+  delay(800);
+
+//  while(leftAverage > LV && rightAverage > LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
+//  while(leftAverage > LV && rightAverage < LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
+//  while(leftAverage > LV && rightAverage > LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
+//  while (leftAverage < LV && rightAverage > LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
   leftservo.write(90);
   rightservo.write(90);
 }
@@ -277,27 +286,28 @@ void turnRight() {
   
   leftservo.write(180);
   rightservo.write(180);
-  
-  while(leftAverage > LV && rightAverage > LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
-  while(leftAverage < LV && rightAverage > LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
-  while(leftAverage > LV && rightAverage > LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
-  while (leftAverage > LV && rightAverage < LV) {
-    delay(50);
-    leftAverage = analogRead(sensorL);
-    rightAverage = analogRead(sensorR);
-  }
+
+  delay(800);
+//  while(leftAverage > LV && rightAverage > LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
+//  while(leftAverage < LV && rightAverage > LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
+//  while(leftAverage > LV && rightAverage > LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
+//  while (leftAverage > LV && rightAverage < LV) {
+//    delay(50);
+//    leftAverage = analogRead(sensorL);
+//    rightAverage = analogRead(sensorR);
+//  }
   
   leftservo.write(90);
   rightservo.write(90);
@@ -395,13 +405,13 @@ void change_direction(int how_many_turn) {
           m_direction = West;
           break;
         case East:
-          m_direction = South;
+          m_direction = North;
           break;
         case South:
           m_direction = East;
           break;
         case West:
-          m_direction = North;
+          m_direction = South;
           break;
         default:
           m_direction = m_direction;
@@ -418,8 +428,9 @@ void change_direction(int how_many_turn) {
 void turns() {
   if ( r_Wall && l_Wall && f_Wall ) {
     change_direction(1);
-    turnLeft();
-    turnLeft();
+    turnAround();
+//    turnLeft();
+//    turnLeft();
   }
   else if ( r_Wall && f_Wall && !l_Wall ) {
     change_direction(2);
@@ -461,9 +472,9 @@ int getX(int m, int x) {
 }
 
 void updateMaze() {
-  maze[current_x][current_y].visited = true;
+  maze[current_y][current_x].visited = true;
   if (!backtracking) {
-    maze[current_x][current_y].dir = m_direction;
+    maze[current_y][current_x].dir = m_direction;
   }
 }
 
@@ -510,13 +521,13 @@ void dfs() {
   }
 
   //check surrounding nodes to see if they have been visited
-  if (maze[rx][ry].visited) {
+  if (maze[ry][rx].visited) {
     r_blocked = true;
   }
-  if (maze[lx][ly].visited) {
+  if (maze[ly][lx].visited) {
     l_blocked = true;
   }
-  if (maze[fx][fy].visited) {
+  if (maze[fy][fx].visited) {
     f_blocked = true;
   }
 
@@ -553,7 +564,7 @@ void dfs() {
   else {
     //reversing the direction
     backtracking = true;
-    int next = (maze[current_x][current_y].dir + 2) % 4;
+    int next = (maze[current_y][current_x].dir + 2) % 4;
     if (next == right) {
       current_x = rx;
       current_y = ry;
@@ -576,8 +587,9 @@ void dfs() {
       int uy = getY(next, current_y);
       current_x = ux;
       current_y = uy;
-      turnRight();
-      turnRight();
+      turnAround();
+//      turnRight();
+//      turnRight();
       change_direction(1);
     }
   }
@@ -679,8 +691,8 @@ void updateBytes() {
 }
 
 void printMaze() {
-  for (int i = 0; i < MAZE_X; i ++ ) {
-    for (int j = 0; j < MAZE_Y; j++) {
+  for (int i = 0; i < MAZE_Y; i ++ ) {
+    for (int j = 0; j < MAZE_X; j++) {
       if (maze[i][j].visited) {
         Serial.print(1);
       }
@@ -745,9 +757,10 @@ void loop() {
           r_Wall = detectRightWall();
           f_Wall = detectFrontWall();
         case MOVE : 
-//          sendRadio();
-//          to_send_0 = 0b00000000;
-//          to_send_1 = 0b00000000;
+          updateBytes();
+          sendRadio();
+          to_send_0 = 0b00000000;
+          to_send_1 = 0b00000000;
           stepPast();
           dfs();
           //turns();
