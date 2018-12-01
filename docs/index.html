@@ -119,7 +119,7 @@
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
               <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
             </span>
-	    </a>	  
+	    </a>
             <h4 class="service-heading">Lab 4</h4>
             <p class="text-muted">FPGA and Shape Detection</p>
           </div>
@@ -804,7 +804,7 @@ the robot to do anything upon detection.
                   </p>
                   <p> <h6>1. Getting Started</h6>
                     We started off the radio portion of the lab by choosing the pipes we would be using throughout
-	      	    the lab. Being Group 2 and in Monday lab, we used 4 and 5 for our pipes. After this, we 
+	      	    the lab. Being Group 2 and in Monday lab, we used 4 and 5 for our pipes. After this, we
 	      		downloaded the getting started sketch and made sure that it was able to run on our Arduinos.
 	      		We found that on maximum power, the radios were able to trasmit from over 10 feet away.
 	      		Once on maximum power, we found that we never dropped packets.
@@ -813,7 +813,7 @@ the robot to do anything upon detection.
                     	At this point, we began modifying the getting started sketch so that it would serve
 	    		the purposes we needed it to. One of the changes we made was for the radio to send
 	    		unsigned chars rather than ints because we needed to send bits containing our bit masks
-	    		to the receiver. After successfully getting the radios to send chars, we started 
+	    		to the receiver. After successfully getting the radios to send chars, we started
 	    		coming up with the bit masks we would use for relaying information to the ground
 	    		station while taking up as little storage as possible. We determined that we would
 	    		send robot movement direction information, whether a space is explored or unexpored,
@@ -867,7 +867,7 @@ the robot to do anything upon detection.
 			of space, and we ended up freeing up about 15% of our dynamic memory on the robot by removing this code. The most important
 			step in this step was to change the pipe setup for each of the arduinos. This is accomplished by changing the role of the
 			script. After doing this, our code was working separately.
-		</p>	
+		</p>
 		</p>
                   <p> <h6>3.  Simulating Your Robot </h6>
                     	In the end, we integrated our code with the radio code and got the robot to drive around the maze as can be seen
@@ -1071,7 +1071,7 @@ the robot to do anything upon detection.
 			<p> <h6> Objective: Writing data into provided Dual_Port_M9K RAM, reading data it to the VGA display, and detecting the color of the bits in the RAM.</h6> </p>
 			<p> <h6>FPGA Team Materials</h6>
                       <ul class="list-inline">
-                      <li> DE0 Nano</li>   
+                      <li> DE0 Nano</li>
 		      <li> VGA Adapter </li>
                     </ul>
                   </p>
@@ -1105,16 +1105,16 @@ the robot to do anything upon detection.
 			<p> <h6>Arduino Team Materials</h6>
                       <ul class="list-inline">
 		      <li> Arduino Uno </li>
-                      <li> OV7670 Camera</li>   
+                      <li> OV7670 Camera</li>
 		      <li> 2 Pull up resistors</li>
 			      <li> 24 MHz clock (from FPGA) </li>
                     </ul>
                   </p>
-			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p> 
+			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p>
 			<img class="img-fluid d-block mx-auto" src="img/lab4/schematic.png" alt="">
-<p>  
+<p>
 There was no communication occurring between the devices, so we checked both the FPGA and Arduino. Originally, we thought that the distorted clock signal (more sinusoidal than square) coming from the FPGA was causing the issue, but after some testing the issue was found to be the program stopping after calling Wire.endTransmission(). Then, after some googling, we switched out our knock-off Arduino for a real one, and the two immediately were able to communicate. We then compared register values before and after writing them to verify that they we could change them.</p>
-		
+
 		<p> <h5>Integration</h5>
 		Below is the picture of the color bar test after integrating the arduino and FPGA. </p>
 		<img class="img-fluid d-block mx-auto" src="img/lab4/colortest.JPG" alt="">
@@ -1131,7 +1131,7 @@ Here is the video output:
 	</div>
 	</div>
 	</div>
-			
+
     <!-- Milestone Modals -->
 
     <!-- Modal 1 -->
@@ -1439,9 +1439,58 @@ Here is the video output:
 		<p class="item-intro text-muted">Objective: Create an algorithm that allows the robot to traverse a maze.</p>
 		  <p class="item-intro text-muted">Materials: Fully assembled robot capable of moving, detecting walls, and line following.</p>
                   <p>
-			  We completed this milestone by creating a DFS algorithm that made our robot capable of navigating through any maze, looking for nodes it hadn't been to before. Once it had reached the end of a node, it backtracked to a new node that it would explore. We chose the DFS algorithm because it would allow our robot to explore the as much of the maze as possible in as little time as possible. Below is a snippet of our DFS code:
+			  hat made our robot capable of navigating through any maze, looking for nodes it hadn't been to before. Once it had reached the end of a node, it backtracked to a new node that it would explore. We chose the DFS algorithm because it would allow our robot to explore the as much of the maze as possible in as little time as possible. Below is a snippet of our DFS code:
 		</p>
 			<img class="img-fluid d-block mx-auto" src="img/milestone4/Code3.JPG" alt="">
+      <p> <h5> DFS </h5>
+        <p> <h6> Algorithm </h6>
+        We used the Depth-first search algorithm to implement this milestone.
+        Depth-first search an algorithm for traversing the nodes of a graph.
+        In abstract terms, the algorithm navigates a graph by traversing “deeper”
+        in some way until there are no more possible paths or all possible paths have already been “visited.”
+        When this happens, the algorithm then backtracks to the last point of the path with another unvisited path.
+        This happens until the entire maze has been explored.
+        </p>
+
+        <p> <h6> Implementation </h6>
+          To store data of where the robot has already traversed, we created a 2D array of nodes.
+          These nodes were based off the struct below.
+          <p class = text-left>
+            <code>
+              struct node { <br>
+                bool visited; <br>
+                maze_direction dir; <br>
+              }; <br>
+            </code>
+          </p>
+          visited is a boolean that tells if that node of the maze has been visited or not.
+          dir is a maze_direction which is an enum that we created to send the direction the robot is going in
+          to the gui. dir is the direction that the robot took to get to that node. This is necessary for the
+          way we implemented the backtracking. We also keep track of the current coordinates and whether or not
+          we are backtracking.
+
+          <br>
+
+          When the robot reaches an intersection, it must determine where to go next. In this determination process,
+          we simply follow right-hand wall following if it is still possible. This means that if not all side (front, left, right)
+          of the robot are blocked, then we simply wall follow. Being blocked means one of two things: there is a wall, or the
+          node to that side has already been visited. We do this by setting these variables to true.
+
+          <p class = text-left>
+            <code>
+              bool r_blocked <br>
+              bool l_blocked <br>
+              bool f_blocked<br>
+            </code>
+          </p>
+
+          For us to be able to easily determine the coordinates of the surrounding nodes to check,
+          we must calculate t
+
+        </p>
+
+
+      </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
@@ -1472,11 +1521,11 @@ Here is the video output:
 		  <p class="item-intro text-muted">Materials: FPGA, Arduino Uno, various wires, VGA adapter, VGA cables, monitor</p>
                   <p>The heart of this milestone is our image processor code. In this code, we determine the shape of the object when VGA_VSYNC_NEG goes low, indicating the end of a frame. At this point, we don’t need to read the incoming data and can quickly go through and figure out what the previous image was. We are able to figure out the color by comparing the number of blue pixels detected with the number of red pixels detected. Additionally, we make sure that the number of pixels detected is greater than a threshold, indicating we are probably seeing a treasure and not just a higher concentration of red or blue pixels. After doing this, we determine the shape of the object by comparing the concentration of pixels at the top, middle, and bottom of the image. We know that for a square all three concentrations should be equal, for a triangle the bottom should be greater than the middle which should be greater than the top, and for the diamond, the bottom should be less than the middle which is greater than the top. Depending on what we find, we determine the value of result which is a parallel connection to the arduino and tells the arduino which shape and color we have detected. </p>
                   <p> Below is our image detection code: </p>
-			
+
 			 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code3.JPG" alt="">
 			 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code4.JPG" alt="">
 			 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code5.JPG" alt="">
-			
+
 		  <p> We spent about 2 weeks trying to use our own code to run the camera and still had no luck. At this point we turned to Group 5’s code because we knew they had it working for their camera. After changing all the IO pins so that it should have worked for our setup, it still didn’t work at all. After another week, we found a single wire with poor connection to the breadboard. We were so far behind at this point that we simply continued working with Group 5’s code since it was nearly identical to our own but we knew it would function properly. </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
