@@ -53,7 +53,7 @@ role_e role = role_pong_back;
 
 //testing variables
 //int current_location[2] = {0,0};
-int current_location_rec[2] = {0, 0};
+int current_location_rec[2] = {0, -1};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
 unsigned char to_send_0 = 0b00000000;
@@ -183,10 +183,11 @@ String Direction_str = "";
 void parse_byte_1( unsigned char response ) {
   int Move;
   Direction = ( response & (0b00001100) ) >> 2;
+  Serial.println(Direction);
   Direction_str = "";
   Move = ( response & (0b00010000) ) >> 4;
-  Serial.println(Move);
-  Serial.println(Direction);
+  //Serial.println(Move);
+  //Serial.println(response);
   if ( Move ) {
     //Serial.println(Direction);
     switch(Direction){
