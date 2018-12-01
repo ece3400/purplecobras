@@ -1438,13 +1438,11 @@ Here is the video output:
 		  <h2 class="text-uppercase">Milestone 3</h2>
 		<p class="item-intro text-muted">Objective: Create an algorithm that allows the robot to traverse a maze.</p>
 		  <p class="item-intro text-muted">Materials: Fully assembled robot capable of moving, detecting walls, and line following.</p>
-                  <p>
-			  hat made our robot capable of navigating through any maze, looking for nodes it hadn't been to before. Once it had reached the end of a node, it backtracked to a new node that it would explore. We chose the DFS algorithm because it would allow our robot to explore the as much of the maze as possible in as little time as possible. Below is a snippet of our DFS code:
-		</p>
+			
       <p> <h5> DFS </h5>
         <p> <h6> Algorithm </h6>
         We used the Depth-first search algorithm to implement this milestone.
-        Depth-first search an algorithm for traversing the nodes of a graph.
+        Depth-first search is an algorithm for traversing the nodes of a graph.
         In abstract terms, the algorithm navigates a graph by traversing “deeper”
         in some way until there are no more possible paths or all possible paths have already been “visited.”
         When this happens, the algorithm then backtracks to the last point of the path with another unvisited path.
@@ -1522,7 +1520,13 @@ Here is the video output:
 
           This shows that our robot is functioning. However, there is still a bug where sometimes
           it knows to turn but yet doesn't complete the turn which can be seen at a point in the video
+<<<<<<< HEAD
           where April sets the robot back on the correct path.
+=======
+          where April sets the robot back on the correct path. Additionally, if one looks closely at the mapped
+	    maze, there is one wall that the robot 'saw' that was not present. However, the rest of the maze
+	    was spot on.
+>>>>>>> 0b3b03938ec9051410e7228f68f047de070fe4b4
         </p>
 
 
