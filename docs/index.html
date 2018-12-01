@@ -1441,7 +1441,6 @@ Here is the video output:
                   <p>
 			  hat made our robot capable of navigating through any maze, looking for nodes it hadn't been to before. Once it had reached the end of a node, it backtracked to a new node that it would explore. We chose the DFS algorithm because it would allow our robot to explore the as much of the maze as possible in as little time as possible. Below is a snippet of our DFS code:
 		</p>
-			<img class="img-fluid d-block mx-auto" src="img/milestone4/Code3.JPG" alt="">
       <p> <h5> DFS </h5>
         <p> <h6> Algorithm </h6>
         We used the Depth-first search algorithm to implement this milestone.
@@ -1485,8 +1484,40 @@ Here is the video output:
           </p>
 
           For us to be able to easily determine the coordinates of the surrounding nodes to check,
-          we must calculate t
+          we must calculate them before hand. We can do this because our directions are enums so we
+          can calculate the right and left directions with some simple algebra.
 
+          <p class = text-left>
+            <code>
+              int right = (m_direction + 1) % 4; <br>
+              int left = (m_direction + 3) % 4;<br>
+            </code>
+          </p>
+
+          This allows us to then pass this direction into methods that calculate coordinates.
+
+          <img class="img-fluid d-block mx-auto" src="img/milestone3/img1.png" alt="">
+
+          If the robot must backtrack, it sets the <code> backtracking </code> variable to
+          <code> true </code> and then proceeds to calculate how to move. The normal wall-following
+          always sets this variable back to <code> false </code> so that the robot won't always
+          think it's backtracking. To calculate how to backtrack, we use <code> dir </code>.
+          <code> dir </code> has told us how we originally got to that node. We also make sure not
+          to update <code> dir </code> if we are backtracking which is why that variable is necessary. We can then
+          calculate what that direction is using similar algebra to before and then calculate the coordinates as above as well.
+          We then are able to determine how to move.
+
+          <br>
+
+          After we turn, we make sure to update <code> m_direction </code> to be able to properly update the gui.
+          We also update the maze every time we hit an intersection.
+
+        </p>
+
+        <p> <h5> VIDEO </h5>
+          This shows that our robot is functioning. However, there is still a bug where sometimes
+          it knows to turn but yet doesn't complete the turn which can be seen at a point in the video
+          where April sets the robot back on the correct path. 
         </p>
 
 
