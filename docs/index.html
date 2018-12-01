@@ -1475,8 +1475,6 @@ Here is the video output:
                   <p>The heart of this milestone is our image processor code. In this code, we determine the shape of the object when VGA_VSYNC_NEG goes low, indicating the end of a frame. At this point, we don’t need to read the incoming data and can quickly go through and figure out what the previous image was. We are able to figure out the color by comparing the number of blue pixels detected with the number of red pixels detected. Additionally, we make sure that the number of pixels detected is greater than a threshold, indicating we are probably seeing a treasure and not just a higher concentration of red or blue pixels. After doing this, we determine the shape of the object by comparing the concentration of pixels at the top, middle, and bottom of the image. We know that for a square all three concentrations should be equal, for a triangle the bottom should be greater than the middle which should be greater than the top, and for the diamond, the bottom should be less than the middle which is greater than the top. Depending on what we find, we determine the value of result which is a parallel connection to the arduino and tells the arduino which shape and color we have detected. </p>
                   <p> Below is our image detection code: </p>
 			
-		 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code1.JPG" alt="">
-		 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code2.JPG" alt="">
 			 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code3.JPG" alt="">
 			 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code4.JPG" alt="">
 			 <img class="img-fluid d-block mx-auto" src="img/milestone4/Code5.JPG" alt="">
