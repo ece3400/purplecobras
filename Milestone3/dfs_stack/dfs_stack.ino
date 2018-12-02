@@ -3,12 +3,22 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 
+#define LOG_OUT 1 // use the log output function
+#define FFT_N 128 // set to 128 point fft
+#include <FFT.h>
+
 //ARUINO INPUTS
 int sensorL = A4;
 int sensorR = A5;
 int leftWall = A1;
 int frontWall = A3;
 int rightWall = A2;
+//mic and robot
+int mic_ir = A0;
+int mic_threshold = 90;
+
+//fft selector
+#define s0 4
 
 //CALIBRATED GLOBAL VARIABLES
 #define LV 400
@@ -22,6 +32,10 @@ Servo leftservo;
 bool l_Wall;
 bool r_Wall;
 bool f_Wall;
+
+//if there is a robot
+int robot;
+int mic;
 
 //states for the outside loop
 enum states {
@@ -167,8 +181,13 @@ void setup() {
   servoSetup();
   radioSetup();
   mazeSetup();
-  pinMode(LED_BUILTIN, OUTPUT);
-  state = FOLLOW_LINE;
+  pinMode(s0, OUTPUT);
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH);
+  digitalWrite(s0, HIGH);
+  robot = 0;
+  mic = 0;
+  state = DETECT_SOUND;
 }
 
 int readL[3] = {LV + 100, LV + 100, LV + 100};
@@ -287,7 +306,10 @@ void turnRight() {
   leftservo.write(180);
   rightservo.write(180);
 
-  delay(800);
+  delay(500);
+  while(leftAverage > LV) {
+    leftAverage = analogRead(sensorL);
+  }
 //  while(leftAverage > LV && rightAverage > LV) {
 //    delay(50);
 //    leftAverage = analogRead(sensorL);
@@ -354,6 +376,82 @@ bool detectLeftWall() {
   else {
     return false;
   }
+}
+
+void detectMicrophone () {
+  cli();
+  for (int i = 0 ; i < 256 ; i += 2) {
+    fft_input[i] = analogRead(mic_ir); // <-- NOTE THIS LINE
+    fft_input[i+1] = 0;
+  }
+
+  fft_window();
+  fft_reorder();
+  fft_run();
+  fft_mag_log();
+  sei();
+  Serial.println(fft_log_out[12]);
+  //whatever bin number decided goes after the log_out
+  // decide threshold by testing the microphone at different distances(?)
+  if (fft_log_out[12] > mic_threshold) {
+    mic = 1;
+  }
+  else {
+    mic = 0;
+  }
+}
+
+void detectRobot() { 
+  //default adc values
+  unsigned int default_timsk = TIMSK0;
+  unsigned int default_adcsra = ADCSRA;
+  unsigned int default_admux = ADMUX;
+  unsigned int default_didr = DIDR0;
+
+  //setup 
+  TIMSK0 = 0; // turn off timer0 for lower jitter
+  ADCSRA = 0xe5; // set the adc to free running mode
+  ADMUX = 0x40; // use adc0
+  DIDR0 = 0x01; // turn off the digital input for adc0
+  
+  cli();
+  for (int i = 0 ; i < 256 ; i += 2) { // save 128 samples
+      while(!(ADCSRA & 0x10)); // wait for adc to be ready
+      ADCSRA = 0xf5; // restart adc
+      byte m = ADCL; // fetch adc data
+      byte j = ADCH;
+      int k = (j << 8) | m; // form into an int
+      k -= 0x0200; // form into a signed int
+      k <<= 6; // form into a 16b signed int
+      fft_input[i] = k; // put real data into even bins
+      fft_input[i+1] = 0; // set odd bins to 0
+    }
+
+  fft_window(); // window the data for better frequency response
+  fft_reorder(); // reorder the data before doing the fft
+  fft_run(); // process the data in the fft
+  fft_mag_log(); // take the output of the fft
+  sei();
+
+  Serial.println("start");
+  for (byte i = 0 ; i < FFT_N/2 ; i++) { 
+      Serial.println(fft_log_out[i]); // send out the data
+    }
+  
+//  if (fft_log_out[23] >= 70) {
+//    TIMSK0 = default_timsk;
+//    ADCSRA = default_adcsra;
+//    ADMUX = default_admux;
+//    DIDR0 = default_didr;
+//    return 1;  
+//  }
+//  else {
+//    TIMSK0 = default_timsk;
+//    ADCSRA = default_adcsra;
+//    ADMUX = default_admux;
+//    DIDR0 = default_didr;
+//    return 0;
+//  }
 }
 
 void change_direction(int how_many_turn) {
@@ -482,28 +580,28 @@ void dfs() {
   int right = (m_direction + 1) % 4;
   int left = (m_direction + 3) % 4;
   
-  Serial.print("current x: ");
-  Serial.println(current_x);
-  Serial.print("current y: ");
-  Serial.println(current_y);
+//  Serial.print("current x: ");
+//  Serial.println(current_x);
+//  Serial.print("current y: ");
+//  Serial.println(current_y);
   int rx = getX(right, current_x);
   int ry = getY(right, current_y);
   int lx = getX(left, current_x);
   int ly = getY(left, current_y);
   int fx = getX(m_direction, current_x);
   int fy = getY(m_direction, current_y);
-  Serial.print("rx: ");
-  Serial.println(rx);
-  Serial.print("ry: ");
-  Serial.println(ry);
-  Serial.print("lx: ");
-  Serial.println(lx);
-  Serial.print("ly: ");
-  Serial.println(ly);
-  Serial.print("fx: ");
-  Serial.println(fx);
-  Serial.print("fy: ");
-  Serial.println(fy);
+//  Serial.print("rx: ");
+//  Serial.println(rx);
+//  Serial.print("ry: ");
+//  Serial.println(ry);
+//  Serial.print("lx: ");
+//  Serial.println(lx);
+//  Serial.print("ly: ");
+//  Serial.println(ly);
+//  Serial.print("fx: ");
+//  Serial.println(fx);
+//  Serial.print("fy: ");
+//  Serial.println(fy);
 
   bool r_blocked = false;
   bool l_blocked = false;
@@ -531,15 +629,15 @@ void dfs() {
     f_blocked = true;
   }
 
-  if (r_blocked) {
-    Serial.println("r blocked");
-  }
-  if (l_blocked) {
-    Serial.println("l blocked");
-  }
-  if (f_blocked) {
-    Serial.println("f blocked");
-  }
+//  if (r_blocked) {
+//    Serial.println("r blocked");
+//  }
+//  if (l_blocked) {
+//    Serial.println("l blocked");
+//  }
+//  if (f_blocked) {
+//    Serial.println("f blocked");
+//  }
   
   if (!r_blocked) {
     backtracking = false;
@@ -722,9 +820,13 @@ void printDirection() {
 void loop() {
   // put your main code here, to run repeatedly:
   switch (state) {
+    case DETECT_SOUND :
+//      while (mic == 0) {
+//        detectMicrophone();
+//      }
+      state = FOLLOW_LINE;
     case FOLLOW_LINE:
       sample();
-      Serial.println("hi");
       if (rightAverage >= LV && leftAverage >= LV) {
         forward();
         state = FOLLOW_LINE;
@@ -751,8 +853,8 @@ void loop() {
           leftservo.write(90);
           rightservo.write(90);
           updateMaze();
-          printMaze();
-          printDirection();
+//          printMaze();
+//          printDirection();
           l_Wall = detectLeftWall();
           r_Wall = detectRightWall();
           f_Wall = detectFrontWall();

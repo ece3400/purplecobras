@@ -4,9 +4,14 @@
 #include <FFT.h> // include the library
 
 //analogRead code from Team Alpha
+#define s0 4
 
 void setup() {
-  Serial.begin(115200); // use the serial port
+  Serial.begin(9600); // use the serial port
+  pinMode(s0, OUTPUT);
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH);
+  digitalWrite(s0, HIGH);
 }
 
 //graph from serial output to find the bin for 660hz
@@ -16,7 +21,7 @@ void loop() {
   while(1) {
     cli();
     for (int i = 0 ; i < 256 ; i += 2) {
-      fft_input[i] = analogRead(A4); // <-- NOTE THIS LINE
+      fft_input[i] = analogRead(A0); // <-- NOTE THIS LINE
       fft_input[i+1] = 0;
     }
     fft_window();

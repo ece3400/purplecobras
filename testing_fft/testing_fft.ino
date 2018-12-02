@@ -11,9 +11,14 @@ port at 115.2kb.
 #define FFT_N 128 // set to 256 point fft
 
 #include <FFT.h> // include the library
+#define s0 4
 
 void setup() {
-  Serial.begin(115200); // use the serial port
+  pinMode(s0, OUTPUT);
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH);
+  digitalWrite(s0, LOW);
+  Serial.begin(9600); // use the serial port
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
   ADMUX = 0x40; // use adc0
@@ -40,8 +45,8 @@ void loop() {
     fft_mag_log(); // take the output of the fft
     sei();
     Serial.println("start");
-    if (fft_log_out[23] >= 70) {
-      Serial.println("ROBOT");
+    for (byte i = 0 ; i < FFT_N/2 ; i++) { 
+      Serial.println(fft_log_out[i]); // send out the data
     }
   }
 }
