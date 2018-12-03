@@ -963,23 +963,23 @@ the robot to do anything upon detection.
 		      <li> Arduino Uno </li>
                       <li> OV7670 Camera</li>
 		      <li> 2 Pull up resistors</li>
-			      <li> 24 MHz clock (from FPGA) </li>
+		      <li> 24 MHz clock (from FPGA) </li>
                     </ul>
                   </p>
-			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p>
-			<img class="img-fluid d-block mx-auto" src="img/lab4/schematic.png" alt="">
+		<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p>
+		<img class="img-fluid d-block mx-auto" src="img/lab4/schematic.png" alt="">
 <p>
 There was no communication occurring between the devices, so we checked both the FPGA and Arduino. Originally, we thought that the distorted clock signal (more sinusoidal than square) coming from the FPGA was causing the issue, but after some testing the issue was found to be the program stopping after calling Wire.endTransmission(). Then, after some googling, we switched out our knock-off Arduino for a real one, and the two immediately were able to communicate. We then compared register values before and after writing them to verify that they we could change them.</p>
-
 		<p> <h5>Integration</h5>
 		Below is the picture of the color bar test after integrating the arduino and FPGA. </p>
 		<img class="img-fluid d-block mx-auto" src="img/lab4/colortest.JPG" alt="">
-			<p>The color bars somewhat correct.
-
+		<p>The color bars somewhat correct.
 Here is the video output:
-
 		</p>
 		<img class="img-fluid d-block mx-auto" src="img/lab4/videooutput.PNG" alt="">
+		<button class="btn btn-primary" data-dismiss="modal" type="button">
+                    <i class="fas fa-times"></i>
+                    Close Project</button>
 		</div>
 	    	</div>
 		</div>
