@@ -185,9 +185,9 @@ void setup() {
   pinMode(2, OUTPUT);
   digitalWrite(2, HIGH);
   digitalWrite(s0, HIGH);
-//   while (mic == 0) {
-//      detectMicrophone();
-//   }
+   while (mic == 0) {
+      detectMicrophone();
+   }
   digitalWrite(s0, LOW);
   servoSetup();
   state = FOLLOW_LINE;
@@ -880,7 +880,7 @@ void loop() {
           l_Wall = detectLeftWall();
           r_Wall = detectRightWall();
           f_Wall = detectFrontWall();
-//          robot = detectRobot();
+          robot = detectRobot();
         case MOVE : 
           updateBytes();
 //          sendRadio();
