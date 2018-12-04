@@ -262,7 +262,7 @@ void turnAround() {
   
 }
 void turnLeft() {
-  Serial.println("turning left");
+//  Serial.println("turning left");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
 
@@ -302,11 +302,11 @@ void turnLeft() {
   
   leftservo.write(90);
   rightservo.write(90);
-  Serial.println("finished turning");
+//  Serial.println("finished turning");
 }
 
 void turnRight() {
-  Serial.println("turning right");
+//  Serial.println("turning right");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
@@ -340,7 +340,7 @@ void turnRight() {
   
   leftservo.write(90);
   rightservo.write(90);
-  Serial.println("finished turning right");
+//  Serial.println("finished turning right");
 }
 
 bool detectRightWall() {
@@ -445,7 +445,12 @@ int detectRobot() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-  
+//  
+//    Serial.println("start");
+//    for (byte i = 0 ; i < FFT_N/2 ; i++) { 
+//      Serial.println(fft_log_out[i]); // send out the data
+//    }
+    
   if (fft_log_out[23] >= 160) {
     TIMSK0 = default_timsk;
     ADCSRA = default_adcsra;

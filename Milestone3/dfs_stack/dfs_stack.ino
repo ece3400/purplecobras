@@ -453,6 +453,11 @@ int detectRobot() {
       fft_input[i+1] = 0; // set odd bins to 0
     }
 
+    Serial.println("start");
+    for (byte i = 0 ; i < FFT_N/2 ; i++) { 
+      Serial.println(fft_log_out[i]); // send out the data
+    }
+
   fft_window(); // window the data for better frequency response
   fft_reorder(); // reorder the data before doing the fft
   fft_run(); // process the data in the fft

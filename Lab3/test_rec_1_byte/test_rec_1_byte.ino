@@ -199,8 +199,8 @@ void parse_byte( unsigned char response ) {
     String Wall_str = "";
     int North_wall,East_wall, South_wall, West_wall;
     North_wall = ( response & (0b10000000) ) >> 7;
-    West_wall = ( response & (0b01000000) ) >> 6;
-    East_wall = ( response & (0b00100000) ) >> 5;
+    East_wall = ( response & (0b01000000) ) >> 6;
+    West_wall = ( response & (0b00100000) ) >> 5;
 
     switch(Direction){
       // north
