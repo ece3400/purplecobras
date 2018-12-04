@@ -768,7 +768,7 @@ void ping_out (unsigned char tosend) {
   }
   
     // Try again 1s later
-    delay(1000);
+    //delay(1000);
   }
   done_sending = 1;
 }
