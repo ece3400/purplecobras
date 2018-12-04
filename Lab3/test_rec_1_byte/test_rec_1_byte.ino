@@ -56,11 +56,9 @@ role_e role = role_pong_back;
 int current_location_rec[2] = {0, -1};
 int direction[2] = {0,1};
 //char to_send[] = {0b00000000,0b00000000};
-unsigned char to_send_0 = 0b00000000;
-unsigned char to_send_1 = 0b00000000;
+unsigned char to_send = 0b00000000;
 
 int location[2] = {0, 0};
-int byteflag = 0;
 
 void setup(void)
 {
@@ -139,25 +137,6 @@ void pong_back() {
         //printf("Got payload %lu...",got_char);
 
         parse_byte( got_char );
-        
-//        if ( got_char == 0b11000000 ) {
-//          byteflag = 1;
-//        }
-//        else if ( got_char == 0b10000000 ) {
-//          byteflag = 2;
-//        }
-//        else{
-//          switch ( byteflag ){
-//            case 1:
-//              parse_byte_1( got_char );
-//              break;
-//            case 2:
-//              parse_byte_2( got_char );
-//              break;
-//            default:
-//              break;
-//          }
-//        }
 
         // Delay just a little bit to let the other unit
         // make the transition to receiver
@@ -178,14 +157,12 @@ void pong_back() {
   }
 }
 
-
-int Direction;
-String Direction_str = "";
-
 void parse_byte( unsigned char response ) {
-  int Move;
+  String Direction_str = "";
+  int Direction;
   Direction = ( response & (0b00001100) ) >> 2;
-  Direction_str = "";
+
+  int Move;
   Move = ( response & (0b00010000) ) >> 4;
   if ( Move ) {
     switch(Direction){

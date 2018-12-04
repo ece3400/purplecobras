@@ -77,10 +77,10 @@ byte wall_present_west = 0b00100000; //left
 
 byte Move = 0b00010000;
 
-byte direction_north = 0b00001000;
-byte direction_east =  0b00000100;
-byte direction_south = 0b00000010;
-byte direction_west =  0b00000001;
+byte direction_north = 0b00010000;
+byte direction_east =  0b00010100;
+byte direction_south = 0b00011000;
+byte direction_west =  0b00011100;
 
 unsigned char to_send = 0b00000000;
 
