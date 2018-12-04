@@ -719,7 +719,7 @@ void dfs() {
     }
   }
 }
-void ping_out (unsigned char to_send) {
+void ping_out (unsigned char tosend) {
   done_sending = 0;
   if (role == role_ping_out ) {
     // First, stop listening so we can talk.
@@ -728,7 +728,7 @@ void ping_out (unsigned char to_send) {
     // Take the time, and send it.  This will block until complete
     unsigned long time = millis();
     //printf("Now sending %lu...",to_send);
-    bool ok = radio.write( &to_send, sizeof(unsigned char) );
+    bool ok = radio.write( &tosend, sizeof(unsigned char) );
     
     if (ok) {
       //printf("ok...");
@@ -758,12 +758,12 @@ void ping_out (unsigned char to_send) {
       unsigned char got_char;
       radio.read( &got_char, sizeof(unsigned char) );
 
-      if (got_char == to_send) {
+      if (got_char == tosend) {
         // Spew it
         //printf("Got response %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
       }
       else {
-        //printf("Got WRONG RESPONSE %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
+        ping_out(tosend);
       }
   }
   
