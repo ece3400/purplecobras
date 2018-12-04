@@ -20,6 +20,9 @@ int mic_threshold = 70;
 //fft selector
 #define s0 4
 
+#define button 7
+int b;
+
 //CALIBRATED GLOBAL VARIABLES
 #define LV 690
 #define LRWALLS 150
@@ -165,15 +168,18 @@ void mazeSetup() {
 void setup() {
   Serial.begin(9600);
   mic = 0;
+  b = 0;
   robot = 0;
   radioSetup();
   mazeSetup();
   pinMode(s0, OUTPUT);
   pinMode(2, OUTPUT);
+  pinMode(button, INPUT);
   digitalWrite(2, HIGH);
   digitalWrite(s0, HIGH);
-   while (mic == 0) {
+   while (mic == 0 && b == 0) {
       detectMicrophone();
+      b = digitalRead(button);
    }
   digitalWrite(s0, LOW);
   servoSetup();
@@ -757,7 +763,7 @@ void ping_out (unsigned char to_send) {
         //printf("Got response %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
       }
       else {
-        ping_out (to_send);
+        //printf("Got WRONG RESPONSE %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
       }
   }
   
