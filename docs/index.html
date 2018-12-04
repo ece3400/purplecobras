@@ -229,7 +229,7 @@
             <span class="fa-stack fa-4x">
 	      <a target= "_blank" href=https://docs.google.com/document/d/1H4SoH9TVXjtUpQlO5tgEejZ70AJBSiMP-9LPh7NKTtk/edit>
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
 	      </a>
             </span>
             <h4 class="service-heading">Final System Design</h4>
@@ -404,7 +404,7 @@
                     </div>
                   </p>
 		<p> <h5> Conclusion </h5>
-		The first part of this lab was fairly simple, and we were able to get the LED to blink and control it with a potentiometer using the Arduino without much trouble. We were able to get our robot built and get line sensor readings for the lines. We were not able to get the robot turning properly based on the line sensor readings yet, but it was able to travel in a square using timing on its turns. This was a good start to build off, and next we have to get the robot turning based on the sensor readings. 
+		The first part of this lab was fairly simple, and we were able to get the LED to blink and control it with a potentiometer using the Arduino without much trouble. We were able to get our robot built and get line sensor readings for the lines. We were not able to get the robot turning properly based on the line sensor readings yet, but it was able to travel in a square using timing on its turns. This was a good start to build off, and next we have to get the robot turning based on the sensor readings.
 		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
@@ -612,7 +612,7 @@ the robot to do anything upon detection.
       </code>
     </p>
 		<p> <h5> Conclusion </h5>
-		Both teams were able to get their parts working, and our robot now has merged code that works both with audio and IR. The IR team first had trouble getting the analog circuitry to work for the amplifier for the IR phototransistor, but found success after changing the op-amp and using Team Alpha’s design. The phototransistor was able to detect IR signals from the IR hat from a good distance away, but for future improvements we should make sure that it does not detect robots that are too far away. 
+		Both teams were able to get their parts working, and our robot now has merged code that works both with audio and IR. The IR team first had trouble getting the analog circuitry to work for the amplifier for the IR phototransistor, but found success after changing the op-amp and using Team Alpha’s design. The phototransistor was able to detect IR signals from the IR hat from a good distance away, but for future improvements we should make sure that it does not detect robots that are too far away.
 		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
@@ -757,7 +757,7 @@ the robot to do anything upon detection.
 <img class="img-fluid d-block mx-auto" src="img/lab3/Code5.JPG" alt="">
 		</p>
 
-		
+
 
 		<p>
 The part of our code regarding turning is not included here for the sake of brevity.
@@ -775,7 +775,7 @@ The part of our code regarding turning is not included here for the sake of brev
 <img class="img-fluid d-block mx-auto" src="img/lab3/Code11.JPG" alt="">
 		</p>
 
-		
+
 <p>
 	Above is some of our integrated code. The radio code is included at the top so we only have to call the radiosetup and ping_out
 	functions within our code to send information to the ground station.
@@ -877,7 +877,7 @@ The part of our code regarding turning is not included here for the sake of brev
                     <img src="img/lab3/image6.gif" alt="" height = "150" width = "250">
                   </p>
 		<p> <h5> Conclusion </h5>
-			Our robot is now capable of starting on a 660 Hz tone, navigate a smaller test maze, and update the GUI. The robot still detects other robots based on their IR hat’s emissions and ignores the IR decoy. Right now our robot simply stops for 10 seconds when it detects a robot, and we may want to consider changing this action for the final competition. 
+			Our robot is now capable of starting on a 660 Hz tone, navigate a smaller test maze, and update the GUI. The robot still detects other robots based on their IR hat’s emissions and ignores the IR decoy. Right now our robot simply stops for 10 seconds when it detects a robot, and we may want to consider changing this action for the final competition.
 		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
@@ -967,7 +967,7 @@ Here is the video output:
 		</p>
 		<img class="img-fluid d-block mx-auto" src="img/lab4/videooutput.PNG" alt="">
 		<p> <h5> Conclusion </h5>
-			We were able to set up communication between the camera and Arduino. However, our color bars were not exactly correct, so we will need to rework how we are setting the registers to set them correctly so treasure colors can be detected. We will also need to decide how we want to implement the actual treasure detection for the competition, so we can correctly detect different shapes. 
+			We were able to set up communication between the camera and Arduino. However, our color bars were not exactly correct, so we will need to rework how we are setting the registers to set them correctly so treasure colors can be detected. We will also need to decide how we want to implement the actual treasure detection for the competition, so we can correctly detect different shapes.
 		</p>
 		<button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
@@ -1259,7 +1259,7 @@ Here is the video output:
                     </div>
                   </p>
 		  <p> <h5> Conclusion </h5>
-		  We were able to get out robot to use righthand wall following to traverse the maze. Our issue with the FTT taking up too much memory was resolved by reducing the number of samples we had to it take. For robot detection, the robot can detect when another robot is nearby, but as of now only prints to the serial monitor when it does. For the competition, we will need to update our robot to stop instead of just printing something when a robot is detected. We could further improve how our robot traverses the maze by using efficient search methods instead of just righthand wall following. 
+		  We were able to get out robot to use righthand wall following to traverse the maze. Our issue with the FTT taking up too much memory was resolved by reducing the number of samples we had to it take. For robot detection, the robot can detect when another robot is nearby, but as of now only prints to the serial monitor when it does. For the competition, we will need to update our robot to stop instead of just printing something when a robot is detected. We could further improve how our robot traverses the maze by using efficient search methods instead of just righthand wall following.
 		  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
@@ -1382,7 +1382,7 @@ Here is the video output:
 
       </p>
 		<p> <h5> Conclusion </h5>
-		Our depth first search algorithm generally works, but there are some bugs remaining with the robot being able to detect some walls and being able to complete turns every time. We need to make our wall detection and turning more consistent in the future to improve the traversal, but the robot showed that it is able to function properly. 
+		Our depth first search algorithm generally works, but there are some bugs remaining with the robot being able to detect some walls and being able to complete turns every time. We need to make our wall detection and turning more consistent in the future to improve the traversal, but the robot showed that it is able to function properly.
 		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
@@ -1425,7 +1425,7 @@ Here is the video output:
 			</p>
 			<img class="img-fluid d-block mx-auto" src="img/milestone4/Combined.JPG" alt="">
 			<p> <h5> Conclusion </h5>
-			After weeks of work our image detection and processing code works properly. When the camera sees the different treasures, it is able to correctly print out the color and shape of the treasure. 
+			After weeks of work our image detection and processing code works properly. When the camera sees the different treasures, it is able to correctly print out the color and shape of the treasure.
 			</p>
 			<button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>

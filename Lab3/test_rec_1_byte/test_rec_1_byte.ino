@@ -182,42 +182,33 @@ void pong_back() {
 int Direction;
 String Direction_str = "";
 
-void parse_byte_1( unsigned char response ) {
+void parse_byte( unsigned char response ) {
   int Move;
   Direction = ( response & (0b00001100) ) >> 2;
-  Serial.println(Direction);
   Direction_str = "";
   Move = ( response & (0b00010000) ) >> 4;
-  //Serial.println(Move);
-  //Serial.println(response);
   if ( Move ) {
-    //Serial.println(Direction);
     switch(Direction){
       case 0:
         // decrement y value because going north
         current_location_rec[1] = current_location_rec[1] - 1;
         Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
         break;
-        
       case 1:
         // increment x value because going east
         current_location_rec[0] = current_location_rec[0] + 1;
         Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
         break;
-  
       case 2:
         // increment the y value because going south
         current_location_rec[1] = current_location_rec[1] + 1;
         Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
         break;
-  
        case 3:
          // decrement x value because going west
          current_location_rec[0] = current_location_rec[0] - 1;
          Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
          break;
-         
-  
        default:
          // Do write the current location without changing location
          Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
@@ -227,129 +218,48 @@ void parse_byte_1( unsigned char response ) {
       Direction_str = Direction_str + String(current_location_rec[1]) + "," + String(current_location_rec[0]);
     }
 
-    // robot present
-    int robot = ( response & (0b00000001) );
-    String Robot_str = "";
-    switch( robot ) {
-      case 0:
-        Robot_str += ",robot=False";
-        break;
-      case 1:
-        Robot_str += ",robot=True";
-        break;
-      default:
-        Robot_str += ",robot=False";
-        break;
-    }
-    String to_Gui = "";
-    to_Gui += Direction_str + Robot_str;
-    Serial.println(to_Gui);
-}
-
-void parse_byte_2 ( unsigned char response ) {
-  // treasure color
-  int treasure_shape = ( ( response & (0b00110000) ) >> 4 ), treasure_color = ( ( response & (0b01000000) ) >> 6 );
-  String Treasure_str = "";
-  switch( treasure_shape ) {
-    case 0:
-      Treasure_str += ",tshape=None";
-      break;
-      
-    case 1:
-      Treasure_str += ",tshape=Circle";
-      break;
-
-    case 2:
-      Treasure_str += ",tshape=Triangle";
-      break;
-
-    case 3:
-      Treasure_str += ",tshape=Square";
-      break;
-      
-    default:
-      Treasure_str += ",tshape=None";
-      break;
-  }
-  switch( treasure_color ) {
-    case 0:
-      Treasure_str += ",tcolor=red";
-      break;
-      
-    case 1:
-      Treasure_str += ",tcolor=blue";
-      break;
-      
-    default:
-      Treasure_str += ",tcolor=red";
-      break;
-  }
-
     String Wall_str = "";
     int North_wall,East_wall, South_wall, West_wall;
-    North_wall = ( response & (0b00001000) ) >> 3;
-    East_wall = ( response & (0b00000100) ) >> 2;
-    South_wall = ( response & (0b00000010) ) >> 1;
-    West_wall = ( response & (0b00000001) );
-  switch(Direction){
+    North_wall = ( response & (0b10000000) ) >> 7;
+    East_wall = ( response & (0b01000000) ) >> 6;
+    West_wall = ( response & (0b00100000) ) >> 5;
+
+    switch(Direction){
       // north
       case 0:
-          if ( North_wall ) Wall_str += ",north=True";
-        //else Wall_str += ",north=False";
+        if ( North_wall ) Wall_str += ",north=True";
         if ( East_wall ) Wall_str += ",east=True";
-        //else Wall_str += ",east=False";
         if ( South_wall )Wall_str += ",south=True" ;
-        //else Wall_str += ",south=False";
         if ( West_wall ) Wall_str += ",west=True";
-        //else Wall_str += ",west=False";
         break;
       // east
       case 1:
-          if ( North_wall ) Wall_str += ",east=True";
-        //else Wall_str += ",north=False";
+        if ( North_wall ) Wall_str += ",east=True";
         if ( East_wall ) Wall_str += ",south=True";
-        //else Wall_str += ",east=False";
         if ( South_wall )Wall_str += ",west=True" ;
-        //else Wall_str += ",south=False";
         if ( West_wall ) Wall_str += ",north=True";
-        //else Wall_str += ",west=False";
         break;
       // south
       case 2:
-          if ( North_wall ) Wall_str += ",south=True";
-        //else Wall_str += ",north=False";
+        if ( North_wall ) Wall_str += ",south=True";
         if ( East_wall ) Wall_str += ",west=True";
-        //else Wall_str += ",east=False";
         if ( South_wall )Wall_str += ",north=True" ;
-        //else Wall_str += ",south=False";
         if ( West_wall ) Wall_str += ",east=True";
-        //else Wall_str += ",west=False";
         break;
       // west
        case 3:
-       if ( North_wall ) Wall_str += ",west=True";
-      //else Wall_str += ",north=False";
-      if ( East_wall ) Wall_str += ",north=True";
-      //else Wall_str += ",east=False";
-      if ( South_wall )Wall_str += ",east=True" ;
-      //else Wall_str += ",south=False";
-      if ( West_wall ) Wall_str += ",south=True";
-      //else Wall_str += ",west=False";
+        if ( North_wall ) Wall_str += ",west=True";
+        if ( East_wall ) Wall_str += ",north=True";
+        if ( South_wall )Wall_str += ",east=True" ;
+        if ( West_wall ) Wall_str += ",south=True";
          break;
        default:
          break;
       }
-  
-
-
-  String to_Gui = "";
-  to_Gui += Direction_str + Treasure_str + Wall_str;
-  Serial.println(to_Gui);
-  
-}
-
-void parse_byte ( usigned char response ) {
-  
+    
+    String to_Gui = "";
+    to_Gui += Direction_str + Wall_str;
+    Serial.println(to_Gui);
 }
 
 // vim:cin:ai:sts=2 sw=2 ft=cpp
