@@ -247,7 +247,7 @@ void parse_byte_1( unsigned char response ) {
 void parse_byte_2 ( unsigned char response ) {
   // treasure color
   int treasure_shape = ( ( response & (0b00110000) ) >> 4 ), treasure_color = ( ( response & (0b01000000) ) >> 6 );
-  String Treasure_str = "tshape=None";
+  String Treasure_str = ",tshape=None";
 //  switch( treasure_shape ) {
 //    case 0:
 //      Treasure_str += ",tshape=None";
