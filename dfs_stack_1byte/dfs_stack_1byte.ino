@@ -864,6 +864,7 @@ void loop() {
           r_Wall = detectRightWall();
           f_Wall = detectFrontWall();
           robot = detectRobot();
+          robot = detectRobot();
         case MOVE : 
           updateBytes();
           sendRadio();
