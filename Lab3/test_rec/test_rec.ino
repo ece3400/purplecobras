@@ -296,7 +296,7 @@ void parse_byte_2 ( unsigned char response ) {
         //else Wall_str += ",north=False";
         if ( East_wall ) Wall_str += ",east=True";
         //else Wall_str += ",east=False";
-        if ( South_wall )Wall_str += ",south=True" ;
+        //if ( South_wall )Wall_str += ",south=True" ;
         //else Wall_str += ",south=False";
         if ( West_wall ) Wall_str += ",west=True";
         //else Wall_str += ",west=False";
@@ -305,7 +305,7 @@ void parse_byte_2 ( unsigned char response ) {
       case 1:
           if ( North_wall ) Wall_str += ",east=True";
         //else Wall_str += ",north=False";
-        if ( East_wall ) Wall_str += ",south=True";
+        //if ( East_wall ) Wall_str += ",south=True";
         //else Wall_str += ",east=False";
         if ( South_wall )Wall_str += ",west=True" ;
         //else Wall_str += ",south=False";
@@ -314,7 +314,7 @@ void parse_byte_2 ( unsigned char response ) {
         break;
       // south
       case 2:
-          if ( North_wall ) Wall_str += ",south=True";
+        //if ( North_wall ) Wall_str += ",south=True";
         //else Wall_str += ",north=False";
         if ( East_wall ) Wall_str += ",west=True";
         //else Wall_str += ",east=False";
@@ -323,15 +323,15 @@ void parse_byte_2 ( unsigned char response ) {
         if ( West_wall ) Wall_str += ",east=True";
         //else Wall_str += ",west=False";
         break;
-      // west
-       case 3:
-       if ( North_wall ) Wall_str += ",west=True";
+     // west
+     case 3:
+      if ( North_wall ) Wall_str += ",west=True";
       //else Wall_str += ",north=False";
       if ( East_wall ) Wall_str += ",north=True";
       //else Wall_str += ",east=False";
       if ( South_wall )Wall_str += ",east=True" ;
       //else Wall_str += ",south=False";
-      if ( West_wall ) Wall_str += ",south=True";
+      //if ( West_wall ) Wall_str += ",south=True";
       //else Wall_str += ",west=False";
          break;
        default:
