@@ -217,19 +217,23 @@
           </div>
           <div class="col-md-4">
             <span class="fa-stack fa-4x">
+	      <a target= "_blank" href=https://docs.google.com/document/d/1tK3uGPCvymwRQQyy8TZ3YWboe7zBefwLGgEb4atzO8A/edit>
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
               <i class="fas fa-glasses fa-stack-1x fa-inverse"></i>
+	      </a>
             </span>
             <h4 class="service-heading">Ethics</h4>
-            <p class="text-muted">Coming Soon</p>
-          </div>
-          <div class="col-md-4">
+            <p class="text-muted">Our Ethics Policy</p>
+	</div>
+	  <div class="col-md-4">
             <span class="fa-stack fa-4x">
+	      <a target= "_blank" href=https://docs.google.com/document/d/1H4SoH9TVXjtUpQlO5tgEejZ70AJBSiMP-9LPh7NKTtk/edit>
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
               <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+	      </a>
             </span>
-            <h4 class="service-heading">GitHub</h4>
-            <p class="text-muted">Coming Soon</p>
+            <h4 class="service-heading">Final System Design</h4>
+            <p class="text-muted">Our Final System</p>
           </div>
         </div>
       </div>
@@ -321,9 +325,9 @@
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
                   <h2 class="text-uppercase">Lab 1: Microcontroller</h2>
-                  <p class="item-intro text-muted">Objective: In this lab, we added a microphone and an IR sensor to our robot.
-			  In order to accomplish this we made both analog and digital filters so that the microphone
-			  can detect a 660 Hz whistle blow and the IR sensor can distinguish between other robots and decoys.
+                  <p class="item-intro text-muted">Objective: This lab’s objective is to learn how to program the Arduino Uno through Arduino IDE and
+			  also learn about its functionalities. We wrote simple programs for the Arduino and then assembled our robot and programmed
+			  it to perform basic autonomous driving.
 		  </p>
                   <p> <h5>Teams:</h5>
                     <ol class="list-inline">
@@ -399,6 +403,9 @@
                       <iframe width="560" height="315" src="https://www.youtube.com/embed/Q3JCB6bpPFQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                   </p>
+		<p> <h5> Conclusion </h5>
+		The first part of this lab was fairly simple, and we were able to get the LED to blink and control it with a potentiometer using the Arduino without much trouble. We were able to get our robot built and get line sensor readings for the lines. We were not able to get the robot turning properly based on the line sensor readings yet, but it was able to travel in a square using timing on its turns. This was a good start to build off, and next we have to get the robot turning based on the sensor readings. 
+		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
@@ -428,8 +435,8 @@
                   <p class="item-intro text-muted">Objective: In this lab we added a microphone and an IR sensor to our robot. In order to accomplish this, we added a digital filter and analog filters so that the microphone could detect 660 Hz and the IR sensor could distinguish between other robots and decoys.</p>
                   <p> <h5>Teams:</h5>
                     <ol class="list-inline">
-                      <li>Microphone - Brian and Elliot</li>
-                      <li>IR - April and Jaylen</li>
+                      <li>Microphone/Acoustic - Brian and Elliot</li>
+                      <li>IR/Optical - April and Jaylen</li>
                     </ol>
                   </p>
                   <p> <h5>Acoustic Team Materials</h5>
@@ -604,6 +611,9 @@ the robot to do anything upon detection.
         }<br>
       </code>
     </p>
+		<p> <h5> Conclusion </h5>
+		Both teams were able to get their parts working, and our robot now has merged code that works both with audio and IR. The IR team first had trouble getting the analog circuitry to work for the amplifier for the IR phototransistor, but found success after changing the op-amp and using Team Alpha’s design. The phototransistor was able to detect IR signals from the IR hat from a good distance away, but for future improvements we should make sure that it does not detect robots that are too far away. 
+		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
@@ -747,16 +757,10 @@ the robot to do anything upon detection.
 <img class="img-fluid d-block mx-auto" src="img/lab3/Code5.JPG" alt="">
 		</p>
 
-		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code6.JPG" alt="">
-		</p>
+		
 
 		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code7.JPG" alt="">
-		</p>
-
-		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code8.JPG" alt="">
+The part of our code regarding turning is not included here for the sake of brevity.
 		</p>
 
 		<p>
@@ -771,23 +775,9 @@ the robot to do anything upon detection.
 <img class="img-fluid d-block mx-auto" src="img/lab3/Code11.JPG" alt="">
 		</p>
 
-		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code12.JPG" alt="">
-		</p>
-
-		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code13.JPG" alt="">
-		</p>
-
-		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code14.JPG" alt="">
-		</p>
-
-		<p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code15.JPG" alt="">
-		</p>
+		
 <p>
-	Above is our integrated code. The radio code is included at the top so we only have to call the radiosetup and ping_out
+	Above is some of our integrated code. The radio code is included at the top so we only have to call the radiosetup and ping_out
 	functions within our code to send information to the ground station.
 </p>
 
@@ -886,6 +876,9 @@ the robot to do anything upon detection.
                     <img src="img/lab3/image5.gif" alt="" height = "150" width = "250">
                     <img src="img/lab3/image6.gif" alt="" height = "150" width = "250">
                   </p>
+		<p> <h5> Conclusion </h5>
+			Our robot is now capable of starting on a 660 Hz tone, navigate a smaller test maze, and update the GUI. The robot still detects other robots based on their IR hat’s emissions and ignores the IR decoy. Right now our robot simply stops for 10 seconds when it detects a robot, and we may want to consider changing this action for the final competition. 
+		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
@@ -959,23 +952,26 @@ the robot to do anything upon detection.
 		      <li> Arduino Uno </li>
                       <li> OV7670 Camera</li>
 		      <li> 2 Pull up resistors</li>
-			      <li> 24 MHz clock (from FPGA) </li>
+		      <li> 24 MHz clock (from FPGA) </li>
                     </ul>
                   </p>
-			<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p>
-			<img class="img-fluid d-block mx-auto" src="img/lab4/schematic.png" alt="">
+		<p> <h5>Procedure:</h5> After setting up the clock on the FPGA and wiring the I2C connection, we tested for any communication between the camera and Arduino. This is the schematic we used to wire the camera and Arduino together. </p>
+		<img class="img-fluid d-block mx-auto" src="img/lab4/schematic.png" alt="">
 <p>
 There was no communication occurring between the devices, so we checked both the FPGA and Arduino. Originally, we thought that the distorted clock signal (more sinusoidal than square) coming from the FPGA was causing the issue, but after some testing the issue was found to be the program stopping after calling Wire.endTransmission(). Then, after some googling, we switched out our knock-off Arduino for a real one, and the two immediately were able to communicate. We then compared register values before and after writing them to verify that they we could change them.</p>
-
 		<p> <h5>Integration</h5>
 		Below is the picture of the color bar test after integrating the arduino and FPGA. </p>
 		<img class="img-fluid d-block mx-auto" src="img/lab4/colortest.JPG" alt="">
-			<p>The color bars somewhat correct.
-
+		<p>The color bars somewhat correct.
 Here is the video output:
-
 		</p>
 		<img class="img-fluid d-block mx-auto" src="img/lab4/videooutput.PNG" alt="">
+		<p> <h5> Conclusion </h5>
+			We were able to set up communication between the camera and Arduino. However, our color bars were not exactly correct, so we will need to rework how we are setting the registers to set them correctly so treasure colors can be detected. We will also need to decide how we want to implement the actual treasure detection for the competition, so we can correctly detect different shapes. 
+		</p>
+		<button class="btn btn-primary" data-dismiss="modal" type="button">
+                    <i class="fas fa-times"></i>
+                    Close Project</button>
 		</div>
 	    	</div>
 		</div>
@@ -1262,6 +1258,9 @@ Here is the video output:
                       <iframe width="560" height="315" src="https://www.youtube.com/embed/xU6shaumFss" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                   </p>
+		  <p> <h5> Conclusion </h5>
+		  We were able to get out robot to use righthand wall following to traverse the maze. Our issue with the FTT taking up too much memory was resolved by reducing the number of samples we had to it take. For robot detection, the robot can detect when another robot is nearby, but as of now only prints to the serial monitor when it does. For the competition, we will need to update our robot to stop instead of just printing something when a robot is detected. We could further improve how our robot traverses the maze by using efficient search methods instead of just righthand wall following. 
+		  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
@@ -1288,7 +1287,7 @@ Here is the video output:
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
 		  <h2 class="text-uppercase">Milestone 3</h2>
-		<p class="item-intro text-muted">Objective: Create an algorithm that allows the robot to traverse a maze.</p>
+		<p class="item-intro text-muted">Objective: Create an algorithm that allows the robot to traverse a maze and update the GUI.</p>
 		  <p class="item-intro text-muted">Materials: Fully assembled robot capable of moving, detecting walls, and line following.</p>
 
       <p> <h5> DFS </h5>
@@ -1382,6 +1381,9 @@ Here is the video output:
 
 
       </p>
+		<p> <h5> Conclusion </h5>
+		Our depth first search algorithm generally works, but there are some bugs remaining with the robot being able to detect some walls and being able to complete turns every time. We need to make our wall detection and turning more consistent in the future to improve the traversal, but the robot showed that it is able to function properly. 
+		</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
@@ -1422,6 +1424,9 @@ Here is the video output:
 			  Below is a picture of our shape detection code working. In each picture is the view from the camera and a view of the serial monitor displaying information from the arduino telling the user what shape and color object it is looking at.
 			</p>
 			<img class="img-fluid d-block mx-auto" src="img/milestone4/Combined.JPG" alt="">
+			<p> <h5> Conclusion </h5>
+			After weeks of work our image detection and processing code works properly. When the camera sees the different treasures, it is able to correctly print out the color and shape of the treasure. 
+			</p>
 			<button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close Project</button>
