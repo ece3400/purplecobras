@@ -643,7 +643,11 @@ void dfs() {
   }
 
   if (robot == 1) {
-    f_blocked = true;
+    delay(5000);
+    robot = detectRobot();
+    if (robot == 1) {
+      f_blocked = true;
+    }
   }
   
 //  if (r_blocked) {
@@ -863,7 +867,6 @@ void loop() {
           l_Wall = detectLeftWall();
           r_Wall = detectRightWall();
           f_Wall = detectFrontWall();
-          robot = detectRobot();
           robot = detectRobot();
         case MOVE : 
           updateBytes();
