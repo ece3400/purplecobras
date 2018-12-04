@@ -71,8 +71,8 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_ping_out;
 
 // parameters to put into each square
-byte wall_present_north = 0b0001000; //front
-byte wall_present_east = 0b0000100; //right
+byte wall_present_north = 0b00001000; //front
+byte wall_present_east = 0b00000100; //right
 //byte wall_present_south = 0b0000010;
 byte wall_present_west = 0b00000001; //left
 
@@ -883,9 +883,9 @@ void loop() {
           robot = detectRobot();
         case MOVE : 
           updateBytes();
-//          sendRadio();
-//          to_send_0 = 0b00000000;
-//          to_send_1 = 0b00000000;
+          sendRadio();
+          to_send_0 = 0b00000000;
+          to_send_1 = 0b00000000;
           dfs();
           //turns();
           state = FOLLOW_LINE;

@@ -71,8 +71,8 @@ const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};
 role_e role = role_ping_out;
 
 // parameters to put into each square
-byte wall_present_north = 0b1000000; //front
-byte wall_present_east = 0b0100000; //right
+byte wall_present_north = 0b10000000; //front
+byte wall_present_east = 0b01000000; //right
 byte wall_present_west = 0b00100000; //left
 
 byte Move = 0b00010000;

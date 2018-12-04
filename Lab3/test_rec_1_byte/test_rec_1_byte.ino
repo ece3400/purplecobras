@@ -164,6 +164,7 @@ void parse_byte( unsigned char response ) {
 
   int Move;
   Move = ( response & (0b00010000) ) >> 4;
+  
   if ( Move ) {
     switch(Direction){
       case 0:
