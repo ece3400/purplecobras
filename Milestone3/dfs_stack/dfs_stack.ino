@@ -15,13 +15,13 @@ int frontWall = A3;
 int rightWall = A2;
 //mic and robot
 int mic_ir = A0;
-int mic_threshold = 90;
+int mic_threshold = 70;
 
 //fft selector
 #define s0 4
 
 //CALIBRATED GLOBAL VARIABLES
-#define LV 400
+#define LV 690
 #define LRWALLS 150
 #define FWALLS 150
 
@@ -39,7 +39,6 @@ int mic;
 
 //states for the outside loop
 enum states {
-  DETECT_SOUND,
   FOLLOW_LINE,
   INTERSECTION,
 };
@@ -77,12 +76,12 @@ byte wall_present_east = 0b0000100; //right
 //byte wall_present_south = 0b0000010;
 byte wall_present_west = 0b00000001; //left
 
-byte treasure_present_circle = 0b00100000;
-byte treasure_present_triangle = 0b01000000;
-byte treasure_present_square = 0b01100000;
+//byte treasure_present_circle = 0b00100000;
+//byte treasure_present_triangle = 0b01000000;
+//byte treasure_present_square = 0b01100000;
 
-byte treasure_color_red = 0b10000000;
-byte treasure_color_blue = 0b00000000;
+//byte treasure_color_red = 0b10000000;
+//byte treasure_color_blue = 0b00000000;
 
 byte robot_present = 0b00000001;
 
@@ -178,16 +177,20 @@ void mazeSetup() {
 
 void setup() {
   Serial.begin(9600);
-  servoSetup();
+  mic = 0;
+  robot = 0;
   radioSetup();
   mazeSetup();
   pinMode(s0, OUTPUT);
   pinMode(2, OUTPUT);
   digitalWrite(2, HIGH);
   digitalWrite(s0, HIGH);
-  robot = 0;
-  mic = 0;
-  state = DETECT_SOUND;
+//   while (mic == 0) {
+//      detectMicrophone();
+//   }
+  digitalWrite(s0, LOW);
+  servoSetup();
+  state = FOLLOW_LINE;
 }
 
 int readL[3] = {LV + 100, LV + 100, LV + 100};
@@ -265,16 +268,30 @@ void turnAround() {
   leftservo.write(0);
   rightservo.write(0);
   delay(1400);
+
+  while(rightAverage > LV) {
+    rightAverage = analogRead(sensorR);
+  }
+  
 }
 void turnLeft() {
+  Serial.println("turning left");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
-  
+
   leftservo.write(0);
   rightservo.write(0);
   
-  delay(800);
-
+  delay(500);
+  
+  while(rightAverage > LV) {
+    rightAverage = analogRead(sensorR);
+  }
+//  leftservo.write(0);
+//  rightservo.write(0);
+//  
+//  delay(800);
+//
 //  while(leftAverage > LV && rightAverage > LV) {
 //    delay(50);
 //    leftAverage = analogRead(sensorL);
@@ -295,11 +312,14 @@ void turnLeft() {
 //    leftAverage = analogRead(sensorL);
 //    rightAverage = analogRead(sensorR);
 //  }
+  
   leftservo.write(90);
   rightservo.write(90);
+  Serial.println("finished turning");
 }
 
 void turnRight() {
+  Serial.println("turning right");
   leftAverage = analogRead(sensorL);
   rightAverage = analogRead(sensorR);
   
@@ -333,6 +353,7 @@ void turnRight() {
   
   leftservo.write(90);
   rightservo.write(90);
+  Serial.println("finished turning right");
 }
 
 bool detectRightWall() {
@@ -390,10 +411,15 @@ void detectMicrophone () {
   fft_run();
   fft_mag_log();
   sei();
-  Serial.println(fft_log_out[12]);
+//  Serial.println(fft_log_out[12]);
   //whatever bin number decided goes after the log_out
   // decide threshold by testing the microphone at different distances(?)
-  if (fft_log_out[12] > mic_threshold) {
+//  Serial.println("start");
+//    for (byte i = 0 ; i < FFT_N/2 ; i++) { 
+//      Serial.println(fft_log_out[i]); // send out the data
+//    }
+//  
+  if (fft_log_out[11] > mic_threshold) {
     mic = 1;
   }
   else {
@@ -401,7 +427,7 @@ void detectMicrophone () {
   }
 }
 
-void detectRobot() { 
+int detectRobot() { 
   //default adc values
   unsigned int default_timsk = TIMSK0;
   unsigned int default_adcsra = ADCSRA;
@@ -432,26 +458,21 @@ void detectRobot() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-
-  Serial.println("start");
-  for (byte i = 0 ; i < FFT_N/2 ; i++) { 
-      Serial.println(fft_log_out[i]); // send out the data
-    }
   
-//  if (fft_log_out[23] >= 70) {
-//    TIMSK0 = default_timsk;
-//    ADCSRA = default_adcsra;
-//    ADMUX = default_admux;
-//    DIDR0 = default_didr;
-//    return 1;  
-//  }
-//  else {
-//    TIMSK0 = default_timsk;
-//    ADCSRA = default_adcsra;
-//    ADMUX = default_admux;
-//    DIDR0 = default_didr;
-//    return 0;
-//  }
+  if (fft_log_out[23] >= 160) {
+    TIMSK0 = default_timsk;
+    ADCSRA = default_adcsra;
+    ADMUX = default_admux;
+    DIDR0 = default_didr;
+    return 1;  
+  }
+  else {
+    TIMSK0 = default_timsk;
+    ADCSRA = default_adcsra;
+    ADMUX = default_admux;
+    DIDR0 = default_didr;
+    return 0;
+  }
 }
 
 void change_direction(int how_many_turn) {
@@ -629,6 +650,10 @@ void dfs() {
     f_blocked = true;
   }
 
+  if (robot == 1) {
+    f_blocked = true;
+  }
+  
 //  if (r_blocked) {
 //    Serial.println("r blocked");
 //  }
@@ -819,12 +844,8 @@ void printDirection() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+//  Serial.println(state);
   switch (state) {
-    case DETECT_SOUND :
-//      while (mic == 0) {
-//        detectMicrophone();
-//      }
-      state = FOLLOW_LINE;
     case FOLLOW_LINE:
       sample();
       if (rightAverage >= LV && leftAverage >= LV) {
@@ -850,6 +871,7 @@ void loop() {
     case INTERSECTION:
       switch (action) {
         case DETECT_WALLS :
+          stepPast();
           leftservo.write(90);
           rightservo.write(90);
           updateMaze();
@@ -858,12 +880,12 @@ void loop() {
           l_Wall = detectLeftWall();
           r_Wall = detectRightWall();
           f_Wall = detectFrontWall();
+//          robot = detectRobot();
         case MOVE : 
           updateBytes();
-          sendRadio();
-          to_send_0 = 0b00000000;
-          to_send_1 = 0b00000000;
-          stepPast();
+//          sendRadio();
+//          to_send_0 = 0b00000000;
+//          to_send_1 = 0b00000000;
           dfs();
           //turns();
           state = FOLLOW_LINE;

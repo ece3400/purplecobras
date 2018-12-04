@@ -1,6 +1,6 @@
 int sensorL = A4;
 int sensorR = A5;
-int lineVoltage = 800;
+int lineVoltage = 700;
 
 void setup() {
   // put your setup code here, to run once:
