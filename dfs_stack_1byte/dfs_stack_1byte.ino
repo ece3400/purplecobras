@@ -757,7 +757,7 @@ void ping_out (unsigned char to_send) {
         //printf("Got response %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
       }
       else {
-        //printf("Got WRONG RESPONSE %lu, round-trip delay: %lu\n\r",got_char,millis()-started_waiting_at);
+        ping_out (to_send);
       }
   }
   
