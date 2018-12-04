@@ -247,41 +247,41 @@ void parse_byte_1( unsigned char response ) {
 void parse_byte_2 ( unsigned char response ) {
   // treasure color
   int treasure_shape = ( ( response & (0b00110000) ) >> 4 ), treasure_color = ( ( response & (0b01000000) ) >> 6 );
-  String Treasure_str = "";
-  switch( treasure_shape ) {
-    case 0:
-      Treasure_str += ",tshape=None";
-      break;
-      
-    case 1:
-      Treasure_str += ",tshape=Circle";
-      break;
-
-    case 2:
-      Treasure_str += ",tshape=Triangle";
-      break;
-
-    case 3:
-      Treasure_str += ",tshape=Square";
-      break;
-      
-    default:
-      Treasure_str += ",tshape=None";
-      break;
-  }
-  switch( treasure_color ) {
-    case 0:
-      Treasure_str += ",tcolor=red";
-      break;
-      
-    case 1:
-      Treasure_str += ",tcolor=blue";
-      break;
-      
-    default:
-      Treasure_str += ",tcolor=red";
-      break;
-  }
+  String Treasure_str = "tshape=None";
+//  switch( treasure_shape ) {
+//    case 0:
+//      Treasure_str += ",tshape=None";
+//      break;
+//      
+//    case 1:
+//      Treasure_str += ",tshape=Circle";
+//      break;
+//
+//    case 2:
+//      Treasure_str += ",tshape=Triangle";
+//      break;
+//
+//    case 3:
+//      Treasure_str += ",tshape=Square";
+//      break;
+//      
+//    default:
+//      Treasure_str += ",tshape=None";
+//      break;
+//  }
+//  switch( treasure_color ) {
+//    case 0:
+//      Treasure_str += ",tcolor=red";
+//      break;
+//      
+//    case 1:
+//      Treasure_str += ",tcolor=blue";
+//      break;
+//      
+//    default:
+//      Treasure_str += ",tcolor=red";
+//      break;
+//  }
 
     String Wall_str = "";
     int North_wall,East_wall, South_wall, West_wall;
