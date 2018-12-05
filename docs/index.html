@@ -1545,10 +1545,11 @@ Here is the video output:
 					<li> 1 9V battery </li>
 					<li> 2 Servos </li>
 					<li> 1 Arduino Uno </li>
-					<li> 1 Small Breadboard </li>
+					<li> 2 Small Breadboard </li>
 					<li> 3 Wall Sensors </li>
 					<li> 2 Analog Line Sensors </li>
 					<li> 1 Microphone </li>
+					<li> 1 Radio </li>
 					<li> 1 Photodetector </li>
 					<li> 1 IR Hat </li>
 					<li> 2 Op Amps </li>
@@ -1577,10 +1578,11 @@ Here is the video output:
 			    Packaging and Mechanical Design
 		    </p>
 		    <p>
-			    After several iterations of our robot’s packaging, we settled on a three-level design in which each level has a distinct purpose. The bottom level contains the battery and is a mounting point for the line sensors. Besides powering the robot, the battery helps maintain a low center of gravity and therefore stability (like in a Tesla). This fixed a previous issue where the robot would often tip over when it started moving. Mounting the line sensor on the bottom level also keeps them low to the ground and as accurate as possible, increasing turning and line following reliability.
-				The second level contains the Arduino, a power bus, and the radio transmitter. The power bus is a two-column breadboard, with one column connected to the Arduino 5V and the other connected to Arduino ground. This allows us to have easy access to our power supply and easily diagnose wiring issues. Having the Arduino and radio protected between the top and middle levels also reduces the likelihood of wiring failures or accidental shorts to the Arduino. The wall sensors are also mounted on this level to be near the middle of the wall and out of the way of any wires that could obstruct them.
-				The third level contains a small breadboard containing all of our lab-made circuits. The placement of this breadboard allows for easy access to the circuits, making debugging quick and easy. Wires to the power bus or Arduino can be easily routed through or around the top level’s “floor”.
-				The servos are mounted to the middle level with standard sized wheels.
+			    After several iterations of our robot’s packaging, we settled on a four-level design in which each level has a distinct purpose. The bottom level contains the power banks and is a mounting point for the line sensors. Besides powering the robot, the battery helps maintain a low center of gravity and therefore stability (like in a Tesla). This fixed a previous issue where the robot would often tip over when it started moving. Additionally, by keeping an extra power bank in the front of the center of mass at the bottom of the robot, we were able to keep the line sensors near the ground even when the front of the robot wanted to bounce. This ensured the line sensors would read consistent values throughout the entire traversal process. Mounting the line sensor on the bottom level also keeps them low to the ground and as accurate as possible, increasing turning and line following reliability.
+				The second level contains the Arduino, a power bus, and the radio transmitter. The power bus is a two-column breadboard, with one column connected to the Arduino 5V and the other connected to Arduino ground. This allows us to have easy access to our power supply and easily diagnose wiring issues. Having the Arduino and radio protected between middle levels also reduces the likelihood of wiring failures or accidental shorts to the Arduino. The wall sensors are also mounted on this level to be near the middle of the wall and out of the way of any wires that could obstruct them.
+				The third level contains a small breadboard containing all of our lab-made circuits. The placement of this breadboard allows for easy access to the circuits, making debugging quick and easy. Wires to the power bus or Arduino can be easily routed through or around the “floor”. The circuits we made are highlighted below.
+				The fourth and top level holds the IR hat at 5.5" above the ground and also is the mounting point for our IR detector. The IR detector is directional so since we have it pointing out from the front of the robot (away from the IR hat which is behind it), we don't detect ourselves as another robot. The IR sensor is plugged into the circuitry on the third level of the robot. The IR hat is plugged into a 9V battery attached to the bottom of this level.
+			    The servos are mounted to the bottom level with standard sized wheels.
 		    </p>
 		    <p>
 			    Hardware:
