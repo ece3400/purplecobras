@@ -1588,7 +1588,19 @@ Here is the video output:
 		    </p>
 		    <img class="img-fluid d-block mx-auto" src="img/final/topbreadboardcircuit.jpg" alt="" style="transform:rotate(90deg);" width="300">
 		    <img class="img-fluid d-block mx-auto" src="img/lab2/teamalphacircuit.png" alt="">
-		    
+		    <p>
+			Besides containing the two op-amps circuits, which are used to amplify the microphone and IR signal, the breadboard also contains a mux. The mux is used because we have too many analog inputs for the Arduino. Depending on the robot’s state, it changes its mux select to read in the necessary sensor information.    
+		    </p>
+		    <p>
+			    Software:
+		    </p>
+		    <p>
+			The robot’s software was based off of a finite state machine. Its maze traversal decisions are based off of a modified depth first search.    
+		    </p>
+		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
+		    <p>
+			    Our robot does not contain a camera or, by extension, an FPGA. There were multiple reasons for this. After successfully setting up camera-Arduino-FPGA communication, our camera output was still noisy and was hard to interpret even by a human. Second, the mounting of the camera and FPGA would have been difficult to implement with our current packaging. Third, it was unclear that even if we overcame the first two issues that time spent on treasure detection would be worth it. Since the point outcomes associated with treasures have equal awards and penalties, treasure detection reliability must be greater than 50% for an expected gain of points. The team decided that allocating effort to other reliability issues would be a better use of our time near competition that integrating and optimizing treasure detection.
+		    </p>
 			<p> <h6>FPGA Team Materials</h6>
                       <ul class="list-inline">
                       <li> DE0 Nano</li>
