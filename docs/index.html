@@ -236,8 +236,8 @@
               <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
             </span>
 	    </a>
-            <h4 class="service-heading">Competition and Beyond</h4>
-            <p class="text-muted">Final Robot Design</p>
+            <h4 class="service-heading">Ethics Homework</h4>
+            <p class="text-muted">Some thinking about robots in society</p>
           </div>
 		<div class="col-md-3 portfolio-item">
 	    <a class="portfolio-link" data-toggle="modal" href="#finalproj">
@@ -1627,73 +1627,14 @@ Here is the video output:
               <div class="col-lg-8 mx-auto">
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
-			<h2 class="text-uppercase">NOTASDFASDFASDFFinal Robot Design</h2>
-			<p class="item-intro text-muted"> Here we highlight the design decisions we made for our final design and explain why we made these decisions.
-		  </p>
-			<h5>Description of Robot</h5>
-			<p> 
-			Our final robot consisted of:
-				<ul class="list-inline">
-					<li> 1 Battery </li>
-					<li> 2 Servos </li>
-					<li> 1 Arduino Uno </li>
-					<li> 1 Small Breadboard </li>
-					<li> 3 Wall Sensors </li>
-					<li> 2 Analog Line Sensors </li>
-					<li> 1 Microphone </li>
-					<li> 1 Photodetector </li>
-					<li> 2 Op Amps </li>
-					<li> Various Passive Components </li>
-					<li> Various Mechanical Components from Lab </li>
-				</ul>
+			<h2 class="text-uppercase">Ethics Homework</h2>
+			<h5> Is “a ban on offensive autonomous weapons beyond meaningful human control” going to work? </h5>
+		<p>
+			An offensive autonomous weapons ban will work because there is precedent for similar agreements working, and the benefits of the ban are clear and equal for everyone. This can be implemented in practice the same way that nations agreed to not pursue chemical and biological weapons, with international agreements, after negotiations had occurred and nations could sign onto the agreement. The main stakeholders are the scientists and engineers who work on and contribute to the development of these weapons, as well as the economic and political leaders in the countries producing these weapons. Secondary stakeholders are all other humans who can be affected by these weapons in terms of them being targeted by the weapons or experiencing financial repercussions due to the production of these weapons in the form of taxes, job lay-offs, or even new jobs being created. Only scientists and engineers should be evaluating scientific products and creating comprehensible media to present to those who need to see it for further decision making such as politicians or businesses who would use these weapons. Politicians or businessmen and women being involved in the evaluation process would likely taint it with their own biases, goals, and lack of technical knowledge and experience. It is unlikely that the integrity of these evaluations will be valued over the agendas of these politicians and business people. I think that these weapons being developed will only have positive effects on IPS research and development. The open letter on autonomous weapons mentions the possibility of a public backlash as a response to autonomous weapons that curtails its potential benefits from being realized. I don’t think this is a reasonable outcome, as the general population should be capable of realizing that autonomous weapons are just one negative application of AI, and that here are broader and more positive uses for it that everyone will be willing to explore for their own good. 
+		</p>
+			<p>
+				This website was updated on 12/4/2018 at 23:53, moving the information from a Google Doc that was linked to this website. Please contact us with any questions.
 			</p>
-		      <p>
-			      The robot has three levels, and the components are divided between them as shown below:
-		      </p>
-		      <img class="img-fluid d-block mx-auto" src="img/final/final_layer_diagram.JPG" alt="">
-		      
-		      <h5> Functionality: </h5>
-		      <p>
-			  <ul class="list-inline">
-				  <li> Recognize 660 Hz audio tone </li>	
-				  <li> Follow maze lines, recognize intersections, and detect walls </li>
-				  <li> Detect nearby robots </li>
-				  <li> Transmit data through radio transmitter </li>
-				  <li> Map maze during traversal </li>
-				  <li> Traverse maze efficiently through depth first search-style algorithm </li>
-		      	  </ul>
-		      </p>
-		    <h5> Why we did what we did: </h5>
-		    <p>
-			    Packaging and Mechanical Design
-		    </p>
-		    <p>
-			    After several iterations of our robot’s packaging, we settled on a three-level design in which each level has a distinct purpose. The bottom level contains the battery and is a mounting point for the line sensors. Besides powering the robot, the battery helps maintain a low center of gravity and therefore stability (like in a Tesla). This fixed a previous issue where the robot would often tip over when it started moving. Mounting the line sensor on the bottom level also keeps them low to the ground and as accurate as possible, increasing turning and line following reliability.
-				The second level contains the Arduino, a power bus, and the radio transmitter. The power bus is a two-column breadboard, with one column connected to the Arduino 5V and the other connected to Arduino ground. This allows us to have easy access to our power supply and easily diagnose wiring issues. Having the Arduino and radio protected between the top and middle levels also reduces the likelihood of wiring failures or accidental shorts to the Arduino. The wall sensors are also mounted on this level to be near the middle of the wall and out of the way of any wires that could obstruct them.
-				The third level contains a small breadboard containing all of our lab-made circuits. The placement of this breadboard allows for easy access to the circuits, making debugging quick and easy. Wires to the power bus or Arduino can be easily routed through or around the top level’s “floor”.
-				The servos are mounted to the middle level with standard sized wheels.
-		    </p>
-		    <p>
-			    Hardware:
-		    </p>
-		    <p>
-			    All of the robot’s custom-made and exciting electronics are contained on the breadboard on the top level. A picture of the breadboard and schematic of the two op amp circuits are shown below.
-		    </p>
-		    <img class="img-fluid d-block mx-auto" src="img/final/topbreadboardcircuit.jpg" alt="" style="transform:rotate(90deg);" width="300">
-		    <img class="img-fluid d-block mx-auto" src="img/lab2/teamalphacircuit.png" alt="">
-		    <p>
-			Besides containing the two op-amps circuits, which are used to amplify the microphone and IR signal, the breadboard also contains a mux. The mux is used because we have too many analog inputs for the Arduino. Depending on the robot’s state, it changes its mux select to read in the necessary sensor information.    
-		    </p>
-		    <p>
-			    Software:
-		    </p>
-		    <p>
-			The robot’s software was based off of a finite state machine. Its maze traversal decisions are based off of a modified depth first search.    
-		    </p>
-		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
-		    <p>
-			    Our robot does not contain a camera or, by extension, an FPGA. There were multiple reasons for this. After successfully setting up camera-Arduino-FPGA communication, our camera output was still noisy and was hard to interpret even by a human. Second, the mounting of the camera and FPGA would have been difficult to implement with our current packaging. Third, it was unclear that even if we overcame the first two issues that time spent on treasure detection would be worth it. Since the point outcomes associated with treasures have equal awards and penalties, treasure detection reliability must be greater than 50% for an expected gain of points. The team decided that allocating effort to other reliability issues would be a better use of our time near competition that integrating and optimizing treasure detection.
-		    </p>
 			
 		<button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
