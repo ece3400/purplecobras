@@ -229,16 +229,16 @@
             <h4 class="service-heading">Contract</h4>
             <p class="text-muted">See how our team functions!</p>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3 portfolio-item">
+	    <a class="portfolio-link" data-toggle="modal" href="#ethics">
             <span class="fa-stack fa-4x">
-	      <a target= "_blank" href=https://docs.google.com/document/d/1tK3uGPCvymwRQQyy8TZ3YWboe7zBefwLGgEb4atzO8A/edit>
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fas fa-glasses fa-stack-1x fa-inverse"></i>
-	      </a>
+              <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
             </span>
-            <h4 class="service-heading">Ethics</h4>
-            <p class="text-muted">Our Ethics Policy</p>
-	</div>
+	    </a>
+            <h4 class="service-heading">Competition and Beyond</h4>
+            <p class="text-muted">Final Robot Design</p>
+          </div>
 		<div class="col-md-3 portfolio-item">
 	    <a class="portfolio-link" data-toggle="modal" href="#finalproj">
             <span class="fa-stack fa-4x">
@@ -1535,6 +1535,99 @@ Here is the video output:
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
 			<h2 class="text-uppercase">Final Robot Design</h2>
+			<p class="item-intro text-muted"> Here we highlight the design decisions we made for our final design and explain why we made these decisions.
+		  </p>
+			<h5>Description of Robot</h5>
+			<p> 
+			Our final robot consisted of:
+				<ul class="list-inline">
+					<li> 1 Battery </li>
+					<li> 2 Servos </li>
+					<li> 1 Arduino Uno </li>
+					<li> 1 Small Breadboard </li>
+					<li> 3 Wall Sensors </li>
+					<li> 2 Analog Line Sensors </li>
+					<li> 1 Microphone </li>
+					<li> 1 Photodetector </li>
+					<li> 2 Op Amps </li>
+					<li> Various Passive Components </li>
+					<li> Various Mechanical Components from Lab </li>
+				</ul>
+			</p>
+		      <p>
+			      The robot has three levels, and the components are divided between them as shown below:
+		      </p>
+		      <img class="img-fluid d-block mx-auto" src="img/final/final_layer_diagram.JPG" alt="">
+		      
+		      <h5> Functionality: </h5>
+		      <p>
+			  <ul class="list-inline">
+				  <li> Recognize 660 Hz audio tone </li>	
+				  <li> Follow maze lines, recognize intersections, and detect walls </li>
+				  <li> Detect nearby robots </li>
+				  <li> Transmit data through radio transmitter </li>
+				  <li> Map maze during traversal </li>
+				  <li> Traverse maze efficiently through depth first search-style algorithm </li>
+		      	  </ul>
+		      </p>
+		    <h5> Why we did what we did: </h5>
+		    <p>
+			    Packaging and Mechanical Design
+		    </p>
+		    <p>
+			    After several iterations of our robot’s packaging, we settled on a three-level design in which each level has a distinct purpose. The bottom level contains the battery and is a mounting point for the line sensors. Besides powering the robot, the battery helps maintain a low center of gravity and therefore stability (like in a Tesla). This fixed a previous issue where the robot would often tip over when it started moving. Mounting the line sensor on the bottom level also keeps them low to the ground and as accurate as possible, increasing turning and line following reliability.
+				The second level contains the Arduino, a power bus, and the radio transmitter. The power bus is a two-column breadboard, with one column connected to the Arduino 5V and the other connected to Arduino ground. This allows us to have easy access to our power supply and easily diagnose wiring issues. Having the Arduino and radio protected between the top and middle levels also reduces the likelihood of wiring failures or accidental shorts to the Arduino. The wall sensors are also mounted on this level to be near the middle of the wall and out of the way of any wires that could obstruct them.
+				The third level contains a small breadboard containing all of our lab-made circuits. The placement of this breadboard allows for easy access to the circuits, making debugging quick and easy. Wires to the power bus or Arduino can be easily routed through or around the top level’s “floor”.
+				The servos are mounted to the middle level with standard sized wheels.
+		    </p>
+		    <p>
+			    Hardware:
+		    </p>
+		    <p>
+			    All of the robot’s custom-made and exciting electronics are contained on the breadboard on the top level. A picture of the breadboard and schematic of the two op amp circuits are shown below.
+		    </p>
+		    <img class="img-fluid d-block mx-auto" src="img/final/topbreadboardcircuit.jpg" alt="" style="transform:rotate(90deg);" width="300">
+		    <img class="img-fluid d-block mx-auto" src="img/lab2/teamalphacircuit.png" alt="">
+		    <p>
+			Besides containing the two op-amps circuits, which are used to amplify the microphone and IR signal, the breadboard also contains a mux. The mux is used because we have too many analog inputs for the Arduino. Depending on the robot’s state, it changes its mux select to read in the necessary sensor information.    
+		    </p>
+		    <p>
+			    Software:
+		    </p>
+		    <p>
+			The robot’s software was based off of a finite state machine. Its maze traversal decisions are based off of a modified depth first search.    
+		    </p>
+		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
+		    <p>
+			    Our robot does not contain a camera or, by extension, an FPGA. There were multiple reasons for this. After successfully setting up camera-Arduino-FPGA communication, our camera output was still noisy and was hard to interpret even by a human. Second, the mounting of the camera and FPGA would have been difficult to implement with our current packaging. Third, it was unclear that even if we overcame the first two issues that time spent on treasure detection would be worth it. Since the point outcomes associated with treasures have equal awards and penalties, treasure detection reliability must be greater than 50% for an expected gain of points. The team decided that allocating effort to other reliability issues would be a better use of our time near competition that integrating and optimizing treasure detection.
+		    </p>
+			
+		<button class="btn btn-primary" data-dismiss="modal" type="button">
+                    <i class="fas fa-times"></i>
+                    Close Project</button>
+		</div>
+	    	</div>
+		</div>
+		</div>
+	</div>
+	</div>
+	</div>
+
+<!-- Modal 8 -->
+    <div class="portfolio-modal modal fade" id="ethics" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 mx-auto">
+                <div class="modal-body">
+                  <!-- Project Details Go Here -->
+			<h2 class="text-uppercase">NOTASDFASDFASDFFinal Robot Design</h2>
 			<p class="item-intro text-muted"> Here we highlight the design decisions we made for our final design and explain why we made these decisions.
 		  </p>
 			<h5>Description of Robot</h5>
