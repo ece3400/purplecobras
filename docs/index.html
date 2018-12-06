@@ -1642,8 +1642,7 @@ Here is the video output:
           We used this encoding and updated it at every new intersection. <code> Move </code>
           was a bit that indicated that the robot moved. The cardinal directions represented
           which direction our robot was moving in. We defined constants so that updating this information
-          would only require bitwise OR-ing. This is what we do in <code> updateBytes</code> through
-          a switch statement and some if statements.
+          would only require bitwise OR-ing.
 
           <img class="img-fluid d-block mx-auto" src="img/final/code3.png" alt="">
 
@@ -1695,10 +1694,6 @@ Here is the video output:
           be able to detect the next line it was to end up at.
           <img class="img-fluid d-block mx-auto" src="img/final/code6.png" alt="">
         </p>
-        <p> <h6> Maze Updates </h6>
-          <code> updateMaze </code> was used to update the current location of where our robot
-          was on our maze representation.
-		    </p>
 		    <p> <h6> Wall Following </h6>
           The functions for detecting the walls on different sides only differed by which analog
           pin it read and the threshold for what was determined as a wall.
@@ -1718,6 +1713,15 @@ Here is the video output:
 
           <img class="img-fluid d-block mx-auto" src="img/final/code8.png" alt="">
         </p>
+        <p> <h6> Maze Updates </h6>
+          <code> updateMaze </code> was used to update the current location of where our robot
+          was on our maze representation.
+
+          <code> updateBytes</code> updates the byte with information
+          that will then be sent to the base station
+
+          <img class="img-fluid d-block mx-auto" src="img/final/code10.png" alt="">
+		    </p>
         <p> <h6> Radio and Base Station</h6>
           <code> sendRadio </code> has been simplified a lot now that we only send one byte. Rather than sending
           four bytes where two were simply to set byteflags, we just have to call <code> ping_out</code>
@@ -1732,6 +1736,28 @@ Here is the video output:
           The decoding was done through bit shifting and then having a switch statement on the possible integer values.
 
           <img class="img-fluid d-block mx-auto" src="img/final/code9.png" alt="">
+        </p>
+
+        <p> <h6>DFS Algorithm </h6>
+          Our maze search algorithm was based off of Depth-First Search. Rather than using a stack to pop
+          and push from, which we thought would use up too much dynamic memory, we calculated our backtracking
+          through the cardinal direction that we saved at every node. We prioritized right-hand wall following,
+          so if no backtracking was necessary, then our robot would continue to run as it always had.
+          Our robot determines if backtracking is necessary by setting boolean variables for each side of the robot
+          to true if it is blocked in some way which can either be a wall or an already visited node.
+
+          <img class="img-fluid d-block mx-auto" src="img/final/code11.png" alt="">
+
+          In backtracking, we calculate what the reverse direction would be to get to that node,
+          and take that direction. Because we already calculate the coordinates of the sides,
+          we can use that to compare and determine which direction to turn.
+
+          <p>
+            Something that could be improved with our backtracking would be rather than
+            following the backtracking all the way back until there is NOT a blocked area,
+            calculating the nearest unvisited node and moving there would make our robot's
+            traversal time much shorter as well. 
+          </p>
         </p>
         </p>
 		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
