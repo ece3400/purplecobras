@@ -378,12 +378,6 @@ bool detectFrontWall() {
 }
 
 bool detectLeftWall() {
-//  digitalWrite(s2, LOW);
-//  digitalWrite(s1, HIGH);
-//  digitalWrite(s0, LOW);
-
-  //read_wallL = analogRead(walls);
-  
   if (analogRead(leftWall) >= LRWALLS) {
     return true;
   }
@@ -451,11 +445,6 @@ int detectRobot() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-//  
-//    Serial.println("start");
-//    for (byte i = 0 ; i < FFT_N/2 ; i++) { 
-//      Serial.println(fft_log_out[i]); // send out the data
-//    }
     
   if (fft_log_out[23] >= 160) {
     TIMSK0 = default_timsk;

@@ -1641,12 +1641,114 @@ Here is the video output:
          so we could have just called the functions instead of using a state machine.
         </p>
         <p>
-          
+          Other than the enums that defined the states for our state machines, we also first want to discuss
+          our variable declarations.
+          <br>
+          We changed up the way we encoded bytes to send to the base station since lab 3.
+          Instead of sending 2 bytes of information, we were able to condense down to only 1 bit.
+
+          <style type="text/css">
+          .tg  {border-collapse:collapse;border-spacing:0;}
+          .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+          .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+          .tg .tg-0lax{text-align:center;vertical-align:top}
+          </style>
+          <table class="tg">
+            <tr>
+              <th class="tg-0lax">bit 7</th>
+              <th class="tg-0lax">bit 6</th>
+              <th class="tg-0lax">bit 5</th>
+              <th class="tg-0lax">bit 4</th>
+              <th class="tg-0lax">bit 3</th>
+              <th class="tg-0lax">bit 2</th>
+              <th class="tg-0lax">bit 1</th>
+              <th class="tg-0lax">bit 0</th>
+            </tr>
+            <tr>
+              <td class="tg-0lax">North<br>wall <br>present</td>
+              <td class="tg-0lax">East<br>wall<br>present</td>
+              <td class="tg-0lax">West<br>wall<br>present</td>
+              <td class="tg-0lax">Move</td>
+              <td class="tg-0lax">North</td>
+              <td class="tg-0lax">East</td>
+              <td class="tg-0lax">South</td>
+              <td class="tg-0lax">West</td>
+            </tr>
+          </table>
+
+          <br>
+          We used this encoding and updated it at every new intersection. <code> Move </code>
+          was a bit that indicated that the robot moved. The cardinal directions represented
+          which direction our robot was moving in. We defined constants so that updating this information
+          would only require bitwise OR-ing.
+
+          <img class="img-fluid d-block mx-auto" src="img/final/code3.png" alt="">
+
+          To keep track of our maze, we defined a 9 by 9 array of nodes. <code> node </code>
+          was a struct that we defined to contain both a boolean if the node was already
+          visited and the direction our robot took to get to that node. The later was used in
+          the backtracking portion of our algorithm. For every maze, the starting direction of our robot
+          is always south and it's starting location is (0,0).
+
+          <p>
+          The different setup functions as well as <code> setup() </code> initialized all the pins
+          we used along with the servos. In order to not mess with the code that we already had working,
+          we found that we were lacking in analog pins, so we muxed the microphone and ir sensor.
+
+          <img class="img-fluid d-block mx-auto" src="img/final/code4.png" alt="">
+          </p>
+
+          <p>
+          We had originally integrated the microphone fully as well as a button to start our robot
+          but on the day of the competition, we were not very confident in either of their functionality
+          so we decided it was better to pull it out.
+        </p>
+        <p>
+          The <code>detectMicrophone()</code> function uses the FFT library which outputs values for each bin number.
+          In lab 2, we chose to iterate through 256 bins, but in order to save dynamic memory on the arduino,
+          we reduced this to 128 bins.
+          By printing out the values of each bin, we found that the 660Hz tone now caused a peak in bin 11.
+          We check if this bin contains a value over the threshold value set in the beginning, it was 70
+          in this case, to determine if the tone is being played.
+          <img class="img-fluid d-block mx-auto" src="img/final/code5.png" alt="">
+        </p>
+        <p>
+          As seen in the first snippet of code, we kept the same line following code from milestone 1
+          which would shift the robot back on track if it had turned a lot.
+        </p>
+        <p>
+          <code> stepPast()</code> was necessary because our robot turns in place when it turns.
+          If the body of the robot is not over the intersection properly, then the robot would never
+          be able to detect the next line it was to end up at.
+          <img class="img-fluid d-block mx-auto" src="img/final/code6.png" alt="">
+        </p>
+        <p>
+          <code> updateMaze </code> was used to update the current location of where our robot
+          was on our maze representation.
       Its maze traversal decisions are based off of a modified depth first search.
 		    </p>
 		    <p>
-			       Radio, wall detection, line following, robot detection
+          The functions for detecting the walls on different sides only differed by which analog
+          pin it read and the threshold for what was determined as a wall.
+          <img class="img-fluid d-block mx-auto" src="img/final/code7.png" alt="">
 		    </p>
+        <p>
+          <code> detectRobot()</code> used code very similar to lab 2. Just like lab 2, we ran
+          the fft code and used the numbers from the serial monitor to create a graph similar to the one below.
+          We could not simply use the same bin numbers that we had from lab 2 because we changed the
+          number of samples from 256 to 128.
+          <img class="img-fluid d-block mx-auto" src="img/lab2/img8.png" alt="">
+
+          We observed the bin 23 peaked, and said that when that bin was over 160, then
+          a robot was detected. Something that could've been improved upon was the timing of our detection.
+          Rather than detecting only at intersection, it would have been better to polling type of dectection
+          that could alter our robots path on the way to an intersection rather.
+
+          <img class="img-fluid d-block mx-auto" src="img/final/code8.png" alt="">
+        </p>
+        <p>
+          
+        </p>
 		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
 		    <p>
 			    Our robot does not contain a camera or, by extension, an FPGA. There were multiple reasons for this. After successfully setting up camera-Arduino-FPGA communication, our camera output was still noisy and was hard to interpret even by a human. This was mainly due to wiring issues where the header wires were too loose in the breadboard sockets leading to noisy images on the screen. We tried numerous times to get the wires more securely attached but were still unable to get the system to work well enough. Considering the number of points we could achieve by having the camera functioning vs the number of points we could lose if the camera detected false treasures, we determined that the best course of action would be to not use the camera or FPGA. The treasure detection would have had to work at least 50% of the time for it to be worth the risk of putting it on, and we were not confident we could get treasures right 50% of the time. Second, the mounting of the camera and FPGA would have been difficult to implement with our current packaging. Either we would have had to add another layer to the robot which would have raised the center of mass and made the robot unstable, or extend one of the layers out the front or back, again throwing off the center of mass. Third, it was unclear that even if we overcame the first two issues that time spent on treasure detection would be worth it. The team decided that allocating effort to other reliability issues would be a better use of our time near competition than integrating and optimizing treasure detection.
