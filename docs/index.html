@@ -1739,8 +1739,11 @@ Here is the video output:
         </p>
 
         <p> <h6>DFS Algorithm </h6>
-          Our maze search algorithm was based off of Depth-First Search. Rather than using a stack to pop
-          and push from, which we thought would use up too much dynamic memory, we calculated our backtracking
+          Our maze search algorithm was based off of Depth-First Search. A pro of using DFS
+          is that our robot can go as far through the maze as possible without having to backtrack. If
+          we have chosen to use Breadth-First Search then we would have found our robot going back to the same node
+          very frequently. Rather than using a stack to pop and push from, 
+          which we thought would use up too much dynamic memory, we calculated our backtracking
           through the cardinal direction that we saved at every node. We prioritized right-hand wall following,
           so if no backtracking was necessary, then our robot would continue to run as it always had.
           Our robot determines if backtracking is necessary by setting boolean variables for each side of the robot
@@ -1756,7 +1759,7 @@ Here is the video output:
             Something that could be improved with our backtracking would be rather than
             following the backtracking all the way back until there is NOT a blocked area,
             calculating the nearest unvisited node and moving there would make our robot's
-            traversal time much shorter as well. 
+            traversal time much shorter as well.
           </p>
         </p>
         </p>
