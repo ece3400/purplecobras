@@ -1603,9 +1603,9 @@ Here is the video output:
 		      	  </ul>
 		      </p>
 		    <h5> Why we did what we did: </h5>
-		    <p>
+		    <h6>
 			    Packaging and Mechanical Design
-		    </p>
+		    </h6>
 		    <p>
 			    After several iterations of our robot’s packaging, we settled on a four-level design in which each level has a distinct purpose. The bottom level contains the power banks and is a mounting point for the line sensors. Besides powering the robot, the battery helps maintain a low center of gravity and therefore stability (like in a Tesla). This fixed a previous issue where the robot would often tip over when it started moving. Additionally, by keeping an extra power bank in the front of the center of mass at the bottom of the robot, we were able to keep the line sensors near the ground even when the front of the robot wanted to bounce. This ensured the line sensors would read consistent values throughout the entire traversal process. Mounting the line sensor on the bottom level also keeps them low to the ground and as accurate as possible, increasing turning and line following reliability.
 				The second level contains the Arduino, a power bus, and the radio transmitter. The power bus is a two-column breadboard, with one column connected to the Arduino 5V and the other connected to Arduino ground. This allows us to have easy access to our power supply and easily diagnose wiring issues. Having the Arduino and radio protected between middle levels also reduces the likelihood of wiring failures or accidental shorts to the Arduino. The wall sensors are also mounted on this level to be near the middle of the wall and out of the way of any wires that could obstruct them.
@@ -1613,9 +1613,9 @@ Here is the video output:
 				The fourth and top level holds the IR hat at 5.5" above the ground and also is the mounting point for our IR detector. The IR detector is directional so since we have it pointing out from the front of the robot (away from the IR hat which is behind it), we don't detect ourselves as another robot. The IR sensor is plugged into the circuitry on the third level of the robot. The IR hat is plugged into a 9V battery attached to the bottom of this level.
 			    The servos are mounted to the bottom level with standard sized wheels.
 		    </p>
-		    <p>
+		    <h6>
 			    Hardware:
-		    </p>
+		    </h6>
 		    <p>
 			    All of the robot’s custom-made and exciting electronics are contained on the breadboard on the top level. A picture of the breadboard and schematic of the two op amp circuits are shown below.
 		    </p>
@@ -1627,14 +1627,25 @@ Here is the video output:
 		    <p>
 			On the day of the competition, we actually were not confident enough in our microphone starting ability to use it, so we took this part out of the code. Instead, we had the robot start immediately after it had been plugged in, and we waited to plug it in until after 5 seconds past the start time. We were concerned that the robot would either have a false start, or it would never start because the 660 Hz was never detected. We were running the IR sensor, however we only checked the value of the sensor at intersections as we assumed this would work (as it had in testing during the lab). However, on the day of competition we collided with two robots, once when the other robot was to our front left, and once when neither our robot nor the other robot saw each other in the middle of a square. For the first collision, our directional IR sensor would never be able to pick up a signal that wasn't coming from directly in front of us. For the second robot, since the other robot was not in front of ours until we were already driving again and in the middle of a square, we were not running the detection code (as previously mentioned, we only ran it at intersections).
 		    </p>
-		    <p>
+		    <h6>
 			    Software:
+		    </h6>
+		    <p>
+			   The robot’s software was originally based off of a finite state machine.
+         <!-- Insert Finite State Machine picture -->
+         <img class="img-fluid d-block mx-auto" src="img/final/code2.png" alt="">
+
+         As you can see, in addition to the two states for driving and at intersections,
+         we tried to have states for every action that must be done at intersections.
+         However, we chose just not to break and go through all of those states rather than update <code> action </code>,
+         so we could have just called the functions instead of using a state machine.
+        </p>
+        <p>
+          
+      Its maze traversal decisions are based off of a modified depth first search.
 		    </p>
 		    <p>
-			The robot’s software was based off of a finite state machine. Its maze traversal decisions are based off of a modified depth first search.
-		    </p>
-		    <p>
-			Radio, wall detection, line following, robot detection, FPGA
+			       Radio, wall detection, line following, robot detection
 		    </p>
 		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
 		    <p>
