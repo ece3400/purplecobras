@@ -1545,7 +1545,7 @@ Here is the video output:
 					<li> 1 9V battery </li>
 					<li> 2 Servos </li>
 					<li> 1 Arduino Uno </li>
-					<li> 2 Small Breadboard </li>
+					<li> 2 Small Breadboards </li>
 					<li> 3 Wall Sensors </li>
 					<li> 2 Analog Line Sensors </li>
 					<li> 1 Microphone </li>
@@ -1725,7 +1725,7 @@ Here is the video output:
         <p> <h6> Radio and Base Station</h6>
           <code> sendRadio </code> has been simplified a lot now that we only send one byte. Rather than sending
           four bytes where two were simply to set byteflags, we just have to call <code> ping_out</code>
-          once and then wait until that one was done sending. <code> ping_out</code> has stayed the same
+          once and then wait until that one was done sending. This meant we spent significantly less time at each intersection than before. <code> ping_out</code> has stayed the same
           from lab 3 as it's functionality has not changed at all. We also make sure to reset the byte
           that we send after we have successfully communicated with the base station.
         </p>
