@@ -784,10 +784,10 @@ the robot to do anything upon detection.
 <img class="img-fluid d-block mx-auto" src="img/lab3/Code5.JPG" alt="">
 		</p>
 <p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code6.JPG" alt="">	
+<img class="img-fluid d-block mx-auto" src="img/lab3/Code6.JPG" alt="">
 </p>
 <p>
-<img class="img-fluid d-block mx-auto" src="img/lab3/Code7.JPG" alt="">	
+<img class="img-fluid d-block mx-auto" src="img/lab3/Code7.JPG" alt="">
 </p>
 		<p>
 <p>
@@ -1537,7 +1537,7 @@ Here is the video output:
 			<h2 class="text-uppercase">Final Robot Design</h2>
 			<p class="item-intro text-muted"> Here we highlight the design decisions we made for our final design and explain why we made these decisions.
 		  </p>
-			<h5>Description of Robot</h5>
+			<h3>Description of Robot</h3>
 			<p>
 			Our final robot consisted of:
 				<ul class="list-inline">
@@ -1562,7 +1562,7 @@ Here is the video output:
 		      </p>
 		      <img class="img-fluid d-block mx-auto" src="img/final/final_layer_diagram_updated.JPG" alt="">
 
-		      <h5> Functionality: </h5>
+		      <h3> Functionality: </h3>
 		      <p>
 			  <ul class="list-inline">
 				  <li> Recognize 660 Hz audio tone </li>
@@ -1573,10 +1573,10 @@ Here is the video output:
 				  <li> Traverse maze efficiently through depth first search-style algorithm </li>
 		      	  </ul>
 		      </p>
-		    <h5> Why we did what we did: </h5>
-		    <h6>
+		    <h3> Why we did what we did: </h3>
+		    <h4>
 			    Packaging and Mechanical Design
-		    </h6>
+		    </h4>
 		    <p>
 			    After several iterations of our robot’s packaging, we settled on a four-level design in which each level has a distinct purpose. The bottom level contains the power banks and is a mounting point for the line sensors. Besides powering the robot, the battery helps maintain a low center of gravity and therefore stability (like in a Tesla). This fixed a previous issue where the robot would often tip over when it started moving. Additionally, by keeping an extra power bank in the front of the center of mass at the bottom of the robot, we were able to keep the line sensors near the ground even when the front of the robot wanted to bounce. This ensured the line sensors would read consistent values throughout the entire traversal process. Mounting the line sensor on the bottom level also keeps them low to the ground and as accurate as possible, increasing turning and line following reliability.
 				The second level contains the Arduino, a power bus, and the radio transmitter. The power bus is a two-column breadboard, with one column connected to the Arduino 5V and the other connected to Arduino ground. This allows us to have easy access to our power supply and easily diagnose wiring issues. Having the Arduino and radio protected between middle levels also reduces the likelihood of wiring failures or accidental shorts to the Arduino. The wall sensors are also mounted on this level to be near the middle of the wall and out of the way of any wires that could obstruct them.
@@ -1584,9 +1584,9 @@ Here is the video output:
 				The fourth and top level holds the IR hat at 5.5" above the ground and also is the mounting point for our IR detector. The IR detector is directional so since we have it pointing out from the front of the robot (away from the IR hat which is behind it), we don't detect ourselves as another robot. The IR sensor is plugged into the circuitry on the third level of the robot. The IR hat is plugged into a 9V battery attached to the bottom of this level.
 			    The servos are mounted to the bottom level with standard sized wheels.
 		    </p>
-		    <h6>
+		    <h4>
 			    Hardware:
-		    </h6>
+		    </h4>
 		    <p>
 			    All of the robot’s custom-made and exciting electronics are contained on the breadboard on the top level. A picture of the breadboard and schematic of the two op amp circuits are shown below.
 		    </p>
@@ -1598,21 +1598,12 @@ Here is the video output:
 		    <p>
 			On the day of the competition, we actually were not confident enough in our microphone starting ability to use it, so we took this part out of the code. Instead, we had the robot start immediately after it had been plugged in, and we waited to plug it in until after 5 seconds past the start time. We were concerned that the robot would either have a false start, or it would never start because the 660 Hz was never detected. We were running the IR sensor, however we only checked the value of the sensor at intersections as we assumed this would work (as it had in testing during the lab). However, on the day of competition we collided with two robots, once when the other robot was to our front left, and once when neither our robot nor the other robot saw each other in the middle of a square. For the first collision, our directional IR sensor would never be able to pick up a signal that wasn't coming from directly in front of us. For the second robot, since the other robot was not in front of ours until we were already driving again and in the middle of a square, we were not running the detection code (as previously mentioned, we only ran it at intersections).
 		    </p>
-		    <h6>
+		    <h4>
 			    Software:
-		    </h6>
+		    </h4>
 		    <p>
-			   The robot’s software was originally based off of a finite state machine.
-         <!-- Insert Finite State Machine picture -->
-         <img class="img-fluid d-block mx-auto" src="img/final/code2.png" alt="">
-
-         As you can see, in addition to the two states for driving and at intersections,
-         we tried to have states for every action that must be done at intersections.
-         However, we chose just not to break and go through all of those states rather than update <code> action </code>,
-         so we could have just called the functions instead of using a state machine.
-        </p>
-        <p>
-          Other than the enums that defined the states for our state machines, we also first want to discuss
+          <h5> Setup </h5>
+          Along with the enums that defined the states for our state machines, we first want to discuss
           our variable declarations.
           <br>
           We changed up the way we encoded bytes to send to the base station since lab 3.
@@ -1651,7 +1642,8 @@ Here is the video output:
           We used this encoding and updated it at every new intersection. <code> Move </code>
           was a bit that indicated that the robot moved. The cardinal directions represented
           which direction our robot was moving in. We defined constants so that updating this information
-          would only require bitwise OR-ing.
+          would only require bitwise OR-ing. This is what we do in <code> updateBytes</code> through
+          a switch statement and some if statements.
 
           <img class="img-fluid d-block mx-auto" src="img/final/code3.png" alt="">
 
@@ -1684,8 +1676,18 @@ Here is the video output:
           <img class="img-fluid d-block mx-auto" src="img/final/code5.png" alt="">
         </p>
         <p>
-          As seen in the first snippet of code, we kept the same line following code from milestone 1
-          which would shift the robot back on track if it had turned a lot.
+          <h5> Loop </h5>
+         The robot’s software was originally based off of a finite state machine.
+         <!-- Insert Finite State Machine picture -->
+         <img class="img-fluid d-block mx-auto" src="img/final/code2.png" alt="">
+
+         As you can see, in addition to the two states for driving and at intersections,
+         we tried to have states for every action that must be done at intersections.
+         However, we chose just not to break and go through all of those states rather than update <code> action </code>,
+         so we could have just called the functions instead of using a state machine.
+        </p>
+        <p> <h6> Line Following </h6>
+          We kept the same line following code from milestone 1 which would shift the robot back on track if it had turned a lot.
         </p>
         <p>
           <code> stepPast()</code> was necessary because our robot turns in place when it turns.
@@ -1693,17 +1695,16 @@ Here is the video output:
           be able to detect the next line it was to end up at.
           <img class="img-fluid d-block mx-auto" src="img/final/code6.png" alt="">
         </p>
-        <p>
+        <p> <h6> Maze Updates </h6>
           <code> updateMaze </code> was used to update the current location of where our robot
           was on our maze representation.
-      Its maze traversal decisions are based off of a modified depth first search.
 		    </p>
-		    <p>
+		    <p> <h6> Wall Following </h6>
           The functions for detecting the walls on different sides only differed by which analog
           pin it read and the threshold for what was determined as a wall.
           <img class="img-fluid d-block mx-auto" src="img/final/code7.png" alt="">
 		    </p>
-        <p>
+        <p> <h6> Robot Detection </h6>
           <code> detectRobot()</code> used code very similar to lab 2. Just like lab 2, we ran
           the fft code and used the numbers from the serial monitor to create a graph similar to the one below.
           We could not simply use the same bin numbers that we had from lab 2 because we changed the
@@ -1717,8 +1718,21 @@ Here is the video output:
 
           <img class="img-fluid d-block mx-auto" src="img/final/code8.png" alt="">
         </p>
+        <p> <h6> Radio and Base Station</h6>
+          <code> sendRadio </code> has been simplified a lot now that we only send one byte. Rather than sending
+          four bytes where two were simply to set byteflags, we just have to call <code> ping_out</code>
+          once and then wait until that one was done sending. <code> ping_out</code> has stayed the same
+          from lab 3 as it's functionality has not changed at all. We also make sure to reset the byte
+          that we send after we have successfully communicated with the base station.
+        </p>
         <p>
-          
+          For the base station, in order to keep track of the robot's location, it updates an int array with
+          the proper x and y coordinates. Depending on these coordinates and the direction we send over,
+          the base station is able to calculate where the robot is. It also places walls after decoding the byte sent over.
+          The decoding was done through bit shifting and then having a switch statement on the possible integer values.
+
+          <img class="img-fluid d-block mx-auto" src="img/final/code9.png" alt="">
+        </p>
         </p>
 		    <h5> Reasoning: Why we didn’t do what we didn’t do </h5>
 		    <p>
